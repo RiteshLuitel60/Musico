@@ -12,7 +12,7 @@ const SongCard = ({ song, isPlaying, activeSong, i, data }) => {
   };
 
   const handlePlayClick = () => {
-    console.log("played")
+    console.log("played");
 
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
@@ -23,7 +23,7 @@ const SongCard = ({ song, isPlaying, activeSong, i, data }) => {
       <div className="relative w-full h-56 group">
         <div
           className={`absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 group-hover:bg-opacity-70 ${
-            activeSong?.title === song.attributes.name ? 'bg-opacity-70' : 'opacity-0 group-hover:opacity-100'
+            activeSong?.id === song.id ? 'bg-opacity-70' : 'opacity-0 group-hover:opacity-100'
           }`}
         >
           <PlayPause
@@ -38,12 +38,12 @@ const SongCard = ({ song, isPlaying, activeSong, i, data }) => {
       </div>
       <div className="mt-4 flex flex-col">
         <p className="font-semibold text-lg text-white truncate">
-          <Link to={`/songs/${song?.key}`}>
+          <Link to={`/songs/${song.id}`}>
             {song.attributes.name}
           </Link>
         </p>
         <p className="text-sm truncate text-gray-300 mt-1">
-          <Link to={song.artistName ? `/artists/${song?.artists[0]?.admid}` : '/top-artists'}>
+          <Link to={`/artists/${song.relationships.artists.data[0]?.id}`}>
             {song.attributes.artistName}
           </Link>
         </p>
