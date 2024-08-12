@@ -8,10 +8,10 @@ const Track = ({ isPlaying, isActive, activeSong }) => (
     </div>
     <div className="w-[50%]">
       <p className="truncate text-white font-bold text-lg">
-        {activeSong?.attributes.artistName ? activeSong?.attributes.artistName : 'No active Song'}
+        {activeSong?.attributes.name ? activeSong?.attributes.name : 'No active Song'}
       </p>
       <p className="truncate text-gray-300">
-        {activeSong?.attributes?.albumName || 'No album name'}
+        {activeSong?.attributes?.artistName || 'No Artist name'}
       </p>
     </div>
   </div>
