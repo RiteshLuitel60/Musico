@@ -61,7 +61,7 @@ const TopPlay = () => {
   };
 
   return (
-    <div ref={divRef} className="xl:ml-8 ml-0 xl:mb-0 mb-6 flex-1 xl:max-w-[450px] max-w-full flex flex-col"> {/* Increased max-width */}
+    <div ref={divRef} className="xl:ml-8 ml-0 xl:mb-0 mb-3 flex-1 xl:max-w-[390px] max-w-full flex flex-col"> {/* Increased max-width */}
       <div className="w-full flex flex-col">
         <div className="flex flex-row justify-between items-center">
           <h2 className="text-white font-bold text-2xl">Top Charts</h2> {/* Increased font size */}
@@ -70,7 +70,7 @@ const TopPlay = () => {
           </Link>
         </div>
 
-        <div className="mt-6 flex flex-col gap-1"> {/* Increased margin-top */}
+        <div className="mt-4 flex flex-col gap-1"> {/* Increased margin-top */}
           {topPlays?.map((song, i) => (
             <TopChartCard
               key={song.id}
