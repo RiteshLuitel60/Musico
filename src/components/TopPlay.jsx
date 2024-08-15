@@ -12,11 +12,11 @@ import { useGetTopChartsQuery } from '../redux/services/shazamCore';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handlePlayClick }) => (
-  <div className={`w-full flex flex-row items-center hover:bg-green-400 ${activeSong?.attributes?.name === song?.attributes?.name ? 'bg-[#26242c]' : 'bg-transparent'} py-1 p-0.7 rounded-lg cursor-pointer mb-0.5`}> {/* Further reduced padding */}
+  <div className={`w-full flex flex-row items-center hover:bg-green-400 ${activeSong?.attributes?.name === song?.attributes?.name ? 'bg-[#26242c]' : 'bg-transparent'} py-1 p-0.7 rounded-lg cursor-pointer mb-0.5`}> 
     <h3 className="font-bold text-sm text-white mr-3">{i + 1}.</h3> {/* Numbering of top chart songs */}
     <div className="flex-1 flex flex-row justify-between items-center">
       <img className="w10 h-10 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> {/*  image of top chart songs */}
-      <div className="flex-1 flex flex-col justify-center mx-3"> {/* Reduced margin */}
+      <div className="flex-1 flex flex-col justify-center mx-3"> 
         <Link to={`/songs/${song.key}`}>
           <p className="text-base font-bold text-white">
             {song?.attributes?.name}
@@ -47,7 +47,8 @@ const TopPlay = () => {
 
   useEffect(() => {
     divRef.current.scrollIntoView({ behavior: 'smooth' });
-  });
+}, []); // Empty array ensures this runs only on component load
+
 
   const topPlays = data?.slice(0, 5);
 
