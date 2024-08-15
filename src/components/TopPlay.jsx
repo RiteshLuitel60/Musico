@@ -12,20 +12,20 @@ import { useGetTopChartsQuery } from '../redux/services/shazamCore';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handlePlayClick }) => (
-  <div className={`w-full flex flex-row items-center hover:bg-green-400 ${activeSong?.attributes?.name === song?.attributes?.name ? 'bg-[#26242c]' : 'bg-transparent'} py-1 p-1 rounded-lg cursor-pointer mb-1`}> {/* Further reduced padding */}
-    <h3 className="font-bold text-sm text-white mr-2">{i + 1}.</h3> 
+  <div className={`w-full flex flex-row items-center hover:bg-green-400 ${activeSong?.attributes?.name === song?.attributes?.name ? 'bg-[#26242c]' : 'bg-transparent'} py-1 p-0.7 rounded-lg cursor-pointer mb-0.5`}> {/* Further reduced padding */}
+    <h3 className="font-bold text-sm text-white mr-3">{i + 1}.</h3> {/* Numbering of top chart songs */}
     <div className="flex-1 flex flex-row justify-between items-center">
-      <img className="w-9 h-9 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> {/* Smaller image */}
-      <div className="flex-1 flex flex-col justify-center mx-1"> {/* Reduced margin */}
+      <img className="w10 h-10 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> {/*  image of top chart songs */}
+      <div className="flex-1 flex flex-col justify-center mx-3"> {/* Reduced margin */}
         <Link to={`/songs/${song.key}`}>
-          <p className="text-xs font-bold text-white">
+          <p className="text-base font-bold text-white">
             {song?.attributes?.name}
-          </p>
+          </p> {/* Song name text in top chart cards */}
         </Link>
         <Link to={`/artists/${song?.relationships.artists.data[0].id}`}>
-          <p className="text-xs text-gray-300 mt-1">
-            {song?.attributes?.artistName}
-          </p>
+          <p className="text-sm text-gray-300 mt-1">
+            {song?.attributes?.artistName} 
+          </p> {/* artist name in top chart card */}
         </Link>
       </div>
     </div>
