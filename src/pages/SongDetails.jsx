@@ -10,7 +10,6 @@ const SongDetails = () => {
   const { activeSong, isPlaying } = useSelector((state) => state.player);
 
   const { data: songData, isFetching: isFetchingSongDetails } = useGetSongDetailsQuery(songid);
-  console.log(songid);
 
   // Extract lyrics from the response dynamically
   const lyrics =
@@ -18,7 +17,7 @@ const SongDetails = () => {
 
   return (
     <div className="flex flex-col">
-      {/* <DetailsHeader artistId={artistId} songData={songData} /> */}
+    <DetailsHeader artistId="" songData={songData} /> 
 
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Lyrics</h2>
@@ -33,7 +32,7 @@ const SongDetails = () => {
               </p>
             ))
           ) : (
-            <p className="text-gray-300 text-base">Sorry! No Lyrics Found</p>
+            <p className="text-gray-300 text-base my-1">Sorry! No Lyrics Found</p>
           )}
         </div>
       </div>

@@ -17,7 +17,7 @@ const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handle
     <div className="flex-1 flex flex-row justify-between items-center">
       <img className="w10 h-10 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> {/*  image of top chart songs */}
       <div className="flex-1 flex flex-col justify-center mx-3"> 
-        <Link to={`/songs/${song.key}`}>
+        <Link to={`/songs/${song.id}`}>
           <p className="text-base font-bold text-white">
             {song?.attributes?.name}
           </p> {/* Song name text in top chart cards */}
