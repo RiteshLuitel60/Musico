@@ -40,21 +40,4 @@ const App = () => {
   );
 };
 
-const url = 'https://shazam-core.p.rapidapi.com/v2/tracks/details?track_id=1450829103';
-const options = {
-	method: 'GET',
-	headers: {
-		'x-rapidapi-key': 'fec4224f99mshbf530c7f64c4359p1a192bjsnb3fbf34b7aa1',
-		'x-rapidapi-host': 'shazam-core.p.rapidapi.com'
-	}
-};
-
-try {
-	const response = await fetch(url, options);
-	const result = await response.text();
-	console.log(result);
-} catch (error) {
-	console.error(error);
-}
-
 export default App;
