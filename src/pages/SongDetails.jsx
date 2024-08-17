@@ -5,6 +5,7 @@ import { DetailsHeader, Error, Loader, RelatedSongs } from "../components";
 import { setActiveSong, playPause } from "../redux/features/playerSlice";
 import { useGetSongDetailsQuery, useGetSongRelatedQuery } from "../redux/services/shazamCore";
 import TopPlayM from '../components/RelatedSongsM';
+import RelatedSongsManual from '../components/RelatedSongManual';
 
 const SongDetails = () => {
   const dispatch = useDispatch();
@@ -55,15 +56,8 @@ const SongDetails = () => {
         </div>
       </div>
 
-      <RelatedSongs
-        data={relatedSongs}
-        isPlaying={isPlaying}
-        activeSong={activeSong}
-        handlePauseClick={handlePauseClick}
-        handlePlayClick={handlePlayClick}
-      />
-
-  
+      <RelatedSongsManual/>
+    
 
     </div>
   );
