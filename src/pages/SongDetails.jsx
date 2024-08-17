@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { DetailsHeader, Error, Loader, RelatedSongs } from "../components";
 import { setActiveSong, playPause } from "../redux/features/playerSlice";
 import { useGetSongDetailsQuery, useGetSongRelatedQuery } from "../redux/services/shazamCore";
+import TopPlayM from '../components/RelatedSongsM';
 
 const SongDetails = () => {
   const dispatch = useDispatch();
@@ -61,6 +62,7 @@ const SongDetails = () => {
         handlePauseClick={handlePauseClick}
         handlePlayClick={handlePlayClick}
       />
+
     </div>
   );
 };

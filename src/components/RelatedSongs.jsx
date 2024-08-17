@@ -1,6 +1,8 @@
 import React from 'react';
 import SongBar from './SongBar';
 import TopPlay from './TopPlay';
+import RelatedSongsM from './RelatedSongsM';
+import TopPlayM from './RelatedSongsM';
 
 const RelatedSongs = ({ 
   data, 
@@ -8,7 +10,8 @@ const RelatedSongs = ({
   isPlaying, 
   activeSong, 
   handlePauseClick, 
-  handlePlayClick 
+  handlePlayClick, 
+  songid 
 }) => {
   return (
     <div className="flex flex-col">
@@ -16,7 +19,11 @@ const RelatedSongs = ({
         More Related Songs
       </h1>
 
-      {/*<div className="mt-6 w-full flex flex-col">
+      <TopPlayM/>
+
+    
+
+      {/*    <div className="mt-6 w-full flex flex-col">
         {data?.map((song, i) => (
           <SongBar
             key={`${song.id}-${artistId}`}
@@ -29,14 +36,12 @@ const RelatedSongs = ({
             handlePlayClick={handlePlayClick}
           />
         ))}
-        
-      </div>
-      */}
+      </div> */}
 
-      
-        </div>
-        
+      <div className="mt-8">
+      </div>
+    </div>
   );
-}
+};
 
 export default RelatedSongs;
