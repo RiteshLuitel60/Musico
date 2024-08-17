@@ -63,6 +63,8 @@ const SongDetails = () => {
         handlePlayClick={handlePlayClick}
       />
 
+  
+
     </div>
   );
 };

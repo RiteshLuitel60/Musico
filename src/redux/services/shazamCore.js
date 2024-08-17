@@ -16,7 +16,7 @@ export const shazamCoreApi = createApi({
   endpoints: (builder) => ({
     getTopCharts: builder.query({
       query: () => "/v1/charts/world?country_code=DZ",
-      transformResponse: (response) => response.slice(0, 51), // Limit the data to 50 items
+      transformResponse: (response) => response.slice(0, 50), // Limit the data to 50 items
     }),
 
     getSongDetails: builder.query({

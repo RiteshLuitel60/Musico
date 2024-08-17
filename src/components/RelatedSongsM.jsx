@@ -50,9 +50,7 @@ const TopPlayM = () => {
   const { data } = useGetTopChartsQuery();
   const divRef = useRef(null);
 
-  useEffect(() => {
-    divRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, []); // Empty array ensures this runs only on component load
+
 
   const topPlays = data ? shuffleArray(data.slice(10, 20)) : []; // Shuffle and slice the data
 
