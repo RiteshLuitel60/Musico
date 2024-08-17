@@ -1,5 +1,3 @@
-
-/* eslint-disable import/no-unresolved */
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,6 +6,15 @@ import PlayPause from './PlayPause';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
 import { useGetTopChartsQuery } from '../redux/services/shazamCore';
 
+// Function to shuffle an array
+const shuffleArray = (array) => {
+  let shuffledArray = array.slice(); // Create a copy of the array
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};
 
 const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handlePlayClick }) => (
   <div className={`w-full flex flex-row items-center hover:bg-green-400 ${activeSong?.attributes?.name === song?.attributes?.name ? 'bg-[#26242c]' : 'bg-transparent'} py-1 p-0.7 rounded-lg cursor-pointer mb-0.5`}> 
@@ -45,10 +52,9 @@ const TopPlayM = () => {
 
   useEffect(() => {
     divRef.current.scrollIntoView({ behavior: 'smooth' });
-}, []); // Empty array ensures this runs only on component load
+  }, []); // Empty array ensures this runs only on component load
 
-
-  const topPlays = data?.slice(0, 10);
+  const topPlays = data ? shuffleArray(data.slice(10, 20)) : []; // Shuffle and slice the data
 
   const handlePauseClick = () => {
     dispatch(playPause(false));
@@ -70,7 +76,7 @@ const TopPlayM = () => {
         </div>
 
         <div className="mt-4 flex flex-col gap-1"> {/* Increased margin-top */}
-          {topPlays?.map((song, i) => (
+          {topPlays.map((song, i) => (
             <TopChartCard
               key={song.id}
               song={song}
@@ -83,12 +89,8 @@ const TopPlayM = () => {
           ))}
         </div>
       </div>
-      </div>
-  
+    </div>
   );
 };
 
-
-
 export default TopPlayM;
-
