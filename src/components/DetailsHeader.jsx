@@ -34,12 +34,20 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
           <div className="ml-5">
             {/* Artist name or Song title */}
             <p className="font-bold sm:text-3xl text-xl text-white">
-              {artistId ? artistData?.attributes?.name : getSongDetails('title')}
+              {artistId ? (
+                artistData?.attributes?.name
+              ) : (
+                <Link to={`/artists/${getSongDetails('artist')?.adamid}`} className="hover:underline">
+                  {getSongDetails('title')}
+                </Link>
+              )}
             </p>
             {/* Song artist (only shown for songs, not for artist pages) */}
             {!artistId && (
               <p className="text-base text-gray-400 mt-2">
-                {getSongDetails('artist')}
+                <Link to={`/artists/${getSongDetails('artist')?.adamid}`} className="hover:underline">
+                  {getSongDetails('artist')}
+                </Link>
               </p>
             )}
             {/* Genre name */}
@@ -56,4 +64,4 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
   );
 };
 
-export default DetailsHeader;
+export default DetailsHeader; 
