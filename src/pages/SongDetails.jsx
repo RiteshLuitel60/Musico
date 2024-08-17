@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { DetailsHeader, Error, Loader, RelatedSongs } from "../components";
+import { DetailsHeader, Error, Loader,  } from "../components";
 import { setActiveSong, playPause } from "../redux/features/playerSlice";
 import { useGetSongDetailsQuery, useGetSongRelatedQuery } from "../redux/services/shazamCore";
-import TopPlayM from '../components/RelatedSongsM';
 import RelatedSongsManual from '../components/RelatedSongManual';
 
 const SongDetails = () => {

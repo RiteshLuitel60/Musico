@@ -16,7 +16,12 @@ export const shazamCoreApi = createApi({
   endpoints: (builder) => ({
     getTopCharts: builder.query({
       query: () => "/v1/charts/world?country_code=DZ",
-      transformResponse: (response) => response.slice(0, 50), // Limit the data to 50 items
+      transformResponse: (response) => {
+        // Shuffle the array
+        const shuffled = response.sort(() => 0.5 - Math.random());
+        // Return the first 50 items
+        return shuffled.slice(0, 50);
+      },
     }),
 
     getSongDetails: builder.query({
@@ -28,11 +33,11 @@ export const shazamCoreApi = createApi({
     }),
 
     getArtistDetails: builder.query({
-      query: (artistId) => `/v2/artists/details?artist_id=${artistId}`, // Correctly formatted URL for related artist
+      query: (artistId) => `/v2/artists/details?artist_id=${artistId}`, // Correctly formatted URL for artist details
     }),
 
     getSongsByCountry: builder.query({
-      query: (countryCode) => `/v1/charts/country?country_code=${countryCode}`, //  Correctly formatted URL for related artist
+      query: (countryCode) => `/v1/charts/country?country_code=${countryCode}`, // Correctly formatted URL for songs by country
     }),
   }),
 });

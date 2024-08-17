@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -20,7 +20,7 @@ const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handle
   <div className={`w-full flex flex-row items-center hover:bg-green-400 ${activeSong?.attributes?.name === song?.attributes?.name ? 'bg-[#26242c]' : 'bg-transparent'} py-1 p-0.7 rounded-lg cursor-pointer mb-0.5`}> 
     <h3 className="font-extrabold text-sm text-white mr-3">☐</h3> {/* Numbering of top chart songs */}
     <div className="flex-1 flex flex-row justify-between items-center">
-      <img className="w10 h-10 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> {/*  image of top chart songs */}
+      <img className="w10 h-10 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> {/* Image of top chart songs */}
       <div className="flex-1 flex flex-col justify-center mx-3"> 
         <Link to={`/songs/${song.id}`}>
           <p className="text-base font-bold text-white">
@@ -30,7 +30,7 @@ const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handle
         <Link to={`/artists/${song?.relationships.artists.data[0].id}`}>
           <p className="text-sm text-gray-300 mt-1">
             {song?.attributes?.artistName} 
-          </p> {/* artist name in top chart card */}
+          </p> {/* Artist name in top chart card */}
         </Link>
       </div>
     </div>
@@ -50,9 +50,17 @@ const TopPlayM = () => {
   const { data } = useGetTopChartsQuery();
   const divRef = useRef(null);
 
+  const [topPlays, setTopPlays] = useState([]);
 
-
-  const topPlays = data ? shuffleArray(data.slice(10, 20)) : []; // Shuffle and slice the data
+  useEffect(() => {
+    if (data) {
+      // Shuffle the data and pick 10 songs from the middle
+      const shuffledData = shuffleArray(data);
+      const start = Math.floor(shuffledData.length / 2) - 5; // Middle of the array
+      const end = start + 10;
+      setTopPlays(shuffledData.slice(start, end));
+    }
+  }, [data]);
 
   const handlePauseClick = () => {
     dispatch(playPause(false));
@@ -64,16 +72,16 @@ const TopPlayM = () => {
   };
 
   return (
-    <div ref={divRef} className="xl:ml-8 ml-0 xl:mb-0 mb-3 flex-1 xl:max-w-[390px] max-w-full flex flex-col"> {/* Increased max-width */}
+    <div ref={divRef} className="xl:ml-8 ml-0 xl:mb-0 mb-3 flex-1 xl:max-w-[390px] max-w-full flex flex-col">
       <div className="w-full flex flex-col">
         <div className="flex flex-row justify-between items-center">
-          <h2 className="text-white font-bold text-2xl"></h2> {/* Increased font size */}
+          <h2 className="text-white font-bold text-2xl"></h2>
           <Link to="/top-charts">
             <p className="text-gray-300 text-sm cursor-pointer">See more</p> 
           </Link>
         </div>
 
-        <div className="mt-4 flex flex-col gap-1"> {/* Increased margin-top */}
+        <div className="mt-4 flex flex-col gap-1">
           {topPlays.map((song, i) => (
             <TopChartCard
               key={song.id}

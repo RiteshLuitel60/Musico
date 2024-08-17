@@ -1,15 +1,7 @@
-
 import React from 'react';
-import TopPlayM from './RelatedSongsM';
+import TopPlayM from './TopPlaysOnly';
 
 const RelatedSongsManual = ({ //used for manually getting random songs coz api is not working as intended 
-  data, 
-  artistId, 
-  isPlaying, 
-  activeSong, 
-  handlePauseClick, 
-  handlePlayClick, 
-  songid 
 }) => {
   return (
     <div className="flex flex-col">
