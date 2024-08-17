@@ -17,10 +17,8 @@ export const shazamCoreApi = createApi({
     getTopCharts: builder.query({
       query: () => "/v1/charts/world?country_code=DZ",
       transformResponse: (response) => {
-        // Shuffle the array
-        const shuffled = response.sort(() => 0.5 - Math.random());
         // Return the first 50 items
-        return shuffled.slice(0, 50);
+        return response.slice(0, 50);
       },
     }),
 
