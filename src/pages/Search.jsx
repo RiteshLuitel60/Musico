@@ -10,18 +10,11 @@ const Search = () => {
   const { activeSong, isPlaying } = useSelector((state) => state.player);
   const { data, isFetching, error } = useGetSongsBySearchQuery(searchTerm);
 
-  // Debugging logs
-  console.log('Data:', data);
-  console.log('Error:', error);
-
-  const songs = data?.tracks?.hits.map((song) => song.track);
+  const songs = data?.tracks?.hits?.map((song) => song.track);
 
   if (isFetching) return <Loader title={`Searching ${searchTerm}...`} />;
 
   if (error) return <Error />;
-
-  // Additional debug for songs
-  console.log('Songs:', songs);
 
   return (
     <div className="flex flex-col">
@@ -33,11 +26,11 @@ const Search = () => {
         {songs && songs.length > 0 ? (
           songs.map((song, i) => (
             <SongCard
-              key={song.id}
+              key={song.key}
               song={song}
               isPlaying={isPlaying}
               activeSong={activeSong}
-              data={data}
+              data={songs}
               i={i}
             />
           ))
