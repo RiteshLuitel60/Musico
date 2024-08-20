@@ -6,10 +6,13 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   // Function to determine the correct audio URL
   const getAudioUrl = (song) => {
     if (song?.attributes?.previews?.[0]?.url) {
+      console.log("Normal song is accessed");
       return song.attributes.previews[0].url;
     } else if (song?.hub?.actions?.[1]?.uri) {
+      console.log("Search song is accessed");
       return song.hub.actions[1].uri;
     } else if (typeof song === 'string') {
+      console.log("String URL is accessed");
       return song; // If song is a string, assume it's a URL
     }
     return ''; // Fallback to an empty string if no URL is found
