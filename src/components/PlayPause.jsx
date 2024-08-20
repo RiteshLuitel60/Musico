@@ -8,6 +8,7 @@ const PlayPause = ({ isPlaying, activeSong, song, handlePause, handlePlay }) => 
     isActive = activeSong.id === song.id;
   } else if (activeSong?.key && song?.key) {
     isActive = activeSong.key === song.key;
+    console.log(activeSong)
   }
                    
 
