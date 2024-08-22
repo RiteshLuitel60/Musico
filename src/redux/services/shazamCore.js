@@ -18,7 +18,7 @@ export const shazamCoreApi = createApi({
       query: () => "/v1/charts/world?country_code=DZ",
       transformResponse: (response) => {
         // Return the first 50 items
-        return response.slice(0, 50);
+        return response.slice(5, 50);
       },
     }),
     getSongsByGenre: builder.query({

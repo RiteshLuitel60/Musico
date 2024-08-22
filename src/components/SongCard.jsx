@@ -18,17 +18,18 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
   };
 
   // Helper functions to get the correct properties based on the song object structure
-  const getSongTitle = () => song.attributes?.name || song.title;
-  const getSongId = () => song.id || song.hub?.options?.[0]?.actions?.[1]?.id;
-  const getArtistName = () => song.attributes?.artistName || song.subtitle;
-  const getArtistId = () => song.relationships?.artists?.data[0]?.id || song.artists?.[0]?.adamid;
-  const getCoverArt = () => song.attributes?.artwork?.url || song.images?.coverart;
-  const getActiveSongComparator = () => song.attributes?.name || song.key;
+  const getSongTitle = () => song.attributes?.name || song.title || 'Unknown Title';
+  const getSongId = () => song?.key || song?.id || 'default-id';
+
+  const getArtistName = () => song.attributes?.artistName || song.subtitle || 'Unknown Artist';
+  const getArtistId = () => song.relationships?.artists?.data[0]?.id || song.artists?.[0]?.adamid || 'default-artist-id';
+  const getCoverArt = () => song.attributes?.artwork?.url || song.images?.coverart || 'default-image-url';
+  const getActiveSongComparator = () => song.attributes?.name || song.key || 'default-comparator';
 
   return (
     <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
       <div className="relative w-full h-56 group">
-        <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong && getActiveSongComparator() === (activeSong.attributes?.name || activeSong.key) ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
+        <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong && getActiveSongComparator() === (activeSong.id || activeSong.key) ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
           <PlayPause
             isPlaying={isPlaying}
             activeSong={activeSong}
@@ -37,7 +38,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
             handlePlay={handlePlayClick}
           />
         </div>
-        <img alt="song_img" src={getCoverArt()} className="w-full h-full rounded-lg" />
+        <img alt="song cover art" src={getCoverArt()} className="w-full h-full rounded-lg" />
       </div>
 
       <div className="mt-4 flex flex-col">

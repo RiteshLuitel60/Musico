@@ -10,7 +10,8 @@ const Search = () => {
   const { activeSong, isPlaying } = useSelector((state) => state.player);
   const { data, isFetching, error } = useGetSongsBySearchQuery(searchTerm);
 
-  const songs = data?.tracks?.hits?.map((song) => song.track);
+  // Correctly map the songs from the API response
+  const songs = data?.tracks?.hits?.map((hit) => hit.track) || []; 
 
   if (isFetching) return <Loader title={`Searching ${searchTerm}...`} />;
 
@@ -23,23 +24,20 @@ const Search = () => {
       </h2>
 
       <div className="flex flex-wrap sm:justify-start justify-center gap-8">
-        {songs && songs.length > 0 ? (
-          songs.map((song, i) => (
-            <SongCard
-              key={song.key}
-              song={song}
-              isPlaying={isPlaying}
-              activeSong={activeSong}
-              data={songs}
-              i={i}
-            />
-          ))
-        ) : (
-          <p className="text-white">No songs found.</p>
-        )}
+        {songs.map((song, i) => (
+          <SongCard
+            key={song?.key || i}  // Ensure key is unique
+            song={song}
+            isPlaying={isPlaying}
+            activeSong={activeSong}
+            data={songs}  // Pass the entire array if needed
+            i={i}
+          />
+        ))}
       </div>
     </div>
   );
 };
 
 export default Search;
+
