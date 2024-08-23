@@ -19,7 +19,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
 
   // Helper functions to get the correct properties based on the song object structure
   const getSongTitle = () => song.attributes?.name || song.title || 'Unknown Title';
-  const getSongId = () => song?.key || song?.id || 'default-id';
+  const getSongId = () => song?.hub?.actions?.[0]?.id || song?.id || 'default-id';
 
   const getArtistName = () => song.attributes?.artistName || song.subtitle || 'Unknown Artist';
   const getArtistId = () => song.relationships?.artists?.data[0]?.id || song.artists?.[0]?.adamid || 'default-artist-id';
