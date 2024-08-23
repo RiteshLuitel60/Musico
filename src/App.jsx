@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { Searchbar, Sidebar, MusicPlayer, TopPlay } from './components';
 import { ArtistDetails, TopArtists, AroundYou, Discover, Search, SongDetails, TopCharts } from './pages';
-import FloatingAudioButton from './components/FloatingAudioButton'; // Corrected import statement
+import FloatingAudioButton from './components/FloatingAudioButton';// Corrected import statement
 
 const App = () => {
   const { activeSong } = useSelector((state) => state.player);
@@ -17,14 +17,14 @@ const App = () => {
 
   // Helper function to check if a song is active
   const isSongActive = (song) => {
-    return song?.key || song?.id || song?.data?.[0]?.id;
+    return song?.key || song?.id || song?.data?.[0]?.id || song?.track?.key;
   };
 
   return (
     <div className="relative flex">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col bg-gradient-to-b from-black to-[rgb(44,59,52)]">
+      <div className="flex-1 flex flex-col bg-gradient-to-br from-slate-400 via-slate-600 to-slate-800 backdrop-blur-lg">
         <div className="flex items-center space-x-1"> {/* Added space-x-2 to control spacing */}
           <FloatingAudioButton /> {/* Corrected component usage */}
           <Searchbar />
@@ -51,9 +51,9 @@ const App = () => {
       </div>
 
       {isSongActive(activeSong) && (
-        <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
-          <MusicPlayer />
-        </div>
+        <div className="absolute h-24 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-10 shadow-lg">
+        <MusicPlayer />
+      </div>
       )}
     </div>
   );

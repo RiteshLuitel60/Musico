@@ -16,10 +16,6 @@ export const shazamCoreApi = createApi({
   endpoints: (builder) => ({
     getTopCharts: builder.query({
       query: () => "/v1/charts/world?country_code=DZ",
-      transformResponse: (response) => {
-        // Return the first 50 items
-        return response.slice(5, 50);
-      },
     }),
     getSongsByGenre: builder.query({
       query: (genre) =>
@@ -41,6 +37,13 @@ export const shazamCoreApi = createApi({
       query: (searchTerm) =>
         `/v1/search/multi?query=${searchTerm}&search_type=SONGS_ARTISTS&offset=0`,
     }),
+    recognizeSong: builder.mutation({
+      query: (audioData) => ({
+        url: "/v1/tracks/recognize",
+        method: "POST",
+        body: audioData,
+      }),
+    }),
   }),
 });
 
@@ -52,4 +55,5 @@ export const {
   useGetArtistDetailsQuery,
   useGetSongsByCountryQuery,
   useGetSongsBySearchQuery,
+  useRecognizeSongMutation,
 } = shazamCoreApi;

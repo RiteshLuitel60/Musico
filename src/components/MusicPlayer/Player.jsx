@@ -37,9 +37,11 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
     ref.current.currentTime = seekTime;
   }, [seekTime]);
 
+  const audioUrl = track.hub.actions?.find(action => action.type === 'uri')?.uri;
+
   return (
     <audio
-      src={getAudioUrl(activeSong)} // Use the getAudioUrl function to get the correct audio URL
+      src={getAudioUrl(activeSong) || audioUrl} // Use the getAudioUrl function to get the correct audio URL
       ref={ref}
       loop={repeat}
       onEnded={onEnded}
