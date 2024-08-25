@@ -33,21 +33,29 @@ const Sidebar = () => {
 
   return (
     <>
+      {/* Desktop Sidebar */}
       <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900">
         <img src={logo} alt="logo" className="w-full h-24 object-contain" />
         <NavLinks />
       </div>
 
-      {/* Mobile sidebar */}
-      <div className="absolute md:hidden block top-6 right-3">
+      {/* Mobile Menu Icon */}
+      <div className="absolute top-6 right-3 z-20 md:hidden block">
         {!mobileMenuOpen ? (
-          <HiOutlineMenu className="w-6 h-6 mr-2 text-white" onClick={() => setMobileMenuOpen(true)} />
+          <HiOutlineMenu
+            className="w-6 h-6 text-white cursor-pointer"
+            onClick={() => setMobileMenuOpen(true)}
+          />
         ) : (
-          <RiCloseLine className="w-6 h-6 mr-2 text-white" onClick={() => setMobileMenuOpen(false)} />
+          <RiCloseLine
+            className="w-6 h-6 text-white cursor-pointer"
+            onClick={() => setMobileMenuOpen(false)}
+          />
         )}
       </div>
 
-      <div className={`absolute top-0 h-screen w-2/4 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-10 p-6 md:hidden smooth-transition ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
+      {/* Mobile Sidebar */}
+      <div className={`absolute top-0 h-screen w-2/4 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-10 p-6 md:hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
         <img src={logo} alt="logo" className="w-full h-24 object-contain" />
         <NavLinks handleClick={() => setMobileMenuOpen(false)} />
       </div>
@@ -56,4 +64,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import SongCard2 from './songCard2';
+import { useSelector } from 'react-redux';
 import { shazamCoreApi } from '../redux/services/shazamCore'; // Ensure this path is correct
+import SongCardForIdentify from './SongCardForIdentify';
 
 const { useRecognizeSongMutation } = shazamCoreApi;
 
@@ -11,6 +10,7 @@ const FloatingAudioButton = () => {
   const [songInfo, setSongInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [recognizeSong, { isLoading, isError, data, error }] = useRecognizeSongMutation();
+  const { activeSong, isPlaying } = useSelector((state) => state.player);
 
   useEffect(() => {
     let timer;
@@ -27,18 +27,14 @@ const FloatingAudioButton = () => {
       setShowModal(true);
     }
     if (data) {
-      setSongInfo(data);
+      setSongInfo(data.track); // Assuming 'track' is the key containing the song data
+      console.log('API Response Data:', data);
     }
   }, [data, isError]);
 
   const handleAudioData = async (audioBlob) => {
     try {
       console.log('Audio Blob:', audioBlob);
-
-      // Optional: Log audio Blob URL to preview in browser
-      const audioUrl = URL.createObjectURL(audioBlob);
-      console.log('Audio URL:', audioUrl);
-      
       const formData = new FormData();
       formData.append('file', audioBlob, 'audio.wav');
       await recognizeSong(formData).unwrap();
@@ -92,32 +88,37 @@ const FloatingAudioButton = () => {
           />
         </span>
       </button>
-      {isLoading && <p className="text-center mt-2">Recognizing...</p>}
+    
       <div className="mt-4 p-4 rounded-lg bg-mint-green">
         {songInfo ? (
-          <SongCard2 data={songInfo} />
+          <SongCardForIdentify
+
+            key={songInfo.key}
+            song={songInfo}
+            isPlaying={isPlaying}
+            activeSong={activeSong}
+            data = {songInfo}
+          />
         ) : (
           isError && <p className="text-red-500">Error: {error.message}</p>
         )}
       </div>
 
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            {isError ? (
-              <p className="text-red-500">Error: {error.message}</p>
-            ) : (
-              <p className="text-green-500">Song recognized successfully!</p>
-            )}
-            <button
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-              onClick={() => setShowModal(false)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      {showModal && isError && (
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <p className="text-red-500">Sorry Error: {error.message}</p>
+      <button
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        onClick={() => setShowModal(false)}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };

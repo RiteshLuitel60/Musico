@@ -6,18 +6,17 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   // Function to determine the correct audio URL
   const getAudioUrl = (song) => {
     if (song?.attributes?.previews?.[0]?.url) {
-      ;
       return song.attributes.previews[0].url;
     } else if (song?.hub?.actions?.[1]?.uri) {
-      
       return song.hub.actions[1].uri;
     } else if (typeof song === 'string') {
-    
       return song; // If song is a string, assume it's a URL
+    }else if(songData.hub.actions.find(action => action.type === "uri")?.uri){
+      return songData.hub.actions.find(action => action.type === "uri")?.uri
+
     }
     return ''; // Fallback to an empty string if no URL is found
   };
-
   // Handle play/pause logic
   if (ref.current) {
     if (isPlaying) {
@@ -37,7 +36,7 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
     ref.current.currentTime = seekTime;
   }, [seekTime]);
 
-  const audioUrl = track.hub.actions?.find(action => action.type === 'uri')?.uri;
+
 
   return (
     <audio

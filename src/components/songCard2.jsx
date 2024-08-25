@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
-import PlayPause from './PlayPause'; // Import the PlayPause component
+import PlayPause from './PlayPause'; // Ensure the path to PlayPause is correct
 
 const SongCard2 = ({ data, isPlaying, activeSong, handlePause, handlePlay }) => {
   const [isVisible, setIsVisible] = useState(true);
-  const { track } = data;
-  const {
-    title,
-    subtitle,
-    images,
-    genres,
-    url,
-    share,
-    hub,
-    sections,
-  } = track;
+
+  // Access properties directly from the data object
+  const title = data.title;
+  const subtitle = data.subtitle;
+  const images = data.images || {};
+  const hub = data.hub || {};
 
   const handleRemove = () => {
     setIsVisible(false);
@@ -32,14 +27,14 @@ const SongCard2 = ({ data, isPlaying, activeSong, handlePause, handlePlay }) => 
       <div className="relative">
         <img
           className="w-full"
-          src={images.coverart}
-          alt={`${title} cover art`}
+          src={images.coverart || '/path/to/default-image.jpg'} // Provide a fallback image
+          alt={`${title || 'Song'} cover art`}
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <PlayPause
             isPlaying={isPlaying}
             activeSong={activeSong}
-            song={track}
+            song={data} // Pass the entire track data as the song
             handlePause={handlePause}
             handlePlay={handlePlay}
           />
@@ -47,14 +42,14 @@ const SongCard2 = ({ data, isPlaying, activeSong, handlePause, handlePlay }) => 
       </div>
       <div className="px-6 py-4">
         <div className="font-bold text-white">
-          {title}
+          {title || 'Unknown Title'}
         </div>
         <div className="text-gray-400">
-          {subtitle}
+          {subtitle || 'Unknown Artist'}
         </div>
         <div className="mt-4">
-          <a href={hub.providers[0]?.actions[0]?.uri} className="text-blue-500 mr-4">Apple Music</a>
-          <a href={hub.providers[1]?.actions[0]?.uri} className="text-blue-500">Amazon Music</a>
+          <a href={hub?.actions?.[0]?.uri || '#'} className="text-blue-500 mr-4">Apple Music</a>
+          <a href={hub?.providers?.[0]?.actions?.[0]?.uri || '#'} className="text-blue-500">Spotify</a>
         </div>
       </div>
     </div>

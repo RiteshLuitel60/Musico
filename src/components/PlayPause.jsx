@@ -8,9 +8,10 @@ const PlayPause = ({ isPlaying, activeSong, song, handlePause, handlePlay }) => 
     isActive = activeSong.id === song.id;
   } else if (activeSong?.key && song?.key) {
     isActive = activeSong.key === song.key;
-    
-  }else activeSong?.track?.key === song?.track?.key
-  
+  } else if (activeSong?.track?.key === song?.track?.key) {
+    isActive = true;
+  }
+
   return isPlaying && isActive ? (
     <FaPauseCircle
       size={35}
