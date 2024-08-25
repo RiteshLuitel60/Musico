@@ -9,6 +9,7 @@ const FloatingAudioButton = () => {
   const [isActive, setIsActive] = useState(false);
   const [songInfo, setSongInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [noSongFound, setNoSongFound] = useState(false); // State to handle no song found message
   const [recognizeSong, { isLoading, isError, data, error }] = useRecognizeSongMutation();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
 
@@ -17,17 +18,23 @@ const FloatingAudioButton = () => {
     if (isActive) {
       timer = setTimeout(() => {
         setIsActive(false);
-        setSongInfo(null); // Reset song info after the timer
-        setShowModal(false); // Hide modal after the timer
+        if (!data || (data.track === null && data.matches.length === 0)) {
+          setNoSongFound(true); // Show no song found dialog if no valid data
+        }
       }, 15000); // 15 seconds
     }
     return () => clearTimeout(timer);
-  }, [isActive]);
+  }, [isActive, data]);
 
   useEffect(() => {
     if (data) {
-      setSongInfo(data.track); // Assuming 'track' is the key containing the song data
-      setShowModal(false); // Hide modal if data is successfully received
+      if (data.track) {
+        setSongInfo(data.track); // Set song info if track data is available
+        setNoSongFound(false); // Reset no song found message
+        setShowModal(false); // Hide modal if data is successfully received
+      } else if (data.track === null && data.matches.length === 0) {
+        setNoSongFound(true); // Show no song found dialog if track is null and no matches
+      }
     }
     if (isError) {
       setShowModal(true);
@@ -52,6 +59,7 @@ const FloatingAudioButton = () => {
       setIsActive(true);
       setSongInfo(null); // Reset song info when starting new recognition
       setShowModal(false); // Ensure modal is hidden
+      setNoSongFound(false); // Reset no song found message
 
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -99,31 +107,72 @@ const FloatingAudioButton = () => {
 
         {showModal && isError && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <p className="text-red-500">Sorry Error: {error.message}</p>
+            <div className="bg-white p-6 rounded-lg shadow-lg relative">
               <button
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
                 onClick={() => setShowModal(false)}
               >
-                Close
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               </button>
+              <p className="text-red-500">Sorry Error: {error.message}</p>
+            </div>
+          </div>
+        )}
+
+        {/* No Song Found Dialog */}
+        {noSongFound && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg relative">
+              <button
+                className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                onClick={() => setNoSongFound(false)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <p className="text-red-500">No song found</p>
             </div>
           </div>
         )}
       </div>
-      <div className="mt-4 p-4 rounded-lg bg-mint-green">
-        {songInfo ? (
-          <SongCardForIdentify
-            key={songInfo.key}
-            song={songInfo}
-            isPlaying={isPlaying}
-            activeSong={activeSong}
-            data={songInfo}
-          />
-        ) : (
-          isError && <p className="text-red-500">Error: {error.message}</p>
-        )}
-      </div>
+      {songInfo && (
+        <div className="fixed bottom-32 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="p-4 rounded-lg bg-mint-green">
+            <SongCardForIdentify
+              key={songInfo.key}
+              song={songInfo}
+              isPlaying={isPlaying}
+              activeSong={activeSong}
+              data={songInfo}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };

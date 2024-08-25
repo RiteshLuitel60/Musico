@@ -62,7 +62,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
       
       {/* Cross Button */}
       <button
-        className="absolute top-[-12px] right-[-12px] w-8 h-8 flex items-center justify-center bg-red-600 rounded-full text-white text-xl"
+        className="absolute top-[-12px] right-[-12px] w-8 h-8 flex items-center justify-center bg-red-600 rounded-full text-white text-xl z-30"
         onClick={handleCloseClick} // Pass function reference
       >
         &times;
