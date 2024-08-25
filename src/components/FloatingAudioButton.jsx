@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { shazamCoreApi } from '../redux/services/shazamCore'; // Ensure this path is correct
 import SongCardForIdentify from './SongCardForIdentify';
+import { X, Music } from 'lucide-react';
 
 const { useRecognizeSongMutation } = shazamCoreApi;
 
@@ -134,30 +135,23 @@ const FloatingAudioButton = () => {
 
         {/* No Song Found Dialog */}
         {noSongFound && (
-          <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg relative">
-              <button
-                className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                onClick={() => setNoSongFound(false)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-              <p className="text-red-500">No song found</p>
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
+          <div className="w-80 bg-gradient-to-br from-purple-500 to-indigo-600 p-6 rounded-xl shadow-2xl relative backdrop-blur-sm border-solid border-white/10 border">
+            <div className="absolute -top-4 -left-4 bg-white rounded-full p-2 shadow-lg">
+              <Music className="w-6 h-6 text-indigo-600" />
+            </div>
+            <button
+              className="absolute top-2 right-2 text-white/70 hover:text-white transition-colors duration-200"
+              onClick={() => setNoSongFound(false)}
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <div className="mt-4">
+              <p className="text-white text-lg font-semibold mb-2">No Song Found</p>
+              <p className="text-white/80 text-sm">We couldn't find the song you're looking for. Please try again.</p>
             </div>
           </div>
+        </div>
         )}
       </div>
       {songInfo && (
