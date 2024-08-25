@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { shazamCoreApi } from '../redux/services/shazamCore'; // Ensure this path is correct
-import SongCardForIdentify from './SongCardForIdentify';
+import SongCardForIdentify from './SongCardForIdentify'; 
 import { X, Music, Music2, Music3Icon, Music2Icon, Music3, Music4, Music4Icon, FileMusicIcon, LucideMusic } from 'lucide-react';
 
 const { useRecognizeSongMutation } = shazamCoreApi;
@@ -26,6 +26,7 @@ const FloatingAudioButton = () => {
     }
     return () => clearTimeout(timer);
   }, [isActive, data]);
+
 
   useEffect(() => {
     if (data) {

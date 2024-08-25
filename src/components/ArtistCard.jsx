@@ -18,6 +18,7 @@ const ArtistCard = ({ track }) => {
       className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer"
       onClick={() => navigate(`/artists/${artistId}`)}
     >
+      {/* phse */}
       <img 
         alt="song_img" 
         src={formattedCoverArt} 
