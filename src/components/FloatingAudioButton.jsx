@@ -161,7 +161,7 @@ const FloatingAudioButton = () => {
         )}
       </div>
       {songInfo && (
-        <div className="fixed bottom-32 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="fixed bottom-11 left-1/2 transform -translate-x-1/2 z-50">
           <div className="p-4 rounded-lg bg-mint-green">
             <SongCardForIdentify
               key={songInfo.key}

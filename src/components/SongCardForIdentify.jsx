@@ -58,7 +58,9 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
   if (!isVisible) return null; // If not visible, render nothing
 
   return (
-    <div className="relative flex flex-col w-[180px] p-2 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
+    <div className="relative  p-8 mb-20 rounded-lg bg-opacity-30 backdrop-filter backdrop-blur-lg bg-white animate-slide-up">
+
+<div className="relative flex flex-col w-[180px] p-2 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
       
       {/* Cross Button */}
       <button
@@ -93,7 +95,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
         <p className="font-semibold text-lg text-white truncate">
           {getSongTitle()}
         </p>
-        <p className="text-sm text-gray-300 truncate mt-1">
+        <p className="text-sm text-gray-700 truncate mt-1">
           {getArtistName()}
         </p>
       </div>
@@ -112,6 +114,8 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
         </p>
       </div> */}
     </div>
+</div>
+    
   );
 };
 
