@@ -56,7 +56,6 @@ const FloatingAudioButton = () => {
       console.error("Error recognizing song:", error);
     }
   };
-
   const handleCloseModal = () => {
     setShowModal(false);
     setNoSongFound(false); // Reset no song found message when modal is closed
@@ -167,21 +166,20 @@ const FloatingAudioButton = () => {
             </div>
           </div>
         )}
-
-        {isActive && songInfo && (
-          <div className="fixed bottom-11 left-1/2 transform -translate-x-1/2 z-50">
-            <div className="p-4 rounded-lg bg-mint-green">
-              <SongCardForIdentify
-                key={songInfo.key}
-                song={songInfo}
-                isPlaying={isPlaying}
-                activeSong={activeSong}
-                data={songInfo}
-              />
-            </div>
-          </div>
-        )}
       </div>
+      {songInfo && (
+        <div className="fixed bottom-11 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="p-4 rounded-lg bg-mint-green">
+            <SongCardForIdentify
+              key={songInfo.key}
+              song={songInfo}
+              isPlaying={isPlaying}
+              activeSong={activeSong}
+              data={songInfo}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };
