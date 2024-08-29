@@ -23,7 +23,7 @@ const FloatingAudioButton = () => {
         if (!data || (data.track === null && data.matches.length === 0)) {
           setNoSongFound(true); // Show no song found dialog if no valid data
         }
-      }, 10000); // 10 seconds
+      }, 15000); // 15 seconds
     }
     return () => clearTimeout(timer);
   }, [isActive, data]);
