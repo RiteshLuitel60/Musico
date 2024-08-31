@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, HiOutlineUserGroup } from 'react-icons/hi';
 import { RiCloseLine } from 'react-icons/ri';
-
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { logo } from '../assets';
+import LogoutButton from './LogoutButton';
 
+// List of navigation links
 const links = [
   { name: 'Discover', to: '/', icon: HiOutlineHome },
   { name: 'Around You', to: '/around-you', icon: HiOutlinePhotograph },
@@ -12,6 +14,7 @@ const links = [
   { name: 'Top Charts', to: '/top-charts', icon: HiOutlineHashtag },
 ];
 
+// Component for rendering navigation links
 const NavLinks = ({ handleClick }) => (
   <div className="mt-10">
     {links.map((item) => (
@@ -30,6 +33,18 @@ const NavLinks = ({ handleClick }) => (
 
 const Sidebar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const supabase = useSupabaseClient();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in
+    const checkLoginStatus = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setIsLoggedIn(!!user);
+    };
+    checkLoginStatus();
+  }, [supabase.auth]);
 
   return (
     <>
@@ -37,6 +52,8 @@ const Sidebar = () => {
       <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900">
         <img src={logo} alt="logo" className="w-full h-24 object-cover" />
         <NavLinks />
+        {/* Logout button for desktop */}
+        {isLoggedIn && <LogoutButton className="mt-auto mb-4" />}
       </div>
 
       {/* Mobile Menu Icon */}
@@ -58,6 +75,8 @@ const Sidebar = () => {
       <div className={`absolute top-0 h-screen w-2/4 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-10 p-6 md:hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
         <img src={logo} alt="logo" className="w-full h-24 object-contain" />
         <NavLinks handleClick={() => setMobileMenuOpen(false)} />
+        {/* Logout button for mobile */}
+        {isLoggedIn && <LogoutButton className="mt-8 w-full" />}
       </div>
     </>
   );
