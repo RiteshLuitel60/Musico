@@ -1,0 +1,17 @@
+url: https://uapxxdffkjmhmvfjaidi.supabase.co
+
+anon public key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcHh4ZGZma2ptaG12ZmphaWRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ5MjQ3ODUsImV4cCI6MjA0MDUwMDc4NX0.TpTCJs86RUrn3Rf52rAQ6g26GIle3B2Xz-T5QUpHSPg
+
+service role secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcHh4ZGZma2ptaG12ZmphaWRpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyNDkyNDc4NSwiZXhwIjoyMDQwNTAwNzg1fQ.e2HJM5audCoPu7WJ17YlahFuw585bhdLaWAGhtBR200
+
+jwt secret: nWCCDQL5T2XU9+KXZcZ56x9xN/+J7UPaDLYGvBpE7d0JHiojFdh1aE8j7H1bGIHraYVPOxUJVmpXlIHIxM3ZSA==
+
+
+
+from google api
+
+client id: 187054712023-79qv27op3v37l3196764gmi800p7jhqr.apps.googleusercontent.com
+
+client secret: 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
+
+callback url for oauth google: https://uapxxdffkjmhmvfjaidi.supabase.co/auth/v1/callback

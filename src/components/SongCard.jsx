@@ -15,6 +15,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
   const handlePlayClick = () => {
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
+    console.log(song);
   };
 
   // Helper functions to get the correct properties based on the song object structure
