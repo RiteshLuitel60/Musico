@@ -5,7 +5,6 @@ import { RiCloseLine } from 'react-icons/ri';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { logo } from '../assets';
 import LogoutButton from './LogoutButton';
-import UserNameDisplay from './UserNameDisplay';  
 // List of navigation links
 const links = [
   { name: 'Discover', to: '/', icon: HiOutlineHome },
@@ -58,7 +57,6 @@ const Sidebar = () => {
       {/* Desktop Sidebar */}
       <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900">
         <img src={logo} alt="logo" className="w-full h-24 object-cover" />
-        {isLoggedIn && <UserNameDisplay className="mt-10 font-bold text-red-500" />}
         <NavLinks />
       </div>
 
@@ -80,7 +78,6 @@ const Sidebar = () => {
       {/* Mobile Sidebar */}
       <div className={`absolute top-0 h-screen w-2/4 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-10 p-6 md:hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
         <img src={logo} alt="logo" className="w-full h-24 object-contain" />
-        {isLoggedIn && <UserNameDisplay />}
         <NavLinks handleClick={() => setMobileMenuOpen(false)} />
       </div>
     </>

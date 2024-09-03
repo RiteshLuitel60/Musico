@@ -20,6 +20,7 @@ import { createClient } from '@supabase/supabase-js'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import SignIn from './components/Logins/SignIn'
 import PrivateRoute from './components/PrivateRoute'
+import UserNameDisplay from './components/UserNameDisplay'
 
 // TODO: Move these to environment variables for better security
 const supabaseUrl = 'https://uapxxdffkjmhmvfjaidi.supabase.co'
@@ -81,9 +82,20 @@ const App = () => {
         <div className="relative flex">
           <Sidebar />
           <div className="flex-1 flex flex-col bg-gradient-to-br from-slate-400 via-slate-600 to-slate-800 backdrop-blur-lg">
-            <div className="flex items-center space-x-1">
-              <FloatingAudioButton />
-              <Searchbar />
+            <div className="flex items-center space-x-1 px-4">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                  <FloatingAudioButton />
+                  <Searchbar />
+                </div>
+                <div className="hidden sm:block">
+                  <UserNameDisplay className="text-white mr-6 transition-transform duration-300 ease-in-out transform hover:scale-105 select-none cursor-default" />
+                </div>
+                <div className="sm:hidden">
+                  <UserNameDisplay className="text-white text-xs mr-4 transition-transform duration-300 ease-in-out transform hover:scale-105 select-none cursor-default" />
+                </div>
+              </div>
+
             </div>
 
             <div className="px-6 h-[calc(100vh-72px)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
