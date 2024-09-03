@@ -28,6 +28,7 @@ const NavLinks = ({ handleClick }) => (
         {item.name}
       </NavLink>
     ))}
+    <LogoutButton className="flex flex-row justify-start items-start mt-10 my-8  text-sm font-large text-gray-400 hover:text-green-300" />
   </div>
 );
 
@@ -52,8 +53,6 @@ const Sidebar = () => {
       <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900">
         <img src={logo} alt="logo" className="w-full h-24 object-cover" />
         <NavLinks />
-        {/* Logout button for desktop */}
-        {isLoggedIn && <LogoutButton className="mt-auto mb-4" />}
       </div>
 
       {/* Mobile Menu Icon */}
@@ -75,8 +74,6 @@ const Sidebar = () => {
       <div className={`absolute top-0 h-screen w-2/4 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-10 p-6 md:hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
         <img src={logo} alt="logo" className="w-full h-24 object-contain" />
         <NavLinks handleClick={() => setMobileMenuOpen(false)} />
-        {/* Logout button for mobile */}
-        {isLoggedIn && <LogoutButton className="mt-8 w-full" />}
       </div>
     </>
   );

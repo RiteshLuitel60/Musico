@@ -54,7 +54,7 @@ const App = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTopPlay(true);
-    }, 2000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);

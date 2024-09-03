@@ -11,7 +11,6 @@ import { useGetTopChartsQuery } from "../redux/services/shazamCore";
 
 import "swiper/css";
 import "swiper/css/free-mode";
-import GoToTop from "./GoToTop";
 const TopChartCard = ({
   song,
   i,
