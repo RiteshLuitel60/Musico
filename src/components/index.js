@@ -11,6 +11,9 @@ import Loader from "./Loader";
 import Error from "./Error";
 import FloatingAudioButton from "./FloatingAudioButton";
 import GoToTop from "./GoToTop";
+import UserNameDisplay from "./UserNameDisplay";
+import SignIn from "./Logins/SignIn";
+import PrivateRoute from "./PrivateRoute";
 
 export {
   TopPlay,
@@ -26,4 +29,7 @@ export {
   Error,
   FloatingAudioButton,
   GoToTop,
+  UserNameDisplay,
+  SignIn,
+  PrivateRoute,
 };
