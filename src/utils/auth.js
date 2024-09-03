@@ -1,8 +1,9 @@
 // Import Supabase client from the supabaseClient file
-import { supabase } from "../supabaseClient"; // Adjust the import path as needed
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 // Function to handle user logout
 export const logout = async () => {
+  const supabase = useSupabaseClient();
   try {
     // Attempt to sign out the user
     const { error } = await supabase.auth.signOut();
@@ -17,25 +18,42 @@ export const logout = async () => {
 
 // Function to check if a user is currently logged in
 export const isLoggedIn = async () => {
-  // Get the current user's data
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  // Return true if user exists, false otherwise
-  return !!user;
+  const supabase = useSupabaseClient();
+  try {
+    // Get the current user's data
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+    if (error) throw error;
+    // Return true if user exists, false otherwise
+    return !!user;
+  } catch (error) {
+    console.error("Error checking login status:", error.message);
+    return false;
+  }
 };
 
 // Function to get the current user's data
 export const getCurrentUser = async () => {
-  // Get and return the current user's data
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  const supabase = useSupabaseClient();
+  try {
+    // Get and return the current user's data
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+    if (error) throw error;
+    return user;
+  } catch (error) {
+    console.error("Error getting current user:", error.message);
+    return null;
+  }
 };
 
 // Function to handle user login
 export const login = async (email, password) => {
+  const supabase = useSupabaseClient();
   try {
     // Attempt to sign in the user with email and password
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -53,6 +71,7 @@ export const login = async (email, password) => {
 
 // Function to handle user sign up
 export const signUp = async (email, password) => {
+  const supabase = useSupabaseClient();
   try {
     // Attempt to sign up a new user with email and password
     const { data, error } = await supabase.auth.signUp({

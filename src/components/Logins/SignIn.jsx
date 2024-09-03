@@ -6,8 +6,11 @@ import { FcGoogle } from 'react-icons/fc';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState(''); // New state for name
+  const [isSignUp, setIsSignUp] = useState(false); // State to toggle between sign-up and sign-in
   const [user, setUser] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); // State to store error messages
 
   const navigate = useNavigate();
   const supabase = useSupabaseClient();
@@ -54,23 +57,29 @@ const SignIn = () => {
   const handleSignIn = useCallback(async (e) => {
     e.preventDefault();
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email, password, displayName });
       if (error) throw error;
     } catch (error) {
-      alert(error.message);
+      setErrorMessage(error.message);
     }
-  }, [email, password, supabase.auth]);
-
+  }, [email, password, displayName, supabase.auth]);
   const handleSignUp = useCallback(async (e) => {
     e.preventDefault();
     try {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { display_name: displayName }
+        }
+      });
       if (error) throw error;
-      alert('Check your email for the login link!');
+      alert('Sign up successful! Please check your email for the login link.');
+      setIsSignUp(false); // Switch to sign-in page after successful sign-up
     } catch (error) {
-      alert(error.message);
+      setErrorMessage(error.message);
     }
-  }, [email, password, supabase.auth]);
+  }, [email, password, displayName, supabase.auth]);
 
   const handleGoogleSignIn = useCallback(async () => {
     try {
@@ -79,7 +88,7 @@ const SignIn = () => {
       });
       if (error) throw error;
     } catch (error) {
-      alert(error.message);
+      setErrorMessage(error.message);
     }
   }, [supabase.auth]);
 
@@ -92,61 +101,126 @@ const SignIn = () => {
         
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            {isSignedIn ? 'Signing you in...' : 'Sign in to your account'}
+            {isSignedIn ? 'Signing you in...' : isSignUp ? 'Sign up for an account' : 'Sign in to your account'}
           </h2>
         </div>
+        {errorMessage && (
+          <div className="text-red-500 text-center">
+            {errorMessage}
+          </div>
+        )}
         {!isSignedIn && (
           <>
-            <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
-              <input type="hidden" name="remember" value="true" />
-              <div className="rounded-md shadow-sm -space-y-px">
-                <div>
-                  <label htmlFor="email-address" className="sr-only text-white">Email address</label>
-                  <input
-                    id="email-address"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
-                    placeholder  ="Email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+            {!isSignUp ? (
+              <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
+                <input type="hidden" name="remember" value="true" />
+                <div className="rounded-md shadow-sm -space-y-px">
+                  <div>
+                    <label htmlFor="email-address" className="sr-only text-white">Email address</label>
+                    <input
+                      id="email-address"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      placeholder  ="Email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="password" className="sr-only text-white">Password</label>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="password" className="sr-only text-white">Password</label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
 
-              <div>
-                <button
-                  type="submit"
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
-                >
-                  Sign in
-                </button>
-              </div>
-            </form>
+                <div>
+                  <button
+                    type="submit"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                  >
+                    Sign in
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <form className="mt-8 space-y-6" onSubmit={handleSignUp}>
+                <input type="hidden" name="remember" value="true" />
+                <div className="rounded-md shadow-sm -space-y-px">
+                  <div>
+                    <label htmlFor="email-address" className="sr-only text-white">Email address</label>
+                    <input
+                      id="email-address"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      placeholder="Email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="password" className="sr-only text-white">Password</label>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="displayName" className="sr-only text-white">Full Name</label>
+                    <input
+                      id="displayName"
+                      name="displayName"
+                      type="text"
+                      required
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      placeholder="Full Name"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <button
+                    type="submit"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                  >
+                    Sign up
+                  </button>
+                </div>
+              </form>
+            )}
+            
             <div>
               <button
-                onClick={handleSignUp}
+                onClick={() => setIsSignUp(!isSignUp)}
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-indigo-300 bg-transparent hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
               >
-                Sign up
+                {isSignUp ? 'Back to Sign in' : 'Sign up with Email'}
               </button>
             </div>
+            
             <div>
               <button
                 onClick={handleGoogleSignIn}
