@@ -46,31 +46,30 @@ const Sidebar = () => {
     // Check if user is logged in and get user data
     const checkLoginStatus = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      setIsLoggedIn(!!session?.user);
-      if (session?.user) {
-        // Extract the user's display name or email prefix
-        const userDisplayName = session.user.user_metadata?.display_name || session.user.email.split('@')[0];
-        setUserName(userDisplayName);
-      }
+      updateUserState(session);
     };
     checkLoginStatus();
 
     // Listen for auth state changes
-    const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
-      setIsLoggedIn(!!session?.user);
-      if (session?.user) {
-        const userDisplayName = session.user.user_metadata?.display_name || session.user.email.split('@')[0];
-        setUserName(userDisplayName);
-      } else {
-        setUserName('');
-      }
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      updateUserState(session);
     });
 
-    // Clean up subscription on unmount
+    // Clean up auth listener on unmount
     return () => {
-      subscription?.unsubscribe();
+      authListener.subscription.unsubscribe();
     };
   }, [supabase]);
+
+  const updateUserState = (session) => {
+    setIsLoggedIn(!!session?.user);
+    if (session?.user) {
+      const userDisplayName = session.user.user_metadata?.display_name || session.user.email.split('@')[0];
+      setUserName(userDisplayName);
+    } else {
+      setUserName('');
+    }
+  };
 
   return (
     <>
