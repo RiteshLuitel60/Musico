@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, HiOutlineUserGroup } from 'react-icons/hi';
 import { RiCloseLine } from 'react-icons/ri';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { logo } from '../assets';
 import LogoutButton from './LogoutButton';
-import * as auth from '../utils/auth';
-
-import { User } from 'lucide-react';
-
+import UserNameDisplay from './UserNameDisplay';  
 // List of navigation links
 const links = [
   { name: 'Discover', to: '/', icon: HiOutlineHome },
@@ -38,50 +35,30 @@ const NavLinks = ({ handleClick }) => (
 const Sidebar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState('');
   const supabase = useSupabaseClient();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in and get user data
     const checkLoginStatus = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      updateUserState(session);
+      setIsLoggedIn(!!session?.user);
     };
     checkLoginStatus();
 
-    // Listen for auth state changes
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      updateUserState(session);
+      setIsLoggedIn(!!session?.user);
     });
 
-    // Clean up auth listener on unmount
     return () => {
       authListener.subscription.unsubscribe();
     };
   }, [supabase]);
-
-  const updateUserState = (session) => {
-    setIsLoggedIn(!!session?.user);
-    if (session?.user) {
-      const userDisplayName = session.user.user_metadata?.display_name || session.user.email.split('@')[0];
-      setUserName(userDisplayName);
-    } else {
-      setUserName('');
-    }
-  };
 
   return (
     <>
       {/* Desktop Sidebar */}
       <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900">
         <img src={logo} alt="logo" className="w-full h-24 object-cover" />
-        {isLoggedIn && (
-          <div className="mt-4 text-center flex items-center justify-center">
-            <User className="text-white mr-2 text-xl" />
-            <p className="text-white text-lg font-semibold">{userName}</p>
-          </div>
-        )}
+        {isLoggedIn && <UserNameDisplay className="mt-10 font-bold text-red-500" />}
         <NavLinks />
       </div>
 
@@ -103,11 +80,7 @@ const Sidebar = () => {
       {/* Mobile Sidebar */}
       <div className={`absolute top-0 h-screen w-2/4 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-10 p-6 md:hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
         <img src={logo} alt="logo" className="w-full h-24 object-contain" />
-        {isLoggedIn && (
-          <div className="mt-4 text-center">
-            <p className="text-white text-sm">Welcome, {userName}!</p>
-          </div>
-        )}
+        {isLoggedIn && <UserNameDisplay />}
         <NavLinks handleClick={() => setMobileMenuOpen(false)} />
       </div>
     </>
