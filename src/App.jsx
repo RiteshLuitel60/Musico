@@ -88,14 +88,10 @@ const App = () => {
                   <FloatingAudioButton />
                   <Searchbar />
                 </div>
-                <div className="hidden sm:block">
+                <div className="hidden lg:block">
                   <UserNameDisplay className="text-white mr-6 transition-transform duration-300 ease-in-out transform hover:scale-105 select-none cursor-default" />
                 </div>
-                <div className="sm:hidden">
-                  <UserNameDisplay className="text-white text-xs mr-4 transition-transform duration-300 ease-in-out transform hover:scale-105 select-none cursor-default" />
-                </div>
               </div>
-
             </div>
 
             <div className="px-6 h-[calc(100vh-72px)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
@@ -137,6 +133,7 @@ Changes made:
 2. Implemented useEffect to check and update login status when the component mounts and when auth state changes.
 3. Conditionally render either the SignIn component or the main app based on 'isLoggedIn' state.
 4. Removed the PrivateRoute component as it's no longer needed with this approach.
+5. Modified the UserNameDisplay to only show on large devices (lg:block).
 
 Next steps:
 1. Modify the SignIn.jsx component to handle both sign-up and sign-in functionality.

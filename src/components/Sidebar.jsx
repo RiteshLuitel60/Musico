@@ -5,6 +5,8 @@ import { RiCloseLine } from 'react-icons/ri';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { logo } from '../assets';
 import LogoutButton from './LogoutButton';
+import UserNameDisplay from './UserNameDisplay';
+
 // List of navigation links
 const links = [
   { name: 'Discover', to: '/', icon: HiOutlineHome },
@@ -78,6 +80,7 @@ const Sidebar = () => {
       {/* Mobile Sidebar */}
       <div className={`absolute top-0 h-screen w-2/4 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-10 p-6 md:hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
         <img src={logo} alt="logo" className="w-full h-24 object-contain" />
+        <UserNameDisplay className="mt-4 mb-6" />
         <NavLinks handleClick={() => setMobileMenuOpen(false)} />
       </div>
     </>
