@@ -64,28 +64,28 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
       return;
     }
 
-    const songDetails = await fetchSongDetails(getSongId());
-    if (!songDetails) {
-      console.error("Failed to fetch song details");
+    const songKey = getSongId();
+
+    if (!songKey) {
+      console.error("Invalid song key");
       return;
     }
 
-    const { data, error } = await supabase
-      .from('library_songs')
-      .insert({
-        user_id: userId,
-        library_id: libraryId,
-        song_key: songDetails.id,
-        title: songDetails.title,
-        artist: songDetails.artist,
-        cover_art: songDetails.cover_art,
-        audio_url: songDetails.audio_url,
-      });
+    try {
+      const { data, error } = await supabase
+        .from('library_songs')
+        .insert({
+          library_id: libraryId,
+          song_key: songKey,
+        });
 
-    if (error) {
-      console.error("Error adding song to library:", error);
-    } else {
+      if (error) throw error;
+
       console.log("Song added to library successfully");
+      // Optionally, you can update the UI or state here to reflect the change
+    } catch (error) {
+      console.error("Error adding song to library:", error.message);
+      // Optionally, you can show an error message to the user here
     }
   };
 
