@@ -58,19 +58,26 @@ const LikeButton = ({ song }) => {
   };
 
   const checkIfLiked = async () => {
-    if (!userId || !likedSongsPlaylistId) return;
+    if (!userId || !likedSongsPlaylistId) {
+      console.log('User ID or Liked Songs playlist ID is not set');
+      return;
+    }
 
-    const { data, error } = await supabase
-      .from('library_songs')
-      .select()
-      .eq('library_id', likedSongsPlaylistId)
-      .eq('song_key', song.key)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('library_songs')
+        .select()
+        .eq('library_id', likedSongsPlaylistId)
+        .eq('song_key', song.key)
+        .single();
 
-    if (error) {
-      console.error('Error checking if song is liked:', error);
-    } else {
-      setIsLiked(!!data);
+      if (error) {
+        console.error('Error checking if song is liked:', error);
+      } else {
+        setIsLiked(!!data);
+      }
+    } catch (error) {
+      console.error('Unexpected error in checkIfLiked:', error);
     }
   };
 

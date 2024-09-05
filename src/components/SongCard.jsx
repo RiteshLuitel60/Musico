@@ -11,6 +11,7 @@ import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddToLibrary, onCreateLibrary }) => {
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(true);
+  const supabase = useSupabaseClient();
 
   const handlePauseClick = () => {
     dispatch(playPause(false));
@@ -59,16 +60,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
       </div>
       
       <div className="mt-4 flex justify-between items-center">
-        <LikeButton song={{
-          key: getSongId(),
-          title: getSongTitle(),
-          subtitle: getArtistName(),
-          images: { coverart: getCoverArt() },
-          hub: song.hub,
-          sections: song.sections,
-          attributes: song.attributes,
-          audio_url: song.audio_url || song.hub?.actions?.find(action => action.type === "uri")?.uri || song.attributes?.previews?.[0]?.url,
-        }} />
+        <LikeButton songId={getSongId()} />
         <SongOptions
           song={song}
           libraries={libraries}
@@ -87,12 +79,27 @@ async function fetchSongDetails(songId) {
     if (data) {
       const audioUrl = data.hub?.actions?.find(action => action.type === "uri")?.uri || '';
       
+      // Fetch audio URL from Supabase
+      let supabaseAudioUrl = '';
+      try {
+        const { data: supabaseData, error: supabaseError } = await supabase
+          .from('songs')
+          .select('audio_url')
+          .eq('id', songId)
+          .single();
+
+        if (supabaseError) throw supabaseError;
+        supabaseAudioUrl = supabaseData?.audio_url || '';
+      } catch (supabaseError) {
+        console.error('Error fetching audio URL from Supabase:', supabaseError);
+      }
+      
       return {
         id: data.key,
         title: data.title,
         artist: data.subtitle,
         cover_art: data.images?.coverart,
-        audio_url: audioUrl,
+        audio_url: supabaseAudioUrl || audioUrl,
       };
     } else if (error) {
       console.error('Error fetching song details:', error);
