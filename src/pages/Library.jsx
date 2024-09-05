@@ -47,37 +47,39 @@ const Library = () => {
 
   const fetchLibrarySongs = async (libraryId) => {
     setIsLoading(true);
-    const { data, error } = await supabase
-      .from('library_songs')
-      .select('song_key')  // Change 'song_id' to 'song_key' if that's the correct column name
-      .eq('library_id', libraryId);
-
-    if (error) {
-      setError(error.message);
-    } else {
-      const songDetails = await Promise.all(data.map(song => fetchSongDetails(song.song_key)));
-      setLibrarySongs(songDetails.filter(Boolean));
-    }
-    setIsLoading(false);
-  };
-
-  const fetchSongDetails = async (songId) => {
-    const url = `https://shazam-core.p.rapidapi.com/v1/tracks/details?track_id=${songId}`;
-    const options = {
-      method: 'GET',
-      headers: {
-        'x-rapidapi-key': 'fec4224f99mshbf530c7f64c4359p1a192bjsnb3fbf34b7aa1',
-        'x-rapidapi-host': 'shazam-core.p.rapidapi.com'
-      }
-    };
-
     try {
-      const response = await fetch(url, options);
-      const result = await response.json();
-      return result;
+      const { data, error } = await supabase
+        .from('library_songs')
+        .select('*')
+        .eq('library_id', libraryId);
+
+      if (error) throw error;
+
+      // Transform the data to match the expected song structure
+      const transformedSongs = data.map(song => ({
+        key: song.song_key,
+        title: song.title,
+        subtitle: song.artist,
+        images: { coverart: song.cover_art },
+        hub: { 
+          actions: [{ type: 'uri', uri: song.audio_url }],
+          displayname: "APPLE MUSIC",
+          explicit: false,
+          image: song.cover_art,
+          options: [{ actions: [{ type: "applemusicplay", uri: song.audio_url }], beacondata: { type: "open" }, caption: "OPEN", colouroverflowimage: false, image: "https://images.shazam.com/static/icons/hub/web/v5/overflow-open-option.png", listcaption: "Open in Apple Music", overflowimage: "https://images.shazam.com/static/icons/hub/web/v5/applemusic-overflow.png", providername: "applemusic", type: "open" }],
+          providers: [{ actions: [{ name: "apple", type: "applemusicplay", uri: song.audio_url }], caption: "Open in Apple Music", images: { overflow: "https://images.shazam.com/static/icons/hub/web/v5/applemusic-overflow.png", default: "https://images.shazam.com/static/icons/hub/web/v5/applemusic.png" }, type: "APPLE" }],
+          type: "APPLEMUSIC"
+        },
+        sections: [{ type: 'LYRICS', text: song.lyrics }],
+        url: song.audio_url,
+      }));
+
+      setLibrarySongs(transformedSongs);
     } catch (error) {
-      console.error(`Error fetching song details for id ${songId}:`, error);
-      return null;
+      console.error('Error fetching library songs:', error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 

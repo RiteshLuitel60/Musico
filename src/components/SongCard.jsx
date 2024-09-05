@@ -8,37 +8,9 @@ import PlayPause from "./PlayPause";
 import SongOptions from "./SongOptions";
 import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 
-const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
+const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddToLibrary, onCreateLibrary }) => {
   const dispatch = useDispatch();
-  const supabase = useSupabaseClient();
-  const [userId, setUserId] = useState(null);
-  const [libraries, setLibraries] = useState([]);
-
-  useEffect(() => {
-    const getUserId = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) setUserId(user.id);
-    };
-    getUserId();
-  }, [supabase.auth]);
-
-  useEffect(() => {
-    const fetchLibraries = async () => {
-      if (userId) {
-        const { data, error } = await supabase
-          .from('libraries')
-          .select('*')
-          .eq('user_id', userId);
-        
-        if (error) {
-          console.error('Error fetching libraries:', error);
-        } else {
-          setLibraries(data);
-        }
-      }
-    };
-    fetchLibraries();
-  }, [userId, supabase]);
+  const [isVisible, setIsVisible] = useState(true);
 
   const handlePauseClick = () => {
     dispatch(playPause(false));
@@ -47,76 +19,21 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
   const handlePlayClick = () => {
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
-    console.log(song);
   };
 
-  // Helper functions (unchanged)
-  const getSongTitle = () => song?.attributes?.name || song?.title || "Unknown Title";
-  const getSongId = () => song?.hub?.actions?.[0]?.id || song?.id || song?.key;
-  const getArtistId = () => song.relationships?.artists?.data[0]?.id || song.artists?.[0]?.adamid || "default-artist-id";
-  const getCoverArt = () => song.attributes?.artwork?.url || song.images?.coverart || "default-image-url";
-  const getActiveSongComparator = () => song.attributes?.name || song.key || "default-comparator";
-  const getArtistName = () => song.attributes?.artistName || song.subtitle || "Unknown Artist";
+  const getSongTitle = () => song?.title || song?.attributes?.name || 'Unknown Title';
+  const getSongId = () => song?.song_key || song?.key || song?.id || 'default-id';
+  const getArtistId = () => song?.artists?.[0]?.adamid || song?.relationships?.artists?.data[0]?.id || 'default-artist-id';
+  const getCoverArt = () => song?.cover_art || song?.images?.coverart || song?.attributes?.artwork?.url || 'default-image-url';
+  const getActiveSongComparator = () => song?.attributes?.name || song?.key || 'default-comparator';
+  const getArtistName = () => song?.artist || song?.subtitle || song?.attributes?.artistName || 'Unknown Artist';
 
-  const handleAddToLibrary = async (libraryId) => {
-    if (!userId) {
-      console.error("User not logged in");
-      return;
-    }
-
-    const songKey = getSongId();
-
-    if (!songKey) {
-      console.error("Invalid song key");
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from('library_songs')
-        .insert({
-          library_id: libraryId,
-          song_key: songKey,
-        });
-
-      if (error) throw error;
-
-      console.log("Song added to library successfully");
-      // Optionally, you can update the UI or state here to reflect the change
-    } catch (error) {
-      console.error("Error adding song to library:", error.message);
-      // Optionally, you can show an error message to the user here
-    }
-  };
-
-  const handleCreateLibrary = async (songToAdd) => {
-    const name = prompt("Enter a name for the new library:");
-    if (name) {
-      const { data, error } = await supabase
-        .from('libraries')
-        .insert({ name, user_id: userId })
-        .select();
-
-      if (error) {
-        console.error("Error creating library:", error);
-      } else {
-        setLibraries([...libraries, data[0]]);
-        handleAddToLibrary(data[0].id);
-      }
-    }
-  };
+  if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[220px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
-      <div className="relative w-full h-48 group">
-        <div
-          className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${
-            activeSong &&
-            getActiveSongComparator() === (activeSong.id || activeSong.key)
-              ? "flex bg-black bg-opacity-70"
-              : "hidden"
-          }`}
-        >
+    <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
+      <div className="relative w-full h-56 group">
+        <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong?.title === song.title ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
           <PlayPause
             isPlaying={isPlaying}
             activeSong={activeSong}
@@ -125,33 +42,37 @@ const SongCard = ({ song, isPlaying, activeSong, data, i }) => {
             handlePlay={handlePlayClick}
           />
         </div>
-        <img
-          alt="song_img"
-          src={getCoverArt()}
-          className="w-full h-full rounded-lg"
-        />
-        <div className="absolute top-2 right-2">
-          <LikeButton songId={getSongId()} userId={userId} />
-        </div>
+        <img alt="song_img" src={getCoverArt()} className="w-full h-full rounded-lg" />
       </div>
 
       <div className="mt-4 flex flex-col">
-        <div className="flex flex-row justify-between items-center">
-          <p className="font-semibold text-lg text-white truncate">
-            <Link to={`/songs/${getSongId()}`}>{getSongTitle()}</Link>
-          </p>
-          <SongOptions
-            song={song}
-            libraries={libraries}
-            onAddToLibrary={handleAddToLibrary}
-            onCreateLibrary={handleCreateLibrary}
-          />
-        </div>
+        <p className="font-semibold text-lg text-white truncate">
+          <Link to={`/songs/${getSongId()}`}>
+            {getSongTitle()}
+          </Link>
+        </p>
         <p className="text-sm truncate text-gray-300 mt-1">
-          <Link to={song.artists ? `/artists/${song?.artists[0]?.adamid}` : '/top-artists'}>
+          <Link to={getArtistId() ? `/artists/${getArtistId()}` : '/top-artists'}>
             {getArtistName()}
           </Link>
         </p>
+      </div>
+      
+      <div className="mt-4 flex justify-between items-center">
+        <LikeButton song={{
+          key: getSongId(),
+          title: getSongTitle(),
+          subtitle: getArtistName(),
+          images: { coverart: getCoverArt() },
+          hub: song.hub,
+          sections: song.sections,
+        }} />
+        <SongOptions
+          song={song}
+          libraries={libraries}
+          onAddToLibrary={onAddToLibrary}
+          onCreateLibrary={onCreateLibrary}
+        />
       </div>
     </div>
   );

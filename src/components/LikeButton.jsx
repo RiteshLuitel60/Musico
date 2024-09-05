@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Heart } from 'lucide-react';
+import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 
-const LikeButton = ({ songId, userId }) => {
+const LikeButton = ({ song }) => {
   const [isLiked, setIsLiked] = useState(false);
+  const [userId, setUserId] = useState(null);
   const [likedSongsPlaylistId, setLikedSongsPlaylistId] = useState(null);
   const supabase = useSupabaseClient();
 
   useEffect(() => {
-    checkIfLiked();
-    getLikedSongsPlaylistId();
-  }, [songId, userId]);
+    const fetchUserId = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) setUserId(user.id);
+    };
+    fetchUserId();
+  }, [supabase.auth]);
 
-  const getLikedSongsPlaylistId = async () => {
+  useEffect(() => {
+    if (userId) {
+      fetchLikedSongsPlaylistId();
+      checkIfLiked();
+    }
+  }, [userId, song]);
+
+  const fetchLikedSongsPlaylistId = async () => {
     const { data, error } = await supabase
       .from('libraries')
       .select('id')
@@ -27,24 +39,6 @@ const LikeButton = ({ songId, userId }) => {
     } else {
       const newPlaylistId = await createLikedSongsPlaylist();
       setLikedSongsPlaylistId(newPlaylistId);
-    }
-  };
-
-  const checkIfLiked = async () => {
-    if (!userId || !likedSongsPlaylistId) return;
-
-    const { data, error } = await supabase
-      .from('library_songs')
-      .select()
-      .eq('user_id', userId)
-      .eq('song_key', songId)
-      .eq('library_id', likedSongsPlaylistId)
-      .single();
-
-    if (error) {
-      console.error('Error checking if song is liked:', error);
-    } else {
-      setIsLiked(!!data);
     }
   };
 
@@ -63,6 +57,23 @@ const LikeButton = ({ songId, userId }) => {
     return data.id;
   };
 
+  const checkIfLiked = async () => {
+    if (!userId || !likedSongsPlaylistId) return;
+
+    const { data, error } = await supabase
+      .from('library_songs')
+      .select()
+      .eq('library_id', likedSongsPlaylistId)
+      .eq('song_key', song.key)
+      .single();
+
+    if (error) {
+      console.error('Error checking if song is liked:', error);
+    } else {
+      setIsLiked(!!data);
+    }
+  };
+
   const handleLike = async () => {
     if (!userId || !likedSongsPlaylistId) {
       console.error('User ID or Liked Songs playlist ID is missing');
@@ -74,20 +85,27 @@ const LikeButton = ({ songId, userId }) => {
         const { error } = await supabase
           .from('library_songs')
           .delete()
-          .eq('user_id', userId)
-          .eq('song_key', songId)
-          .eq('library_id', likedSongsPlaylistId);
+          .eq('library_id', likedSongsPlaylistId)
+          .eq('song_key', song.key);
 
         if (error) throw error;
         console.log('Song removed from likes');
         setIsLiked(false);
       } else {
+        const songDetails = {
+          song_key: song.key,
+          title: song.title,
+          artist: song.subtitle,
+          cover_art: song.images?.coverart,
+          audio_url: song.hub?.actions?.find(action => action.type === "uri")?.uri || '',
+          lyrics: song.sections?.find(section => section.type === 'LYRICS')?.text || [],
+        };
+
         const { error } = await supabase
           .from('library_songs')
           .insert({ 
-            user_id: userId, 
-            song_key: songId, 
-            library_id: likedSongsPlaylistId 
+            library_id: likedSongsPlaylistId, 
+            ...songDetails
           });
 
         if (error) throw error;
