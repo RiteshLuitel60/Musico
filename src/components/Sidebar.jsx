@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, HiOutlineUserGroup } from 'react-icons/hi';
+import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, HiOutlineUserGroup, HiOutlineLibrary } from 'react-icons/hi';
 import { RiCloseLine } from 'react-icons/ri';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { logo } from '../assets';
@@ -13,6 +13,7 @@ const links = [
   { name: 'Around You', to: '/around-you', icon: HiOutlinePhotograph },
   { name: 'Top Artists', to: '/top-artists', icon: HiOutlineUserGroup },
   { name: 'Top Charts', to: '/top-charts', icon: HiOutlineHashtag },
+  { name: 'Library', to: '/library', icon: HiOutlineLibrary }, // Add this line
 ];
 
 // Component for rendering navigation links

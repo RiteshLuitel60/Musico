@@ -66,7 +66,7 @@ const SignIn = () => {
   const handleSignUp = useCallback(async (e) => {
     e.preventDefault();
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data: { user }, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -74,6 +74,19 @@ const SignIn = () => {
         }
       });
       if (error) throw error;
+
+      // Create "Liked Songs" library for the new user
+      if (user) {
+        const { error: libraryError } = await supabase
+          .from('libraries')
+          .insert({ name: 'Liked Songs', user_id: user.id })
+          .select();
+
+        if (libraryError) {
+          console.error('Error creating Liked Songs library:', libraryError);
+        }
+      }
+
       alert('Sign up successful! Please check your email for the login link.');
       setIsSignUp(false); // Switch to sign-in page after successful sign-up
     } catch (error) {

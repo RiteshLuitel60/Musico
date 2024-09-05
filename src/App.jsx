@@ -14,6 +14,7 @@ import {
 } from "./pages";
 import FloatingAudioButton from "./components/FloatingAudioButton";
 import GoToTop from "./components/GoToTop";
+import Library from './pages/Library'; // Added import for Library component
 
 // Import Supabase related dependencies
 import { createClient } from '@supabase/supabase-js'
@@ -104,6 +105,7 @@ const App = () => {
                   <Route path="/artists/:id" element={<ArtistDetails />} />
                   <Route path="/songs/:songid" element={<SongDetails />} />
                   <Route path="/search/:searchTerm" element={<Search />} />
+                  <Route path="/library" element={<Library />} /> {/* Add this line */}
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </div>
