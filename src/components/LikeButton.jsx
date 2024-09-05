@@ -92,12 +92,17 @@ const LikeButton = ({ song }) => {
         console.log('Song removed from likes');
         setIsLiked(false);
       } else {
+        const audioUrl = song.hub?.actions?.find(action => action.type === "uri")?.uri 
+          || song.attributes?.previews?.[0]?.url 
+          || song.audio_url 
+          || '';
+
         const songDetails = {
           song_key: song.key,
           title: song.title,
           artist: song.subtitle,
           cover_art: song.images?.coverart,
-          audio_url: song.hub?.actions?.find(action => action.type === "uri")?.uri || '',
+          audio_url: audioUrl,
           lyrics: song.sections?.find(section => section.type === 'LYRICS')?.text || [],
         };
 

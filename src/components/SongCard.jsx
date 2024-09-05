@@ -66,6 +66,8 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
           images: { coverart: getCoverArt() },
           hub: song.hub,
           sections: song.sections,
+          attributes: song.attributes,
+          audio_url: song.audio_url || song.hub?.actions?.find(action => action.type === "uri")?.uri || song.attributes?.previews?.[0]?.url,
         }} />
         <SongOptions
           song={song}
