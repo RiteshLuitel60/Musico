@@ -72,7 +72,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
           sections: song.sections,
           attributes: song.attributes,
           audio_url: song.audio_url || song.hub?.actions?.find(action => action.type === "uri")?.uri || song.attributes?.previews?.[0]?.url,
-        }} />
+        }} isLikedSongs={song.isLikedSongs} />
         <SongOptions
           song={song}
           libraries={libraries}

@@ -54,6 +54,8 @@ const Library = () => {
 
       if (error) throw error;
 
+      const isLikedSongs = selectedLibrary?.name === 'Liked Songs';
+
       const transformedSongs = data.map(song => ({
         key: song.song_key,
         title: song.title,
@@ -70,6 +72,7 @@ const Library = () => {
         },
         sections: [{ type: 'LYRICS', text: song.lyrics }],
         url: song.audio_url,
+        isLikedSongs: isLikedSongs,
       }));
 
       setLibrarySongs(transformedSongs);

@@ -31,7 +31,20 @@ const SongDetails = () => {
   };
 
   if (isFetchingSongDetails && isFetchingRelatedSongs) return <Loader title="Searching song details" />;
-  if (error) return <Error />;
+  if (error) return <>
+<p className='text-green-400 text-xl font-bold mt-5 mb-12 '>
+  Song Details Not Found:(
+  
+  </p>  
+<RelatedSongsManual
+        data={relatedSongs}
+        artistId={artistId}
+        isPlaying={isPlaying}
+        activeSong={activeSong}
+        handlePauseClick={handlePauseClick}
+        handlePlayClick={handlePlayClick}
+      />
+  </> ;
 
   const lyrics = songData?.sections?.[1]?.type === 'LYRICS'
     ? songData?.sections[1]?.text

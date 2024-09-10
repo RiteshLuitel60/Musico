@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Heart } from 'lucide-react';
 
-const LikeButton = ({ song }) => {
-  const [isLiked, setIsLiked] = useState(false);
+const LikeButton = ({ song, isLikedSongs = false }) => {
+  const [isLiked, setIsLiked] = useState(isLikedSongs);
   const [userId, setUserId] = useState(null);
   const [likedSongsPlaylistId, setLikedSongsPlaylistId] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -12,18 +12,20 @@ const LikeButton = ({ song }) => {
 
   useEffect(() => {
     const initializeButton = async () => {
-      const fetchedUserId = await fetchUserId();
-      if (fetchedUserId) {
-        const fetchedPlaylistId = await fetchLikedSongsPlaylistId(fetchedUserId);
-        if (fetchedPlaylistId) {
-          await checkIfLiked();
+      if (!isLikedSongs) {
+        const fetchedUserId = await fetchUserId();
+        if (fetchedUserId) {
+          const fetchedPlaylistId = await fetchLikedSongsPlaylistId(fetchedUserId);
+          if (fetchedPlaylistId) {
+            await checkIfLiked();
+          }
         }
       }
       setIsInitialized(true);
     };
 
     initializeButton();
-  }, [song]);
+  }, [song, isLikedSongs]);
 
   const fetchUserId = async () => {
     const { data: { user } } = await supabase.auth.getUser();

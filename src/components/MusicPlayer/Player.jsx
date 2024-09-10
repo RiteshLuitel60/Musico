@@ -139,7 +139,6 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   return (
     <>
       <audio
-        audioUrl = {getAudioUrl()}
         ref={ref}
         loop={repeat}
         onEnded={onEnded}
