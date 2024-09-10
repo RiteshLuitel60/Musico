@@ -1,10 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { supabase } from '../utils/supabaseClient';
 import { LogOutIcon } from 'lucide-react';
 
 const LogoutButton = ({ className }) => {
-  const supabase = useSupabaseClient();
   const navigate = useNavigate();
 
   const handleLogout = async () => {

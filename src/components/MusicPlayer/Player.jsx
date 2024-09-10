@@ -1,10 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = 'https://jtxrwvpvxnqxmvnqxnqx.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0eHJ3dnB2eG5xeG12bnF4bnF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU1NTg5NzAsImV4cCI6MjAwMTEzNDk3MH0.0FchXKNWNXxXXNZXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from '../../utils/supabaseClient';
 
 // Add this function after the imports and before the Player component
 const fetchAudioUrlFromSupabase = async (songKey) => {
@@ -13,12 +8,11 @@ const fetchAudioUrlFromSupabase = async (songKey) => {
     const { data, error } = await supabase
       .from('library_songs')
       .select('audio_url')
-      .eq('song_key', songKey)
-      .single();
+      .eq('song_key', songKey);
 
     if (error) throw error;
     console.log('Supabase response:', data);
-    return data?.audio_url || null;
+    return data.length > 0 ? data[0].audio_url : null;
   } catch (error) {
     console.error('Error fetching audio URL from Supabase:', error);
     return null;
@@ -26,6 +20,8 @@ const fetchAudioUrlFromSupabase = async (songKey) => {
 };
 
 const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate, onLoadedData, repeat }) => {
+  console.log('Player rendering');
+
   const ref = useRef(null);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
@@ -118,11 +114,17 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   };
 
   useEffect(() => {
+    console.log('Player effect running for activeSong');
     const setAudioSrc = async () => {
       if (activeSong) {
-        const audioUrl = await getAudioUrl(activeSong);
-        if (ref.current) {
-          ref.current.src = audioUrl;
+        try {
+          const audioUrl = await getAudioUrl(activeSong);
+          console.log('Audio URL fetched:', audioUrl);
+          if (ref.current) {
+            ref.current.src = audioUrl;
+          }
+        } catch (error) {
+          console.error('Error setting audio source:', error);
         }
       }
     };
@@ -148,9 +150,9 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
         <input 
           type="range" 
           min="0" 
-          max={ref.current ? ref.current.duration : 0} 
+          max={ref.current && !isNaN(ref.current.duration) ? ref.current.duration : 0} 
           value={ref.current ? ref.current.currentTime : 0}
-          onChange={(e) => handleSeek(e.target.value)}
+          onChange={(e) => handleSeek(parseFloat(e.target.value))}
         />
       </div>
     </>

@@ -11,7 +11,6 @@ import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddToLibrary, onCreateLibrary }) => {
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(true);
-  const supabase = useSupabaseClient();
 
   const handlePauseClick = () => {
     dispatch(playPause(false));
@@ -32,8 +31,8 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[220px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
-      <div className="relative w-full h-48 group">
+    <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
+      <div className="relative w-full h-56 group">
         <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong?.title === song.title ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
           <PlayPause
             isPlaying={isPlaying}
@@ -60,7 +59,16 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
       </div>
       
       <div className="mt-4 flex justify-between items-center">
-        <LikeButton songId={getSongId()} />
+        <LikeButton song={{
+          key: getSongId(),
+          title: getSongTitle(),
+          subtitle: getArtistName(),
+          images: { coverart: getCoverArt() },
+          hub: song.hub,
+          sections: song.sections,
+          attributes: song.attributes,
+          audio_url: song.audio_url || song.hub?.actions?.find(action => action.type === "uri")?.uri || song.attributes?.previews?.[0]?.url,
+        }} />
         <SongOptions
           song={song}
           libraries={libraries}
@@ -79,27 +87,12 @@ async function fetchSongDetails(songId) {
     if (data) {
       const audioUrl = data.hub?.actions?.find(action => action.type === "uri")?.uri || '';
       
-      // Fetch audio URL from Supabase
-      let supabaseAudioUrl = '';
-      try {
-        const { data: supabaseData, error: supabaseError } = await supabase
-          .from('songs')
-          .select('audio_url')
-          .eq('id', songId)
-          .single();
-
-        if (supabaseError) throw supabaseError;
-        supabaseAudioUrl = supabaseData?.audio_url || '';
-      } catch (supabaseError) {
-        console.error('Error fetching audio URL from Supabase:', supabaseError);
-      }
-      
       return {
         id: data.key,
         title: data.title,
         artist: data.subtitle,
         cover_art: data.images?.coverart,
-        audio_url: supabaseAudioUrl || audioUrl,
+        audio_url: audioUrl,
       };
     } else if (error) {
       console.error('Error fetching song details:', error);

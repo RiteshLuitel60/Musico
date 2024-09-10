@@ -1,30 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Heart } from 'lucide-react';
-import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 
 const LikeButton = ({ song }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [userId, setUserId] = useState(null);
   const [likedSongsPlaylistId, setLikedSongsPlaylistId] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const supabase = useSupabaseClient();
 
   useEffect(() => {
-    const fetchUserId = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) setUserId(user.id);
+    const initializeButton = async () => {
+      await fetchUserId();
+      await fetchLikedSongsPlaylistId();
+      await checkIfLiked();
+      setIsInitialized(true);
     };
-    fetchUserId();
-  }, [supabase.auth]);
 
-  useEffect(() => {
-    if (userId) {
-      fetchLikedSongsPlaylistId();
-      checkIfLiked();
-    }
-  }, [userId, song]);
+    initializeButton();
+  }, [song]);
+
+  const fetchUserId = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) setUserId(user.id);
+  };
 
   const fetchLikedSongsPlaylistId = async () => {
+    if (!userId) return;
+
     const { data, error } = await supabase
       .from('libraries')
       .select('id')
@@ -58,30 +61,28 @@ const LikeButton = ({ song }) => {
   };
 
   const checkIfLiked = async () => {
-    if (!userId || !likedSongsPlaylistId) {
-      console.log('User ID or Liked Songs playlist ID is not set');
-      return;
-    }
+    if (!userId || !likedSongsPlaylistId) return;
 
     try {
       const { data, error } = await supabase
         .from('library_songs')
-        .select()
+        .select('*')
         .eq('library_id', likedSongsPlaylistId)
-        .eq('song_key', song.key)
-        .single();
+        .eq('song_key', song.key);
 
-      if (error) {
-        console.error('Error checking if song is liked:', error);
-      } else {
-        setIsLiked(!!data);
-      }
+      if (error) throw error;
+      setIsLiked(data.length > 0);
     } catch (error) {
-      console.error('Unexpected error in checkIfLiked:', error);
+      console.error('Error checking if song is liked:', error);
     }
   };
 
   const handleLike = async () => {
+    if (!isInitialized) {
+      console.log('Like button is not yet initialized');
+      return;
+    }
+
     if (!userId || !likedSongsPlaylistId) {
       console.error('User ID or Liked Songs playlist ID is missing');
       return;
@@ -130,7 +131,7 @@ const LikeButton = ({ song }) => {
   };
 
   return (
-    <button onClick={handleLike} className="focus:outline-none">
+    <button onClick={handleLike} className="focus:outline-none" disabled={!isInitialized}>
       <Heart
         size={20}
         fill={isLiked ? 'red' : 'none'}

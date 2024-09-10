@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, HiOutlineUserGroup, HiOutlineLibrary } from 'react-icons/hi';
 import { RiCloseLine } from 'react-icons/ri';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { supabase } from '../utils/supabaseClient';
 import { logo } from '../assets';
 import LogoutButton from './LogoutButton';
 import UserNameDisplay from './UserNameDisplay';
@@ -37,7 +37,6 @@ const NavLinks = ({ handleClick }) => (
 const Sidebar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const supabase = useSupabaseClient();
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -53,7 +52,7 @@ const Sidebar = () => {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, []);
 
   return (
     <>

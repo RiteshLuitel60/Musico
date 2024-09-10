@@ -17,18 +17,13 @@ import GoToTop from "./components/GoToTop";
 import Library from './pages/Library'; // Added import for Library component
 
 // Import Supabase related dependencies
-import { createClient } from '@supabase/supabase-js'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import SignIn from './components/Logins/SignIn'
-import PrivateRoute from './components/PrivateRoute'
 import UserNameDisplay from './components/UserNameDisplay'
+import { supabase } from './utils/supabaseClient';
 
 // TODO: Move these to environment variables for better security
-const supabaseUrl = 'https://uapxxdffkjmhmvfjaidi.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcHh4ZGZma2ptaG12ZmphaWRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ5MjQ3ODUsImV4cCI6MjA0MDUwMDc4NX0.TpTCJs86RUrn3Rf52rAQ6g26GIle3B2Xz-T5QUpHSPg'
 
-// Initialize Supabase client
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const App = () => {
   // Get the active song from Redux store

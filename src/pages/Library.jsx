@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { supabase } from '../utils/supabaseClient';
 import { Error, Loader, SongCard } from '../components';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
@@ -14,7 +14,6 @@ const Library = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { activeSong, isPlaying } = useSelector((state) => state.player);
-  const supabase = useSupabaseClient();
 
   useEffect(() => {
     fetchLibraries();
@@ -55,7 +54,6 @@ const Library = () => {
 
       if (error) throw error;
 
-      // Transform the data to match the expected song structure
       const transformedSongs = data.map(song => ({
         key: song.song_key,
         title: song.title,
@@ -263,7 +261,7 @@ const Library = () => {
           <div className="flex flex-wrap sm:justify-start justify-center gap-8">
             {librarySongs.map((song, i) => (
               <SongCard
-                key={song.id}
+                key={`${song.id}-${i}`}
                 song={song}
                 isPlaying={isPlaying}
                 activeSong={activeSong}

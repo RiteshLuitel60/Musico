@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { supabase } from '../utils/supabaseClient';
 import { FaUser } from 'react-icons/fa';
 
 const UserNameDisplay = () => {
   const [userName, setUserName] = useState('');
-  const supabase = useSupabaseClient();
 
   useEffect(() => {
     if (!supabase) {

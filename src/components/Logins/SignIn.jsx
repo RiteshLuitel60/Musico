@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { supabase } from '../../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 
@@ -13,7 +13,6 @@ const SignIn = () => {
   const [errorMessage, setErrorMessage] = useState(''); // State to store error messages
 
   const navigate = useNavigate();
-  const supabase = useSupabaseClient();
   const authListenerRef = useRef(null);
   const signInRef = useRef(null);
 

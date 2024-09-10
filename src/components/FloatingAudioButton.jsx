@@ -34,17 +34,17 @@ const FloatingAudioButton = () => {
         setSongInfo(data.track); // Set song info if track data is available
         setNoSongFound(false); // Reset no song found message
         setShowModal(false); // Hide modal if data is successfully received
-      } else if (data.track === null && data.matches.length === 0) {
+      } else if (data.track === null && (!data.matches || data.matches.length === 0)) {
         setNoSongFound(true); // Show no song found dialog if track is null and no matches
       }
     }
-    if (isError || (data && data.track === null && data.matches.length === 0)) {
+    if (isError) {
       setNoSongFound(true); // Show no song found message
       setShowModal(true);
     }
     console.log("Data:", data);
     console.log("Error:", error);
-  }, [data, isError]);
+  }, [data, isError, error]);
 
   const handleAudioData = async (audioBlob) => {
     try {
