@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import { Error, Loader, SongCard } from '../components';
 import { useGetSongsByCountryQuery } from '../redux/services/shazamCore';
 
+const DEFAULT_COUNTRY_CODE = 'US';
+
 const CountryTracks = () => {
   const [country, setCountry] = useState('');
   const [loading, setLoading] = useState(true);
@@ -14,10 +16,13 @@ const CountryTracks = () => {
   useEffect(() => {
     axios
       .get(`https://geo.ipify.org/api/v2/country?apiKey=at_LEgxHner0pvrET6vpgwsNXoJwsHh5`)
-      .then((res) => setCountry(res?.data?.location.country))
-      .catch((err) => console.log(err))
+      .then((res) => setCountry(res?.data?.location?.country || DEFAULT_COUNTRY_CODE))
+      .catch((err) => {
+        console.log(err);
+        setCountry(DEFAULT_COUNTRY_CODE);
+      })
       .finally(() => setLoading(false));
-  }, [country]);
+  }, []);
 
   if (isFetching && loading) return <Loader title="Loading Songs around you..." />;
 

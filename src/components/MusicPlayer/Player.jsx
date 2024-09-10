@@ -29,20 +29,6 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
 
   const getAudioUrl = async (song) => {
     console.log('getAudioUrl called with song:', song);
-
-    if (song?.audio_url) {
-      return song.audio_url;
-    }
-
-    try {
-      const supabaseUrl = await fetchAudioUrlFromSupabase(song.key || song.id);
-      if (supabaseUrl) {
-        return supabaseUrl;
-      }
-    } catch (error) {
-      console.error('Error fetching from Supabase:', error);
-    }
-
     if (song?.attributes?.previews?.[0]?.url) {
       return song.attributes.previews[0].url;
     } else if (song?.hub?.actions?.[1]?.uri) {
@@ -50,6 +36,21 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
     } else if (song?.url) {
       return song.url;
     }
+
+    if (song?.audio_url) {
+      return song.audio_url;
+    }
+
+    try {
+      const supabaseUrl = await fetchAudioUrlFromSupabase(song?.key || song?.id);
+      if (supabaseUrl) {
+        return supabaseUrl;
+      }
+    } catch (error) {
+      console.error('Error fetching from Supabase:', error);
+    }
+
+    
 
     console.warn('No audio URL found for song:', song);
     return '';
@@ -135,6 +136,7 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   return (
     <>
       <audio
+        audioUrl = {getAudioUrl()}
         ref={ref}
         loop={repeat}
         onEnded={onEnded}
