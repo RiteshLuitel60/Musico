@@ -11,6 +11,7 @@ import Player from "./Player";
 import Seekbar from "./Seekbar";
 import Track from "./Track";
 import VolumeBar from "./VolumeBar";
+import { getAudioUrl } from "../../utils/audioUtils";
 
 const MusicPlayer = () => {
   const { activeSong, currentSongs, currentIndex, isActive, isPlaying } =
@@ -53,6 +54,16 @@ const MusicPlayer = () => {
     }
   };
 
+  useEffect(() => {
+    const preloadPlaylist = async () => {
+      if (currentSongs.length > 0) {
+        const preloadPromises = currentSongs.map(song => getAudioUrl(song));
+        await Promise.all(preloadPromises);
+      }
+    };
+    preloadPlaylist();
+  }, [currentSongs]);
+
   return (
     <div className="relative sm:px-12 px-8 w-full flex items-center justify-between flex-wrap">
       <Track
@@ -82,17 +93,19 @@ const MusicPlayer = () => {
           setSeekTime={setSeekTime}
           appTime={appTime}
         />
-        <Player
-          activeSong={activeSong}
-          volume={volume}
-          isPlaying={isPlaying}
-          seekTime={seekTime}
-          repeat={repeat}
-          currentIndex={currentIndex}
-          onEnded={handleNextSong}
-          onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
-          onLoadedData={(event) => setDuration(event.target.duration)}
-        />
+        {activeSong && Object.keys(activeSong).length > 0 && (
+          <Player
+            activeSong={activeSong}
+            volume={volume}
+            isPlaying={isPlaying}
+            seekTime={seekTime}
+            repeat={repeat}
+            currentIndex={currentIndex}
+            onEnded={handleNextSong}
+            onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
+            onLoadedData={(event) => setDuration(event.target.duration)}
+          />
+        )}
       </div>
 
       <VolumeBar

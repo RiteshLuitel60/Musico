@@ -134,8 +134,8 @@ const LikeButton = ({ song }) => {
     <button onClick={handleLike} className="focus:outline-none" disabled={!isInitialized}>
       <Heart
         size={20}
-        fill={isLiked ? 'red' : 'none'}
-        stroke={isLiked ? 'red' : 'currentColor'}
+        fill={isLiked ? 'lime' : 'none'}
+        stroke={isLiked ? 'lime' : 'currentColor'}
       />
     </button>
   );

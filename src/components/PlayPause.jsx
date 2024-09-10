@@ -19,9 +19,9 @@ const PlayPause = ({
   }
 
   return isPlaying && isActive ? (
-    <FaPauseCircle size={35} className="text-gray-300" onClick={handlePause} />
+    <FaPauseCircle size={35} className="text-gray-300 z-50" onClick={handlePause} />
   ) : (
-    <FaPlayCircle size={35} className="text-gray-300" onClick={handlePlay} />
+    <FaPlayCircle size={35} className="text-gray-300 z-50" onClick={handlePlay} />
   );
 };
 

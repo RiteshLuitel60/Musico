@@ -1,69 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { supabase } from '../../utils/supabaseClient';
-
-// Add this function after the imports and before the Player component
-const fetchAudioUrlFromSupabase = async (songKey) => {
-  console.log('Fetching audio URL from Supabase for song key:', songKey);
-  try {
-    const { data, error } = await supabase
-      .from('library_songs')
-      .select('audio_url')
-      .eq('song_key', songKey);
-
-    if (error) throw error;
-    console.log('Supabase response:', data);
-    return data.length > 0 ? data[0].audio_url : null;
-  } catch (error) {
-    console.error('Error fetching audio URL from Supabase:', error);
-    return null;
-  }
-};
+import { getAudioUrl } from '../../utils/audioUtils';
 
 const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate, onLoadedData, repeat }) => {
-  console.log('Player rendering');
 
   const ref = useRef(null);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [previousVolume, setPreviousVolume] = useState(volume);
-
-  const getAudioUrl = async (song) => {
-    console.log('getAudioUrl called with song:', song);
-    if (song?.attributes?.previews?.[0]?.url) {
-      return song.attributes.previews[0].url;
-    } else if (song?.hub?.actions?.[1]?.uri) {
-      return song.hub.actions[1].uri;
-    } else if (song?.url) {
-      return song.url;
-    }
-
-    if (song?.audio_url) {
-      return song.audio_url;
-    }
-
-    try {
-      const supabaseUrl = await fetchAudioUrlFromSupabase(song?.key || song?.id);
-      if (supabaseUrl) {
-        return supabaseUrl;
-      }
-    } catch (error) {
-      console.error('Error fetching from Supabase:', error);
-    }
-
-    
-
-    console.warn('No audio URL found for song:', song);
-    return '';
-  };
-
-  // Handle play/pause logic
-  if (ref.current) {
-    if (isPlaying) {
-      ref.current.play();
-    } else {
-      ref.current.pause();
-    }
-  }
 
   // Update volume
   useEffect(() => {
@@ -115,13 +58,13 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   };
 
   useEffect(() => {
-    console.log('Player effect running for activeSong');
+    console.log('Player effect running for activeSong', activeSong);
     const setAudioSrc = async () => {
-      if (activeSong) {
+      if (activeSong && Object.keys(activeSong).length > 0) {
         try {
           const audioUrl = await getAudioUrl(activeSong);
           console.log('Audio URL fetched:', audioUrl);
-          if (ref.current) {
+          if (ref.current && audioUrl) {
             ref.current.src = audioUrl;
           }
         } catch (error) {
@@ -130,13 +73,14 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
       }
     };
 
-    setAudioSrc();
+    if (activeSong && Object.keys(activeSong).length > 0) {
+      setAudioSrc();
+    }
   }, [activeSong]);
 
   return (
     <>
       <audio
-        audioUrl = {getAudioUrl()}
         ref={ref}
         loop={repeat}
         onEnded={onEnded}

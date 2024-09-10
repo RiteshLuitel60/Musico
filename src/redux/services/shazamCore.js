@@ -1,5 +1,48 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const customFetch = async (url, options, retries = 3, delay = 1000) => {
+  try {
+    const response = await fetch(url, options);
+    if (response.status === 429 && retries > 0) {
+      await wait(delay);
+      return customFetch(url, options, retries - 1, delay * 2);
+    }
+    return response;
+  } catch (error) {
+    if (retries > 0) {
+      await wait(delay);
+      return customFetch(url, options, retries - 1, delay * 2);
+    }
+    throw error;
+  }
+};
+
+const queue = [];
+let isProcessing = false;
+
+const processQueue = async () => {
+  if (isProcessing || queue.length === 0) return;
+  isProcessing = true;
+  const { resolve, reject, args } = queue.shift();
+  try {
+    const result = await customFetch(...args);
+    resolve(result);
+  } catch (error) {
+    reject(error);
+  }
+  isProcessing = false;
+  setTimeout(processQueue, 200); // Ensure at least 200ms between requests
+};
+
+const queuedFetch = (...args) => {
+  return new Promise((resolve, reject) => {
+    queue.push({ resolve, reject, args });
+    processQueue();
+  });
+};
+
 export const shazamCoreApi = createApi({
   reducerPath: "shazamCoreApi",
   baseQuery: fetchBaseQuery({
@@ -11,6 +54,7 @@ export const shazamCoreApi = createApi({
       );
       return headers;
     },
+    fetchFn: queuedFetch,
   }),
 
   endpoints: (builder) => ({
@@ -32,7 +76,7 @@ export const shazamCoreApi = createApi({
       query: (artistId) => `/v2/artists/details?artist_id=${artistId}`,
     }),
     getSongsByCountry: builder.query({
-      query: (countryCode) => `/charts/country?country_code=${countryCode}`,
+      query: (countryCode) => `/v1/charts/country?country_code=${countryCode}`,
       transformResponse: (response) => response.slice(0, 50),
     }),
     getSongsBySearch: builder.query({

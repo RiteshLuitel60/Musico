@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import LikeButton from './LikeButton';
 import { playPause, setActiveSong } from "../redux/features/playerSlice";
 import PlayPause from "./PlayPause";
@@ -19,6 +18,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
   const handlePlayClick = () => {
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
+    console.log(song);
   };
 
   const getSongTitle = () => song?.title || song?.attributes?.name || 'Unknown Title';
@@ -31,8 +31,8 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer">
-      <div className="relative w-full h-56 group">
+    <div className="flex flex-col w-[220px] p-4 bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out hover:bg-white/5">
+      <div className="relative w-full h-44 group">
         <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong?.title === song.title ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
           <PlayPause
             isPlaying={isPlaying}
@@ -42,7 +42,11 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
             handlePlay={handlePlayClick}
           />
         </div>
-        <img alt="song_img" src={getCoverArt()} className="w-full h-full rounded-lg" />
+        <img 
+          alt="song_img" 
+          src={getCoverArt()} 
+          className="w-full h-full rounded-lg object-cover brightness-110 hover:brightness-100 transition-all duration-300"
+        />
       </div>
 
       <div className="mt-4 flex flex-col">
