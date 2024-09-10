@@ -7,13 +7,18 @@ const LikeButton = ({ song }) => {
   const [userId, setUserId] = useState(null);
   const [likedSongsPlaylistId, setLikedSongsPlaylistId] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const supabase = useSupabaseClient();
 
   useEffect(() => {
     const initializeButton = async () => {
-      await fetchUserId();
-      await fetchLikedSongsPlaylistId();
-      await checkIfLiked();
+      const fetchedUserId = await fetchUserId();
+      if (fetchedUserId) {
+        const fetchedPlaylistId = await fetchLikedSongsPlaylistId(fetchedUserId);
+        if (fetchedPlaylistId) {
+          await checkIfLiked();
+        }
+      }
       setIsInitialized(true);
     };
 
@@ -22,11 +27,15 @@ const LikeButton = ({ song }) => {
 
   const fetchUserId = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (user) setUserId(user.id);
+    if (user) {
+      setUserId(user.id);
+      return user.id;
+    }
+    return null;
   };
 
-  const fetchLikedSongsPlaylistId = async () => {
-    if (!userId) return;
+  const fetchLikedSongsPlaylistId = async (userId) => {
+    if (!userId) return null;
 
     const { data, error } = await supabase
       .from('libraries')
@@ -37,15 +46,20 @@ const LikeButton = ({ song }) => {
 
     if (error) {
       console.error('Error getting Liked Songs playlist:', error);
-    } else if (data) {
-      setLikedSongsPlaylistId(data.id);
-    } else {
-      const newPlaylistId = await createLikedSongsPlaylist();
-      setLikedSongsPlaylistId(newPlaylistId);
+      return null;
     }
+
+    if (data) {
+      setLikedSongsPlaylistId(data.id);
+      return data.id;
+    }
+
+    const newPlaylistId = await createLikedSongsPlaylist(userId);
+    setLikedSongsPlaylistId(newPlaylistId);
+    return newPlaylistId;
   };
 
-  const createLikedSongsPlaylist = async () => {
+  const createLikedSongsPlaylist = async (userId) => {
     const { data, error } = await supabase
       .from('libraries')
       .insert({ name: 'Liked Songs', user_id: userId })
@@ -78,15 +92,26 @@ const LikeButton = ({ song }) => {
   };
 
   const handleLike = async () => {
-    if (!isInitialized) {
-      console.log('Like button is not yet initialized');
+    if (!isInitialized || isLoading) {
+      console.log('Like button is not yet initialized or is loading');
       return;
     }
 
-    if (!userId || !likedSongsPlaylistId) {
-      console.error('User ID or Liked Songs playlist ID is missing');
+    if (!userId) {
+      console.error('User ID is missing');
       return;
     }
+
+    if (!likedSongsPlaylistId) {
+      console.error('Liked Songs playlist ID is missing');
+      const fetchedPlaylistId = await fetchLikedSongsPlaylistId(userId);
+      if (!fetchedPlaylistId) {
+        console.error('Failed to fetch or create Liked Songs playlist');
+        return;
+      }
+    }
+
+    setIsLoading(true);
 
     try {
       if (isLiked) {
@@ -127,11 +152,13 @@ const LikeButton = ({ song }) => {
       }
     } catch (error) {
       console.error('Error updating like status:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <button onClick={handleLike} className="focus:outline-none" disabled={!isInitialized}>
+    <button onClick={handleLike} className="focus:outline-none" disabled={!isInitialized || isLoading}>
       <Heart
         size={20}
         fill={isLiked ? 'lime' : 'none'}
