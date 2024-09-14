@@ -148,6 +148,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
         size={20}
         fill={isLiked ? 'lime' : 'none'}
         stroke={isLiked ? 'lime' : 'currentColor'}
+        className={isLiked ? 'animate-like' : ''}
       />
     </button>
   );
