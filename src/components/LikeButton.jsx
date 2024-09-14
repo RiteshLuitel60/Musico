@@ -6,38 +6,32 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
   const [isLiked, setIsLiked] = useState(isLikedSongs);
   const [userId, setUserId] = useState(null);
   const [likedSongsPlaylistId, setLikedSongsPlaylistId] = useState(null);
-  const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const supabase = useSupabaseClient();
 
   useEffect(() => {
     const initializeButton = async () => {
-      if (!isLikedSongs) {
-        const fetchedUserId = await fetchUserId();
-        if (fetchedUserId) {
-          const fetchedPlaylistId = await fetchLikedSongsPlaylistId(fetchedUserId);
-          if (fetchedPlaylistId) {
-            await checkIfLiked();
-          }
+      const fetchedUserId = await fetchUserId();
+      if (fetchedUserId) {
+        setUserId(fetchedUserId);
+        const fetchedPlaylistId = await fetchLikedSongsPlaylistId(fetchedUserId);
+        if (fetchedPlaylistId) {
+          setLikedSongsPlaylistId(fetchedPlaylistId);
+          checkIfLiked(fetchedPlaylistId); // check if the song is liked without delay
         }
       }
-      setIsInitialized(true);
     };
-
     initializeButton();
-  }, [song, isLikedSongs]);
+  }, [song]);
 
   const fetchUserId = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUserId(user.id);
-      return user.id;
-    }
-    return null;
+    return user ? user.id : null;
   };
 
   const fetchLikedSongsPlaylistId = async (userId) => {
-    if (!userId) return null;
+    const cachedPlaylistId = localStorage.getItem('likedSongsPlaylistId');
+    if (cachedPlaylistId) return cachedPlaylistId;
 
     const { data, error } = await supabase
       .from('libraries')
@@ -51,14 +45,9 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
       return null;
     }
 
-    if (data) {
-      setLikedSongsPlaylistId(data.id);
-      return data.id;
-    }
-
-    const newPlaylistId = await createLikedSongsPlaylist(userId);
-    setLikedSongsPlaylistId(newPlaylistId);
-    return newPlaylistId;
+    const playlistId = data ? data.id : await createLikedSongsPlaylist(userId);
+    localStorage.setItem('likedSongsPlaylistId', playlistId); // Cache it locally
+    return playlistId;
   };
 
   const createLikedSongsPlaylist = async (userId) => {
@@ -72,60 +61,54 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
       console.error('Error creating Liked Songs playlist:', error);
       return null;
     }
-
     return data.id;
   };
 
-  const checkIfLiked = async () => {
-    if (!userId || !likedSongsPlaylistId) return;
+  const checkIfLiked = async (playlistId) => {
+    const cachedLikes = JSON.parse(localStorage.getItem('likedSongs')) || {};
+    if (cachedLikes[song.key]) {
+      setIsLiked(true); // Instantly mark it as liked from cache
+      return;
+    }
 
-    try {
-      const { data, error } = await supabase
-        .from('library_songs')
-        .select('*')
-        .eq('library_id', likedSongsPlaylistId)
-        .eq('song_key', song.key);
+    const { data, error } = await supabase
+      .from('library_songs')
+      .select('*')
+      .eq('library_id', playlistId)
+      .eq('song_key', song.key);
 
-      if (error) throw error;
-      setIsLiked(data.length > 0);
-    } catch (error) {
-      console.error('Error checking if song is liked:', error);
+    if (error) throw error;
+    
+    const liked = data.length > 0;
+    setIsLiked(liked);
+
+    if (liked) {
+      localStorage.setItem(
+        'likedSongs',
+        JSON.stringify({ ...cachedLikes, [song.key]: true })
+      ); // Cache liked status
     }
   };
 
   const handleLike = async () => {
-    if (!isInitialized || isLoading) {
-      console.log('Like button is not yet initialized or is loading');
-      return;
-    }
-
-    if (!userId) {
-      console.error('User ID is missing');
-      return;
-    }
-
-    if (!likedSongsPlaylistId) {
-      console.error('Liked Songs playlist ID is missing');
-      const fetchedPlaylistId = await fetchLikedSongsPlaylistId(userId);
-      if (!fetchedPlaylistId) {
-        console.error('Failed to fetch or create Liked Songs playlist');
-        return;
-      }
-    }
+    if (isLoading) return;
 
     setIsLoading(true);
+    setIsLiked(prev => !prev); // Optimistic update
 
     try {
+      const cachedLikes = JSON.parse(localStorage.getItem('likedSongs')) || {};
+
       if (isLiked) {
-        const { error } = await supabase
+        await supabase
           .from('library_songs')
           .delete()
           .eq('library_id', likedSongsPlaylistId)
           .eq('song_key', song.key);
 
-        if (error) throw error;
-        console.log('Song removed from likes');
-        setIsLiked(false);
+        // Update cache
+        delete cachedLikes[song.key];
+        localStorage.setItem('likedSongs', JSON.stringify(cachedLikes));
       } else {
         const audioUrl = song.hub?.actions?.find(action => action.type === "uri")?.uri 
           || song.attributes?.previews?.[0]?.url 
@@ -141,26 +124,26 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
           lyrics: song.sections?.find(section => section.type === 'LYRICS')?.text || [],
         };
 
-        const { error } = await supabase
+        await supabase
           .from('library_songs')
           .insert({ 
             library_id: likedSongsPlaylistId, 
             ...songDetails
           });
 
-        if (error) throw error;
-        console.log('Song added to likes');
-        setIsLiked(true);
+        // Update cache
+        localStorage.setItem('likedSongs', JSON.stringify({ ...cachedLikes, [song.key]: true }));
       }
     } catch (error) {
       console.error('Error updating like status:', error);
+      setIsLiked(prev => !prev); // Revert optimistic update on error
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <button onClick={handleLike} className="focus:outline-none" disabled={!isInitialized || isLoading}>
+    <button onClick={handleLike} className="focus:outline-none" disabled={isLoading}>
       <Heart
         size={20}
         fill={isLiked ? 'lime' : 'none'}
