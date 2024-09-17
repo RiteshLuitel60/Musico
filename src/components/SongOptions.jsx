@@ -7,16 +7,26 @@ const SongOptions = ({ song }) => {
   const [showLibraries, setShowLibraries] = useState(false);
   const [libraries, setLibraries] = useState([]);
   const [addedToLibraries, setAddedToLibraries] = useState({});
+  const [isLoadingLibraries, setIsLoadingLibraries] = useState(false);
 
   useEffect(() => {
-    const loadLibraries = async () => {
-      const result = await fetchUserLibraries();
-      if (result.success) {
-        setLibraries(result.libraries);
-      }
-    };
-    loadLibraries();
+    const cachedLibraries = localStorage.getItem('userLibraries');
+    if (cachedLibraries) {
+      setLibraries(JSON.parse(cachedLibraries));
+    } else {
+      loadLibraries();
+    }
   }, []);
+
+  const loadLibraries = async () => {
+    setIsLoadingLibraries(true);
+    const result = await fetchUserLibraries();
+    if (result.success) {
+      setLibraries(result.libraries);
+      localStorage.setItem('userLibraries', JSON.stringify(result.libraries));
+    }
+    setIsLoadingLibraries(false);
+  };
 
   const handleAddToLibraryClick = async (libraryId) => {
     const result = await handleAddToLibrary(libraryId, song);
@@ -58,7 +68,10 @@ const SongOptions = ({ song }) => {
             onClick={() => setShowLibraries(!showLibraries)} 
             className="w-full text-left px-4 py-2 hover:bg-gray-300 flex items-center"
           >
-            <FolderPlus size={12} className="mr-0.5" /> <span className="text-sm">Add to Existing Library</span>
+            <FolderPlus size={12} className="mr-0.5" /> 
+            <span className="text-sm">
+              {isLoadingLibraries ? 'Loading...' : 'Add to Existing Library'}
+            </span>
           </button>
           {showLibraries && libraries.length > 0 && (
             <div className="ml-4 border-l border-gray-200">
