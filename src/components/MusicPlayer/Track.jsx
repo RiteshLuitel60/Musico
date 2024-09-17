@@ -22,7 +22,7 @@ const Track = ({ isPlaying, isActive, activeSong }) => {
   };
 
   const getArtist = () => {
-    return activeSong?.attributes?.artistName || activeSong?.subtitle || 'No Artist name';
+    return activeSong?.attributes?.artistName || activeSong?.subtitle ||activeSong?.artist || 'No Artist name';
   };
 
   return (
