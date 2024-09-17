@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         black: "#191624",
+        "green-500": "#4caf50",
       },
       animation: {
         slideup: "slideup 1s ease-in-out",
@@ -48,8 +49,16 @@ module.exports = {
           "100%": { transform: "scale(1)" },
         },
       },
+      transitionProperty: {
+        colors: "background-color, color",
+      },
     },
   },
-  variants: {},
+  variants: {
+    extend: {
+      backgroundColor: ["active"],
+      textColor: ["active"],
+    },
+  },
   plugins: [],
 };

@@ -29,13 +29,14 @@ const SongOptions = ({ song }) => {
   };
 
   const handleAddToLibraryClick = async (libraryId) => {
+    setAddedToLibraries(prev => ({ ...prev, [libraryId]: true })); // Set state immediately
     const result = await handleAddToLibrary(libraryId, song);
     if (result.success) {
-      setAddedToLibraries(prev => ({ ...prev, [libraryId]: true }));
       // Optionally show a success message
     } else {
       // Show an error message
       alert(result.error.message || 'Failed to add song to library.');
+      setAddedToLibraries(prev => ({ ...prev, [libraryId]: false })); // Revert state on error
     }
   };
 
@@ -79,9 +80,10 @@ const SongOptions = ({ song }) => {
                 <button 
                   key={library.id} 
                   onClick={() => handleAddToLibraryClick(library.id)} 
-                  className={`w-full text-left px-4 py-2 hover:bg-gray-300 ${addedToLibraries[library.id] ? 'text-green-500' : ''}`}
+                  className={`w-full text-left px-4 py-2 hover:bg-gray-300 transition-colors duration-300 library-button ${addedToLibraries[library.id] ? 'bg-green-500 text-white' : ''}`}
                 >
-                  {library.name} {addedToLibraries[library.id] && '✓'}
+                  {library.name}
+                  {addedToLibraries[library.id] && <span className="ml-2">✓</span>}
                 </button>
               ))}
             </div>
