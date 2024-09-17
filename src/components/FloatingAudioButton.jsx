@@ -98,7 +98,7 @@ const FloatingAudioButton = () => {
     <>
       <div className="relative">
         <button
-          className={`ml-4 mr-2  bg-slate-900 rounded-full w-7 h-7 flex items-center justify-center text-white text-lg sm:w-10 sm:h-10 sm:text-xl md:w-12 md:h-12 md:text-2xl shadow-lg focus:outline-none transition-all duration-300 ease-in-out z-50 transform hover:shadow-xl hover:scale-150 animate-pulse border border-white hover:bg-slate-800 ${isActive ? "shadow-2xl" : ""}`}
+          className={`ml-4 mr-2  bg-slate-900 rounded-full w-7 h-7 flex items-center justify-center text-white text-lg sm:w-10 sm:h-10 sm:text-xl md:w-12 md:h-12 md:text-2xl shadow-lg focus:outline-none transition-all duration-300 ease-in-out z-50 transform hover:shadow-xl hover:scale-125 animate-pulse border border-white hover:bg-slate-800 ${isActive ? "shadow-2xl" : ""}`}
           onClick={handleClick}
           disabled={isLoading}
         >
