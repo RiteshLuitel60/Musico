@@ -2,12 +2,19 @@ import React from 'react';
 
 const Track = ({ isPlaying, isActive, activeSong }) => {
   const getArtwork = () => {
+
     if (activeSong?.attributes?.artwork?.url) {
       return activeSong.attributes.artwork.url;
     } else if (activeSong?.images?.coverart) {
       return activeSong.images.coverart;
+    } else if (activeSong?.cover_image) {
+      return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/songs/${activeSong.cover_image}`;
+    } else if (activeSong?.cover_art) {
+      return activeSong.cover_art;
     }
-    return '';  // Return a default image URL if needed
+    
+     // Debug log
+    return '/path/to/default/image.jpg';  // Return a default image URL
   };
 
   const getTitle = () => {
