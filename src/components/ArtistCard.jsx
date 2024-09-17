@@ -11,21 +11,24 @@ const ArtistCard = ({ track }) => {
   const coverArt = track?.attributes?.artwork?.url;
 
   // Replace width and height in the URL with desired dimensions
-  const formattedCoverArt = coverArt?.replace('{w}', '250').replace('{h}', '250');
+  const formattedCoverArt = coverArt?.replace('{w}', '200').replace('{h}', '200');
+
+  // Get the first word of the artist name
+  const artistName = track?.attributes?.artistName?.split(' ')[0] || '';
 
   return (
     <div
-      className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer"
+      className="flex flex-col w-full sm:w-[66px] p-3 bg-opacity-80 backdrop-blur-sm rounded-lg cursor-pointer"
+      style={{ width: '26%' }}
       onClick={() => navigate(`/artists/${artistId}`)}
     >
-      {/* phse */}
       <img 
         alt="song_img" 
         src={formattedCoverArt} 
-        className="w-full h-56 rounded-lg" 
+        className="w-full h-45 rounded-full transform transition-transform duration-200 hover:scale-105" 
       />
-      <p className="mt-4 font-semibold text-lg text-white truncate">
-        {track?.attributes?.artistName}
+      <p className="mt-3 font-semibold text-white text-center text-[8px] xs:text-[10px] sm:text-xs md:text-sm leading-tight">
+        {artistName}
       </p>
     </div>
   );
