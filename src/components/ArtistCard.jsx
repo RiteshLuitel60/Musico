@@ -27,8 +27,8 @@ const ArtistCard = ({ track }) => {
         src={formattedCoverArt} 
         className="w-full h-45 rounded-full transform transition-transform duration-200 hover:scale-105" 
       />
-      <p className="mt-3 font-semibold text-white text-center text-[8px] xs:text-[10px] sm:text-xs md:text-sm leading-tight">
-        {artistName}
+      <p className="mt-3 font-semibold text-white text-center text-[8px] xs:text-[10px] sm:text-xs md:text-sm leading-tight truncate overflow-hidden">
+      {track?.attributes?.artistName}
       </p>
     </div>
   );
