@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Error, Loader, SongCard } from "../components";
 import { selectGenreListId } from "../redux/features/playerSlice";
@@ -7,7 +7,7 @@ import {
   useGetTopChartsQuery,
 } from "../redux/services/shazamCore";
 import { genres } from "../assets/constants";
-import GoToTop from "../components/GoToTop";
+import { supabase } from "../utils/supabaseClient";
 
 const Discover = () => {
   const dispatch = useDispatch();
@@ -16,6 +16,28 @@ const Discover = () => {
   const { data, isFetching, error } = useGetSongsByGenreQuery(
     genreListId || "POP",
   );
+
+  const [libraries, setLibraries] = useState([]);
+
+  useEffect(() => {
+    fetchLibraries();
+  }, []);
+
+  const fetchLibraries = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data, error } = await supabase
+        .from('libraries')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Error fetching libraries:', error);
+      } else {
+        setLibraries(data);
+      }
+    }
+  };
 
   if (isFetching) return <Loader title="Loading Songs...." />;
   if (error) return <Error />;
@@ -46,15 +68,14 @@ const Discover = () => {
         <div className="flex flex-wrap sm:justify-start justify-center gap-8">
           {data?.map((song, i) => (
             <SongCard
-            libraries
-            onAddToLibrary
-            onCreateLibrary
-              key={song.id}
+              key={song.key || song.id || `song-${i}`}
               song={song}
               isPlaying={isPlaying}
               activeSong={activeSong}
               data={data}
               i={i}
+              libraries={libraries}
+              setLibraries={setLibraries}
             />
           ))}
         </div>

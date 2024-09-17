@@ -32,7 +32,6 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
       return '';
     }
 
-    console.log('getAudioUrl called with song:', song);
 
     if (song?.attributes?.previews?.[0]?.url) {
       return song.attributes.previews[0].url;
@@ -116,12 +115,10 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   };
 
   useEffect(() => {
-    console.log('Player effect running for activeSong', activeSong);
     const setAudioSrc = async () => {
       if (activeSong && Object.keys(activeSong).length > 0) {
         try {
           const audioUrl = await getAudioUrl(activeSong);
-          console.log('Audio URL fetched:', audioUrl);
           if (ref.current && audioUrl) {
             ref.current.src = audioUrl;
           }

@@ -1,56 +1,77 @@
-import React, { useState } from 'react';
-import { MoreHorizontal, Plus, FolderPlus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, FolderPlus, MoreHorizontal } from 'lucide-react';
+import { fetchUserLibraries, handleAddToLibrary, handleCreateLibrary } from '../utils/libraryUtils';
 
-const SongOptions = ({ song, libraries = [], onAddToLibrary, onCreateLibrary, isPlaylist }) => {
+const SongOptions = ({ song }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showLibraries, setShowLibraries] = useState(false);
+  const [libraries, setLibraries] = useState([]);
+  const [addedToLibraries, setAddedToLibraries] = useState({});
 
-  const handleCreateLibrary = () => {
-    onCreateLibrary(song);
-    setIsOpen(false);
+  useEffect(() => {
+    const loadLibraries = async () => {
+      const result = await fetchUserLibraries();
+      if (result.success) {
+        setLibraries(result.libraries);
+      }
+    };
+    loadLibraries();
+  }, []);
+
+  const handleAddToLibraryClick = async (libraryId) => {
+    const result = await handleAddToLibrary(libraryId, song);
+    if (result.success) {
+      setAddedToLibraries(prev => ({ ...prev, [libraryId]: true }));
+      // Optionally show a success message
+    } else {
+      // Show an error message
+      alert(result.error.message || 'Failed to add song to library.');
+    }
   };
 
-  const handleAddToLibrary = (libraryId) => {
-    onAddToLibrary(libraryId, song);
-    setIsOpen(false);
-    setShowLibraries(false);
+  const handleCreateLibraryClick = async () => {
+    const result = await handleCreateLibrary(song);
+    if (result.success) {
+      setLibraries([...libraries, result.library]);
+      setIsOpen(false);
+      // Optionally show a success message
+    } else {
+      // Show an error message
+      alert(result.error.message || 'Failed to create library.');
+    }
   };
 
   return (
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)} 
-        className="p-2 rounded-full bg-black bg-opacity-50 hover:bg-opacity-75 transition-all duration-200 ease-in-out"
+        className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 ease-in-out"
       >
         <MoreHorizontal size={20} color="white" />
       </button>
       {isOpen && (
-        <div className="absolute bottom-full right-0 mb-2 w-48 bg-gray-800 rounded-md shadow-lg z-20">
-          {!isPlaylist && (
-            <>
-              <button onClick={handleCreateLibrary} className="w-full text-left px-4 py-2 hover:bg-gray-700 flex items-center">
-                <Plus size={16} className="mr-2" /> Create New Library
-              </button>
-              <button 
-                onClick={() => setShowLibraries(!showLibraries)} 
-                className="w-full text-left px-4 py-2 hover:bg-gray-700 flex items-center"
-              >
-                <FolderPlus size={16} className="mr-2" /> Add to Existing Library
-              </button>
-              {showLibraries && libraries.length > 0 && (
-                <div className="ml-4 border-l border-gray-700">
-                  {libraries.map((library) => (
-                    <button 
-                      key={library.id} 
-                      onClick={() => handleAddToLibrary(library.id)} 
-                      className="w-full text-left px-4 py-2 hover:bg-gray-700"
-                    >
-                      {library.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </>
+        <div className="absolute bottom-full right-0 mb-2 w-48 bg-gray-200 rounded-md shadow-lg z-20">
+          <button onClick={handleCreateLibraryClick} className="w-full text-left px-4 py-2 hover:bg-gray-400 flex items-center">
+            <Plus size={12} className="mr-1" /> <span className="text-sm">Create New Library</span>
+          </button>
+          <button 
+            onClick={() => setShowLibraries(!showLibraries)} 
+            className="w-full text-left px-4 py-2 hover:bg-gray-300 flex items-center"
+          >
+            <FolderPlus size={12} className="mr-0.5" /> <span className="text-sm">Add to Existing Library</span>
+          </button>
+          {showLibraries && libraries.length > 0 && (
+            <div className="ml-4 border-l border-gray-200">
+              {libraries.map((library) => (
+                <button 
+                  key={library.id} 
+                  onClick={() => handleAddToLibraryClick(library.id)} 
+                  className={`w-full text-left px-4 py-2 hover:bg-gray-300 ${addedToLibraries[library.id] ? 'text-green-500' : ''}`}
+                >
+                  {library.name} {addedToLibraries[library.id] && '✓'}
+                </button>
+              ))}
+            </div>
           )}
         </div>
       )}

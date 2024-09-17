@@ -5,9 +5,9 @@ import LikeButton from './LikeButton';
 import { playPause, setActiveSong } from "../redux/features/playerSlice";
 import PlayPause from "./PlayPause";
 import SongOptions from "./SongOptions";
-import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
+import { handleAddToLibrary, handleCreateLibrary, fetchUserLibraries } from '../utils/libraryUtils';
 
-const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddToLibrary, onCreateLibrary }) => {
+const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLibraries }) => {
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(true);
 
@@ -28,11 +28,36 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
   const getActiveSongComparator = () => song?.attributes?.name || song?.key || 'default-comparator';
   const getArtistName = () => song?.artist || song?.subtitle || song?.attributes?.artistName || 'Unknown Artist';
 
+  const onAddToLibrary = async (libraryId, song) => {
+    const result = await handleAddToLibrary(libraryId, song);
+    if (result.success) {
+      const updatedLibraries = await fetchUserLibraries();
+      if (updatedLibraries.success) {
+        setLibraries(updatedLibraries.libraries);
+      }
+    }
+    return result;
+  };
+
+  const onCreateLibrary = async () => { // No song parameter
+    const result = await handleCreateLibrary(song); // Pass song directly
+    if (result.success) {
+      const updatedLibraries = await fetchUserLibraries();
+      if (updatedLibraries.success) {
+        setLibraries(updatedLibraries.libraries);
+      }
+    } else {
+      // Handle error, e.g., show a notification
+      alert(result.error.message || 'Failed to create library.');
+    }
+    return result;
+  };
+
   if (!isVisible) return null;
 
   return (
     <div className="flex flex-col w-[220px] p-4 bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out hover:bg-white/5">
-      <div className="relative w-full h-44 group">
+      <div className="relative w-full h-44 group ">
         <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong?.title === song.title ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
           <PlayPause
             isPlaying={isPlaying}
@@ -45,7 +70,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
         <img 
           alt="song_img" 
           src={getCoverArt()} 
-          className="w-full h-full rounded-lg object-cover brightness-110 hover:brightness-100 transition-all duration-300"
+          className="w-full h-full object-cover brightness-110 hover:brightness-100 transition-all duration-300"
         />
       </div>
 
@@ -83,29 +108,5 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], onAddT
     </div>
   );
 };
-
-// Add this function outside of the component
-async function fetchSongDetails(songId) {
-  try {
-    const { data, error } = await useGetSongDetailsQuery(songId);
-    if (data) {
-      const audioUrl = data.hub?.actions?.find(action => action.type === "uri")?.uri || '';
-      
-      return {
-        id: data.key,
-        title: data.title,
-        artist: data.subtitle,
-        cover_art: data.images?.coverart,
-        audio_url: audioUrl,
-      };
-    } else if (error) {
-      console.error('Error fetching song details:', error);
-      return null;
-    }
-  } catch (error) {
-    console.error('Error in fetchSongDetails:', error);
-    return null;
-  }
-}
 
 export default SongCard;
