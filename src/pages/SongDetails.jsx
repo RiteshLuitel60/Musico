@@ -33,7 +33,7 @@ const SongDetails = () => {
   if (isFetchingSongDetails && isFetchingRelatedSongs) return <Loader title="Searching song details" />;
   if (error) return <>
 <p className='text-green-400 text-xl font-bold mt-5 mb-12 '>
-  Song Details Not Found:(
+  Song Details Not Found!
   
   </p>  
 <RelatedSongsManual

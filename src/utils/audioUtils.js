@@ -24,8 +24,6 @@ export const getAudioUrl = async (song) => {
     return "";
   }
 
-  console.log("getAudioUrl called with song:", song);
-
   if (song?.attributes?.previews?.[0]?.url) {
     return song.attributes.previews[0].url;
   } else if (song?.hub?.actions?.[1]?.uri) {
