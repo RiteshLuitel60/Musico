@@ -88,6 +88,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
       </div>
       
       <div className="mt-4 flex justify-between items-center">
+
         <LikeButton song={{
           key: getSongId(),
           title: getSongTitle(),
@@ -98,6 +99,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
           attributes: song.attributes,
           audio_url: song.audio_url || song.hub?.actions?.find(action => action.type === "uri")?.uri || song.attributes?.previews?.[0]?.url,
         }} isLikedSongs={song.isLikedSongs} />
+
         <SongOptions
           song={song}
           libraries={libraries}
