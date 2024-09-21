@@ -84,11 +84,6 @@ export const handleCreateLibrary = async (song) => {
 
 export const fetchUserLibraries = async () => {
   try {
-    const cachedLibraries = localStorage.getItem("userLibraries");
-    if (cachedLibraries) {
-      return { success: true, libraries: JSON.parse(cachedLibraries) };
-    }
-
     const {
       data: { user },
       error: authError,
@@ -103,7 +98,6 @@ export const fetchUserLibraries = async () => {
 
     if (error) throw error;
 
-    localStorage.setItem("userLibraries", JSON.stringify(data));
     return { success: true, libraries: data };
   } catch (error) {
     console.error("Error fetching user libraries:", error);
