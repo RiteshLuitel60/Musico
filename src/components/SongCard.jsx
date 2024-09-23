@@ -7,27 +7,37 @@ import PlayPause from "./PlayPause";
 import SongOptions from "./SongOptions";
 import { handleAddToLibrary, handleCreateLibrary, fetchUserLibraries } from '../utils/libraryUtils';
 
+// SongCard component definition
 const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLibraries }) => {
-  const dispatch = useDispatch();
-  const [isVisible, setIsVisible] = useState(true);
+  const dispatch = useDispatch(); // Hook to dispatch actions
+  const [isVisible, setIsVisible] = useState(true); // State to manage visibility
 
+  // Function to handle pause action
   const handlePauseClick = () => {
     dispatch(playPause(false));
   };
 
+  // Function to handle play action
   const handlePlayClick = () => {
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
-    console.log(song);
+    console.log(song); // Log the current song
   };
 
+  // Function to get the song title
   const getSongTitle = () => song?.title || song?.attributes?.name || 'Unknown Title';
+  // Function to get the song ID
   const getSongId = () => song?.song_key || song?.key || song?.id || 'default-id';
+  // Function to get the artist ID
   const getArtistId = () => song?.artists?.[0]?.adamid || song?.relationships?.artists?.data[0]?.id || 'default-artist-id';
+  // Function to get the cover art URL
   const getCoverArt = () => song?.cover_art || song?.images?.coverart || song?.attributes?.artwork?.url || 'default-image-url';
+  // Function to get a comparator for the active song
   const getActiveSongComparator = () => song?.attributes?.name || song?.key || 'default-comparator';
+  // Function to get the artist name
   const getArtistName = () => song?.artist || song?.subtitle || song?.attributes?.artistName || 'Unknown Artist';
 
+  // Async function to add a song to a library
   const onAddToLibrary = async (libraryId, song) => {
     const result = await handleAddToLibrary(libraryId, song);
     if (result.success) {
@@ -39,20 +49,21 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
     return result;
   };
 
-  const onCreateLibrary = async () => { // No song parameter
-    const result = await handleCreateLibrary(song); // Pass song directly
+  // Async function to create a library
+  const onCreateLibrary = async () => {
+    const result = await handleCreateLibrary(song);
     if (result.success) {
       const updatedLibraries = await fetchUserLibraries();
       if (updatedLibraries.success) {
         setLibraries(updatedLibraries.libraries);
       }
     } else {
-      // Handle error, e.g., show a notification
       alert(result.error.message || 'Failed to create library.');
     }
     return result;
   };
 
+  // Conditional rendering based on visibility
   if (!isVisible) return null;
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Heart } from "lucide-react";
 
@@ -8,26 +8,38 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
   const [likedSongsPlaylistId, setLikedSongsPlaylistId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const supabase = useSupabaseClient();
+  const isInitialized = useRef(false);
 
   useEffect(() => {
     const initializeButton = async () => {
-      const fetchedUserId = await fetchUserId();
-      if (fetchedUserId) {
+      if (isInitialized.current) return; // Prevent re-initialization
+      isInitialized.current = true;
+
+      try {
+        setIsLoading(true);
+        const fetchedUserId = await fetchUserId();
+        if (!fetchedUserId) return;
+
         setUserId(fetchedUserId);
+
         const fetchedPlaylistId = await fetchLikedSongsPlaylistId(fetchedUserId);
-        if (fetchedPlaylistId) {
-          setLikedSongsPlaylistId(fetchedPlaylistId);
-          await checkIfLiked(fetchedPlaylistId);
-        }
+        if (!fetchedPlaylistId) return;
+
+        setLikedSongsPlaylistId(fetchedPlaylistId);
+
+        await checkIfLiked(fetchedPlaylistId);
+      } catch (error) {
+        console.error("Error initializing like button:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
+
     initializeButton();
-  }, [song]);
+  }, []); // Run only once on mount
 
   const fetchUserId = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
     return user ? user.id : null;
   };
 
@@ -64,7 +76,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
     if (isLoading) return;
 
     setIsLoading(true);
-    setIsLiked((prev) => !prev); // Optimistic update
+    setIsLiked((prev) => !prev);
 
     try {
       if (isLiked) {
@@ -83,7 +95,6 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
                      song.attributes?.previews?.[0]?.url ||
                      song.audio_url ||
                      "",
-          lyrics: song.sections?.find((section) => section.type === "LYRICS")?.text || [],
         };
 
         await supabase.from("library_songs").insert({
@@ -93,18 +104,14 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
       }
     } catch (error) {
       console.error("Error updating like status:", error);
-      setIsLiked((prev) => !prev); // Revert optimistic update on error
+      setIsLiked((prev) => !prev);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <button
-      onClick={handleLike}
-      className="focus:outline-none"
-      disabled={isLoading}
-    >
+    <button onClick={handleLike} className="focus:outline-none" disabled={isLoading}>
       <Heart
         size={20}
         fill={isLiked ? "lime" : "none"}
