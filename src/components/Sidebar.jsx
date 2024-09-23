@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, HiOutlineUserGroup, HiMusicNote } from 'react-icons/hi'; // Changed HiOutlineLibrary to HiMusicNote
+import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, HiOutlineUserGroup } from 'react-icons/hi';
+import { MdLibraryMusic } from "react-icons/md"; // Use MdLibraryMusic for library icon
 import { RiCloseLine } from 'react-icons/ri';
 import { supabase } from '../utils/supabaseClient';
 import { logo } from '../assets';
@@ -13,7 +14,7 @@ const links = [
   { name: 'Around You', to: '/around-you', icon: HiOutlinePhotograph },
   { name: 'Top Artists', to: '/top-artists', icon: HiOutlineUserGroup },
   { name: 'Top Charts', to: '/top-charts', icon: HiOutlineHashtag },
-  { name: 'Library', to: '/library', icon: HiMusicNote }, // Changed icon to HiMusicNote
+  { name: 'Library', to: '/library', icon: MdLibraryMusic }, // Use MdLibraryMusic for library icon
 ];
 
 // Component for rendering navigation links
