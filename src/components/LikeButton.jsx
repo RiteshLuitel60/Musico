@@ -12,7 +12,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
 
   useEffect(() => {
     const initializeButton = async () => {
-      if (isInitialized.current) return; // Prevent re-initialization
+      if (isInitialized.current) return;
       isInitialized.current = true;
 
       try {
@@ -36,7 +36,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
     };
 
     initializeButton();
-  }, []); // Run only once on mount
+  }, [song]); // Add song as a dependency
 
   const fetchUserId = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -63,7 +63,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
       .from("library_songs")
       .select("*")
       .eq("library_id", playlistId)
-      .eq("song_key", song.key);
+      .or(`song_key.eq.${song.key},title.eq.${song.title}`);
 
     if (error) {
       console.error("Error checking if song is liked:", error);

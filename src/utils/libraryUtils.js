@@ -114,7 +114,15 @@ export const fetchLibrarySongs = async (libraryId) => {
 
     if (error) throw error;
 
-    return { success: true, songs: data };
+    return {
+      success: true,
+      songs: data.map((song) => ({
+        ...song,
+        key: song.song_key,
+        title: song.title,
+        isLikedSongs: true,
+      })),
+    };
   } catch (error) {
     console.error("Error fetching library songs:", error);
     return { success: false, error };
