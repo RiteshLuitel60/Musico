@@ -16,7 +16,7 @@ const SongDetails = () => {
   const { data: relatedSongs, isFetching: isFetchingRelatedSongs } = useGetSongRelatedQuery(finalSongId);
 
   useEffect(() => {
-    if (relatedSongs && !relatedSongs.some(song => song.id === songid)) {
+    if (relatedSongs && !relatedSongs.some(song => song?.id || song?.key ||song?.hub?.actions[0]?.id === songid)) {
       setFinalSongId(498502624); // Fallback to default trackId if no match is found
     }
   }, [relatedSongs, songid]);

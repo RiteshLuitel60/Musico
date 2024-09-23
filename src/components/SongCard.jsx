@@ -27,7 +27,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
   // Function to get the song title
   const getSongTitle = () => song?.title || song?.attributes?.name || 'Unknown Title';
   // Function to get the song ID
-  const getSongId = () => song?.song_key || song?.key || song?.id || 'default-id';
+  const getSongId = () => song?.song_key||song?.hub?.actions[0]?.id || song?.key || song?.id ;
   // Function to get the artist ID
   const getArtistId = () => song?.artists?.[0]?.adamid || song?.relationships?.artists?.data[0]?.id || 'default-artist-id';
   // Function to get the cover art URL
