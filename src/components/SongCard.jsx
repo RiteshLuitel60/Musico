@@ -7,6 +7,7 @@ import PlayPause from "./PlayPause";
 import SongOptions from "./SongOptions";
 import { handleAddToLibrary, handleCreateLibrary, fetchUserLibraries } from '../utils/libraryUtils';
 
+
 // SongCard component definition
 const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLibraries, currentLibraryId, onRemoveFromLibrary }) => {
   const dispatch = useDispatch(); // Hook to dispatch actions
@@ -67,8 +68,8 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[220px] p-4 bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out hover:bg-white/5">
-      <div className="relative w-full h-44 group ">
+    <div className="flex flex-col w-[200px] p-4 bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out hover:bg-white/5">
+      <div className="relative w-full h-36 group ">
         <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong?.title === song.title ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
           <PlayPause
             isPlaying={isPlaying}
