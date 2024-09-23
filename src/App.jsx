@@ -75,51 +75,49 @@ const App = () => {
   return (
     <SessionContextProvider supabaseClient={supabase} initialSession={null}>
       <ErrorBoundary> {/* Wrap with ErrorBoundary */}
-        <>
+        <div className="relative flex h-screen overflow-hidden">
           <GoToTop />
-          <div className="relative flex">
-            <Sidebar />
-            <div className="flex-1 flex flex-col bg-gradient-to-br from-slate-400 via-slate-600 to-slate-800 backdrop-blur-lg">
-              <div className="flex items-center space-x-1 px-4">
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center">
-                    <FloatingAudioButton />
-                    <Searchbar />
-                  </div>
-                  <div className="hidden lg:block">
-                    <UserNameDisplay className="text-white mr-6 transition-transform duration-300 ease-in-out transform hover:scale-105 select-none cursor-default" />
-                  </div>
+          <Sidebar />
+          <div className="flex-1 flex flex-col bg-gradient-to-br from-slate-400 via-slate-600 to-slate-800 backdrop-blur-lg">
+            <div className="flex items-center space-x-1 px-4">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                  <FloatingAudioButton />
+                  <Searchbar />
                 </div>
-              </div>
-
-              <div className="px-6 h-[calc(100vh-72px)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
-                <div className="flex-1 h-fit pb-40">
-                  <Routes>
-                    <Route path="/" element={<Discover />} />
-                    <Route path="/top-artists" element={<TopArtists />} />
-                    <Route path="/top-charts" element={<TopCharts />} />
-                    <Route path="/around-you" element={<AroundYou />} />
-                    <Route path="/artists/:id" element={<ArtistDetails />} />
-                    <Route path="/songs/:songid" element={<SongDetails />} />
-                    <Route path="/search/:searchTerm" element={<Search />} />
-                    <Route path="/library" element={<Library />} />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                  </Routes>
+                <div className="hidden lg:block">
+                  <UserNameDisplay className="text-white mr-6 transition-transform duration-300 ease-in-out transform hover:scale-105 select-none cursor-default" />
                 </div>
-                {showTopPlay && (
-                  <div className="xl:sticky relative top-0 h-fit">
-                    <TopPlay />
-                  </div>
-                )}
               </div>
             </div>
-            {isSongActive(activeSong) && (
-              <div className="fixed h-24 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-50 shadow-lg">
-                <MusicPlayer />
+
+            <div className="px-6 h-[calc(100vh-72px)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
+              <div className="flex-1 h-fit pb-40">
+                <Routes>
+                  <Route path="/" element={<Discover />} />
+                  <Route path="/top-artists" element={<TopArtists />} />
+                  <Route path="/top-charts" element={<TopCharts />} />
+                  <Route path="/around-you" element={<AroundYou />} />
+                  <Route path="/artists/:id" element={<ArtistDetails />} />
+                  <Route path="/songs/:songid" element={<SongDetails />} />
+                  <Route path="/search/:searchTerm" element={<Search />} />
+                  <Route path="/library" element={<Library />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
               </div>
-            )}
+              {showTopPlay && (
+                <div className="xl:sticky relative top-0 h-fit">
+                  <TopPlay />
+                </div>
+              )}
+            </div>
           </div>
-        </>
+          {isSongActive(activeSong) && (
+            <div className="fixed h-24 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-50 shadow-lg">
+              <MusicPlayer />
+            </div>
+          )}
+        </div>
       </ErrorBoundary>
     </SessionContextProvider>
   );
