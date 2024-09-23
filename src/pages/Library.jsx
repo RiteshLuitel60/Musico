@@ -124,6 +124,23 @@ const Library = () => {
     }
   };
 
+  const handleRemoveFromLibrary = async (songId) => {
+    try {
+      const { error } = await supabase
+        .from('library_songs')
+        .delete()
+        .eq('id', songId)
+        .eq('library_id', selectedLibrary.id);
+
+      if (error) throw error;
+
+      setLibrarySongs(librarySongs.filter(song => song.id !== songId));
+    } catch (error) {
+      console.error('Error removing song from library:', error);
+      setError(error.message);
+    }
+  };
+
   if (isLoading) return <Loader title="Loading libraries..." />;
   if (error) return <Error message={error} />;
 
@@ -181,6 +198,8 @@ const Library = () => {
             i={i}
             libraries={libraries}
             setLibraries={setLibraries}
+            currentLibraryId={selectedLibrary?.id}
+            onRemoveFromLibrary={handleRemoveFromLibrary}
           />
         ))}
       </div>

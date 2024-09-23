@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, FolderPlus, MoreHorizontal } from 'lucide-react';
 import { fetchUserLibraries, handleAddToLibrary, handleCreateLibrary } from '../utils/libraryUtils';
 
-const SongOptions = ({ song }) => {
+const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showLibraries, setShowLibraries] = useState(false);
   const [libraries, setLibraries] = useState([]);
@@ -48,6 +48,11 @@ const SongOptions = ({ song }) => {
     }
   };
 
+  const handleRemoveFromLibrary = () => {
+    onRemoveFromLibrary(song.id);
+    setIsOpen(false);
+  };
+
   return (
     <div className="relative">
       <button 
@@ -58,6 +63,14 @@ const SongOptions = ({ song }) => {
       </button>
       {isOpen && (
         <div className="absolute bottom-full right-0 mb-2 w-48 bg-gray-200 rounded-md shadow-lg z-20">
+          {currentLibraryId && (
+            <button 
+              onClick={handleRemoveFromLibrary} 
+              className="w-full text-left px-4 py-2 hover:bg-red-400 flex items-center text-red-600 font-bold"
+            >
+              <span className="text-sm">Remove From Playlist</span>
+            </button>
+          )}
           <button onClick={handleCreateLibraryClick} className="w-full text-left px-4 py-2 hover:bg-gray-400 flex items-center">
             <Plus size={12} className="mr-1" /> <span className="text-sm">Create New Library</span>
           </button>

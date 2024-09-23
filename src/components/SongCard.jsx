@@ -8,7 +8,7 @@ import SongOptions from "./SongOptions";
 import { handleAddToLibrary, handleCreateLibrary, fetchUserLibraries } from '../utils/libraryUtils';
 
 // SongCard component definition
-const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLibraries }) => {
+const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLibraries, currentLibraryId, onRemoveFromLibrary }) => {
   const dispatch = useDispatch(); // Hook to dispatch actions
   const [isVisible, setIsVisible] = useState(true); // State to manage visibility
 
@@ -116,6 +116,8 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
           libraries={libraries}
           onAddToLibrary={onAddToLibrary}
           onCreateLibrary={onCreateLibrary}
+          currentLibraryId={currentLibraryId}
+          onRemoveFromLibrary={onRemoveFromLibrary}
         />
       </div>
     </div>
