@@ -10,12 +10,7 @@ const SongOptions = ({ song }) => {
   const [isLoadingLibraries, setIsLoadingLibraries] = useState(false);
 
   useEffect(() => {
-    const cachedLibraries = localStorage.getItem('userLibraries');
-    if (cachedLibraries) {
-      setLibraries(JSON.parse(cachedLibraries));
-    } else {
-      loadLibraries();
-    }
+    loadLibraries();
   }, []);
 
   const loadLibraries = async () => {
@@ -23,32 +18,33 @@ const SongOptions = ({ song }) => {
     const result = await fetchUserLibraries();
     if (result.success) {
       setLibraries(result.libraries);
-      localStorage.setItem('userLibraries', JSON.stringify(result.libraries));
     }
     setIsLoadingLibraries(false);
   };
 
   const handleAddToLibraryClick = async (libraryId) => {
-    setAddedToLibraries(prev => ({ ...prev, [libraryId]: true })); // Set state immediately
+    setAddedToLibraries(prev => ({ ...prev, [libraryId]: true }));
     const result = await handleAddToLibrary(libraryId, song);
-    if (result.success) {
-      // Optionally show a success message
-    } else {
-      // Show an error message
+    if (!result.success) {
+      setAddedToLibraries(prev => ({ ...prev, [libraryId]: false }));
       alert(result.error.message || 'Failed to add song to library.');
-      setAddedToLibraries(prev => ({ ...prev, [libraryId]: false })); // Revert state on error
     }
   };
 
   const handleCreateLibraryClick = async () => {
     const result = await handleCreateLibrary(song);
     if (result.success) {
-      setLibraries([...libraries, result.library]);
+      await loadLibraries();
       setIsOpen(false);
-      // Optionally show a success message
     } else {
-      // Show an error message
       alert(result.error.message || 'Failed to create library.');
+    }
+  };
+
+  const handleShowLibraries = async () => {
+    setShowLibraries(!showLibraries);
+    if (!showLibraries) {
+      await loadLibraries();
     }
   };
 
@@ -66,7 +62,7 @@ const SongOptions = ({ song }) => {
             <Plus size={12} className="mr-1" /> <span className="text-sm">Create New Library</span>
           </button>
           <button 
-            onClick={() => setShowLibraries(!showLibraries)} 
+            onClick={handleShowLibraries} 
             className="w-full text-left px-4 py-2 hover:bg-gray-300 flex items-center"
           >
             <FolderPlus size={12} className="mr-0.5" /> 
