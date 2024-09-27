@@ -41,3 +41,12 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.my-component {
+  display: block;
+}
+@supports (display: flex) {
+  .my-component {
+    display: flex;
+  }
+}
