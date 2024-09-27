@@ -46,7 +46,7 @@ const queuedFetch = (...args) => {
 export const shazamCoreApi = createApi({
   reducerPath: "shazamCoreApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://shazam-core.p.rapidapi.com/",
+    baseUrl: "https://shazam-core.p.rapidapi.com",
     prepareHeaders: (headers) => {
       headers.set(
         "X-RapidAPI-Key",
@@ -64,7 +64,7 @@ export const shazamCoreApi = createApi({
     }),
     getSongsByGenre: builder.query({
       query: (genre) =>
-        `v1/charts/genre-world?genre_code=${genre}&country_code=DZ`,
+        `/v1/charts/genre-world?genre_code=${genre}&country_code=DZ`,
     }),
     getSongDetails: builder.query({
       query: (songid) => `/v2/tracks/details?track_id=${songid}`,
