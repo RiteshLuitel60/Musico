@@ -150,7 +150,7 @@ const Library = () => {
   if (error) return <Error message={error} />;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ml-10">
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-bold text-3xl text-white">Your Libraries</h2>
         <button
