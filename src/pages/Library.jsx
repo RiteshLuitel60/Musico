@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Error, Loader, SongCard } from '../components';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
 import { fetchUserLibraries, fetchLibrarySongs, handleAddToLibrary, handleCreateLibrary } from '../utils/libraryUtils';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, MoreVertical } from 'lucide-react';
 import { supabase } from '../utils/supabaseClient';
 
 const Library = () => {
@@ -14,6 +14,7 @@ const Library = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { activeSong, isPlaying } = useSelector((state) => state.player);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   useEffect(() => {
     const loadLibraries = async () => {
@@ -82,7 +83,7 @@ const Library = () => {
   };
 
   const handleRenameLibrary = async (libraryId) => {
-    const newName = prompt("Enter a new name for the library:");
+    const newName = prompt("Enter a new name:");
     if (!newName) return;
 
     try {
@@ -141,6 +142,10 @@ const Library = () => {
     }
   };
 
+  const toggleMenu = (libraryId) => {
+    setOpenMenuId(openMenuId === libraryId ? null : libraryId);
+  };
+
   if (isLoading) return <Loader title="Loading libraries..." />;
   if (error) return <Error message={error} />;
 
@@ -157,30 +162,41 @@ const Library = () => {
       </div>
       <div className="flex mb-4 flex-wrap">
         {libraries.map((library) => (
-          <div key={library.id} className="mr-2 mb-2">
+          <div key={library.id} className="mr-2 mb-2 relative">
             <button
               onClick={() => handleSelectLibrary(library)}
-              className={`px-4 py-2 rounded ${
+              className={`w-48 h-12 px-4 py-1 rounded flex items-center justify-between ${
                 selectedLibrary?.id === library.id
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-700 text-gray-300'
-              }`}
+                  ? 'bg-gray-900 text-white'
+                  : 'bg-gray-900 text-white'
+              } hover:bg-gray-800 transition-colors duration-200`}
             >
-              {library.name}
+              <span className="font-semibold text-sm truncate mr-2">{library.name}</span>
+              {library.name !== 'Liked Songs' && (
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleMenu(library.id);
+                  }}
+                  className="p-1 rounded hover:bg-gray-700"
+                >
+                  <MoreVertical size={16} color="white" />
+                </button>
+              )}
             </button>
-            {library.name !== 'Liked Songs' && (
-              <div className="mt-1 flex justify-center">
+            {openMenuId === library.id && (
+              <div className="absolute right-0 mt-1 w-32 bg-gray-800 rounded shadow-lg z-50">
                 <button
                   onClick={() => handleRenameLibrary(library.id)}
-                  className="mr-1 p-1 bg-blue-500 rounded"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
                 >
-                  <Edit2 size={12} />
+                  Rename
                 </button>
                 <button
                   onClick={() => handleDeleteLibrary(library.id)}
-                  className="p-1 bg-red-500 rounded"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
                 >
-                  <Trash2 size={12} />
+                  Delete
                 </button>
               </div>
             )}
