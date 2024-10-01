@@ -61,7 +61,7 @@ const SongDetails = () => {
             <Loader />
           ) : lyrics ? (
             lyrics.map((line, i) => (
-              <p key={`lyrics-${line}-${i}`} className="text-gray-400 text-base my-1">
+              <p key={`lyrics-${line}-${i}`} className="text-gray-200 text-base my-1">
                 {line}
               </p>
             ))

@@ -220,7 +220,7 @@ const Library = () => {
 
   // Render the Library component
   return (
-    <div className="flex flex-col ml-10">
+    <div className="flex flex-col">
       {/* Header with "Your Libraries" title and Add Library button */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-bold text-3xl text-white">Your Libraries</h2>

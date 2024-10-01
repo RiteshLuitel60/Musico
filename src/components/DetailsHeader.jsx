@@ -51,7 +51,7 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
     if (!artistId) {
       return (
         <Link to={`/artists/${artistIdDynamic || songData?.artists?.[0]?.adamid}`}>
-          <p className="text-base text-gray-400 mt-2">
+          <p className="text-base text-white mt-2">
             {getSongDetails('artist') || // Older structure
             songData?.subtitle || 'Unknown Artist'}{/* Updated structure */}
           </p>
@@ -76,8 +76,9 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
           <p className="font-bold sm:text-3xl text-xl text-white">
             {getTitleOrName()}
           </p>
-          {getArtistLink()}
-          <p className="text-base text-gray-400 mt-2">
+
+          {getArtistLink() }
+          <p className="text-base text-white mt-2">
             {getGenreName()}
           </p>
         </div>
