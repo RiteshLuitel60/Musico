@@ -6,11 +6,11 @@ import { FcGoogle } from 'react-icons/fc';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState(''); // New state for name
-  const [isSignUp, setIsSignUp] = useState(false); // State to toggle between sign-up and sign-in
+  const [displayName, setDisplayName] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
   const [user, setUser] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(''); // State to store error messages
+  const [errorMessage, setErrorMessage] = useState('');
 
   const navigate = useNavigate();
   const authListenerRef = useRef(null);
@@ -56,12 +56,15 @@ const SignIn = () => {
   const handleSignIn = useCallback(async (e) => {
     e.preventDefault();
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password, displayName });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      setEmail(''); // Clear email field
+      setPassword(''); // Clear password field
     } catch (error) {
       setErrorMessage(error.message);
     }
-  }, [email, password, displayName, supabase.auth]);
+  }, [email, password, supabase.auth]);
+
   const handleSignUp = useCallback(async (e) => {
     e.preventDefault();
     try {
@@ -74,7 +77,6 @@ const SignIn = () => {
       });
       if (error) throw error;
 
-      // Create "Liked Songs" library for the new user
       if (user) {
         const { error: libraryError } = await supabase
           .from('libraries')
@@ -87,7 +89,7 @@ const SignIn = () => {
       }
 
       alert('Sign up successful! Please check your email for the login link.');
-      setIsSignUp(false); // Switch to sign-in page after successful sign-up
+      setIsSignUp(false);
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -104,13 +106,18 @@ const SignIn = () => {
     }
   }, [supabase.auth]);
 
+  const toggleSignUp = () => {
+    setIsSignUp(!isSignUp);
+    setEmail(''); // Clear email field when toggling sign-up
+    setPassword(''); // Clear password field when toggling sign-up
+  };
+
   return (
-    <div ref={signInRef} className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div ref={signInRef} className="min-h-screen flex items-center justify-center bg-black py-12 px-4 sm:px-6 lg:px-8">
       <div className="absolute top-4 left-4">
-          <h1 className="text-4xl font-roboto font-bold text-white italic">Musico</h1>
-        </div>
-      <div className="max-w-md w-full space-y-8 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-8 shadow-xl relative">
-        
+        <h1 className="text-4xl font-playfair font-bold text-white italic tracking-wide shadow-lg">Musico</h1>
+      </div>
+      <div className="max-w-md w-full space-y-8 bg-gray-800 bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-xl p-8 shadow-xl relative">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             {isSignedIn ? 'Signing you in...' : isSignUp ? 'Sign up for an account' : 'Sign in to your account'}
@@ -135,8 +142,8 @@ const SignIn = () => {
                       type="email"
                       autoComplete="email"
                       required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
-                      placeholder  ="Email address"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-t-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm bg-gray-700"
+                      placeholder="Email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -149,7 +156,7 @@ const SignIn = () => {
                       type="password"
                       autoComplete="current-password"
                       required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-b-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm bg-gray-700"
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -160,7 +167,7 @@ const SignIn = () => {
                 <div>
                   <button
                     type="submit"
-                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
                   >
                     Sign in
                   </button>
@@ -178,7 +185,7 @@ const SignIn = () => {
                       type="email"
                       autoComplete="email"
                       required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-t-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm bg-gray-700"
                       placeholder="Email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -192,7 +199,7 @@ const SignIn = () => {
                       type="password"
                       autoComplete="current-password"
                       required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-b-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm bg-gray-700"
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -205,7 +212,7 @@ const SignIn = () => {
                       name="displayName"
                       type="text"
                       required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-white-700 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white bg-opacity-20"
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-b-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm bg-gray-700"
                       placeholder="Full Name"
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
@@ -216,7 +223,7 @@ const SignIn = () => {
                 <div>
                   <button
                     type="submit"
-                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
                   >
                     Sign up
                   </button>
@@ -226,8 +233,8 @@ const SignIn = () => {
             
             <div>
               <button
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-indigo-300 bg-transparent hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                onClick={toggleSignUp}
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-green-300 bg-transparent hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
               >
                 {isSignUp ? 'Back to Sign in' : 'Sign up with Email'}
               </button>
