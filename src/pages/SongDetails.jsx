@@ -5,6 +5,7 @@ import { DetailsHeader, Error, Loader } from '../components';
 import { setActiveSong, playPause } from '../redux/features/playerSlice';
 import { useGetSongDetailsQuery, useGetSongRelatedQuery } from '../redux/services/shazamCore';
 import RelatedSongsManual from '../components/RelatedSongManual';
+import PlayPause from '../components/PlayPause';
 
 const SongDetails = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,8 @@ const SongDetails = () => {
   const [finalSongId, setFinalSongId] = useState(songid);
   const { data: songData, isFetching: isFetchingSongDetails, error } = useGetSongDetailsQuery(finalSongId);
   const { data: relatedSongs, isFetching: isFetchingRelatedSongs } = useGetSongRelatedQuery(finalSongId);
+
+  console.log(songData);
 
   useEffect(() => {
     if (relatedSongs && !relatedSongs.some(song => song?.id || song?.key ||song?.hub?.actions[0]?.id === songid)) {
@@ -25,28 +28,15 @@ const SongDetails = () => {
     dispatch(playPause(false));
   };
 
-  const handlePlayClick = (song, i) => {
-    dispatch(setActiveSong({ song, data: relatedSongs, i }));
+  const handlePlayClick = () => {
+    dispatch(setActiveSong({ song: songData, data: [songData], i: 0 }));
     dispatch(playPause(true));
   };
 
   if (isFetchingSongDetails && isFetchingRelatedSongs) return <Loader title="Searching song details" />;
-  if (error) return <>
-<p className='text-green-400 text-xl font-bold mt-5 mb-12 '>
-  Song Details Not Found!
-  
-  </p>  
-<RelatedSongsManual
-        data={relatedSongs}
-        artistId={artistId}
-        isPlaying={isPlaying}
-        activeSong={activeSong}
-        handlePauseClick={handlePauseClick}
-        handlePlayClick={handlePlayClick}
-      />
-  </> ;
+  if (error) return <Error />;
 
-  const lyrics = songData?.sections?.[1]?.type === 'LYRICS'
+  const lyrics = songData?.sections?.find((section) => section.type === 'LYRICS')?.text
     ? songData?.sections[1]?.text
     : songData?.resources?.lyrics?.[Object.keys(songData.resources.lyrics)[0]]?.attributes?.text;
 
@@ -69,6 +59,17 @@ const SongDetails = () => {
             <p className="text-gray-400 text-base my-1">Sorry, No lyrics found!</p>
           )}
         </div>
+      </div>
+
+      <div className="flex items-center mb-10">
+        <PlayPause
+          isPlaying={isPlaying}
+          activeSong={activeSong}
+          song={songData}
+          handlePause={handlePauseClick}
+          handlePlay={handlePlayClick}
+        />
+        <h2 className="text-white text-3xl font-bold ml-4">Play Song</h2>
       </div>
 
       <RelatedSongsManual
