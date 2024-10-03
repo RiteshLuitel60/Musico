@@ -2,6 +2,9 @@ import React from 'react';
 
 const Track = ({ isPlaying, isActive, activeSong }) => {
   const getArtwork = () => {
+    const songInfo = activeSong?.resources?.['shazam-songs'] && Object.values(activeSong.resources['shazam-songs'])[0]?.attributes;
+    const coverArt = songInfo?.artwork?.url;
+
 
     if (activeSong?.attributes?.artwork?.url) {
       return activeSong.attributes.artwork.url;
@@ -11,18 +14,24 @@ const Track = ({ isPlaying, isActive, activeSong }) => {
       return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/songs/${activeSong.cover_image}`;
     } else if (activeSong?.cover_art) {
       return activeSong.cover_art;
+    } else {
+      return coverArt;
     }
-    
-     // Debug log
-    return '/path/to/default/image.jpg';  // Return a default image URL
+
   };
 
   const getTitle = () => {
-    return activeSong?.attributes?.name || activeSong?.title || 'No active Song';
+
+    const songInfo = activeSong?.resources?.['shazam-songs'] && Object.values(activeSong.resources['shazam-songs'])[0]?.attributes;
+    const songName = songInfo?.title;
+    return activeSong?.attributes?.name || activeSong?.title || songName || 'No active Song';
   };
 
   const getArtist = () => {
-    return activeSong?.attributes?.artistName || activeSong?.subtitle ||activeSong?.artist || 'No Artist name';
+    const songInfo = activeSong?.resources?.['shazam-songs'] && Object.values(activeSong.resources['shazam-songs'])[0]?.attributes;
+    const artistName = songInfo?.primaryArtist;
+
+    return activeSong?.attributes?.artistName || activeSong?.subtitle ||activeSong?.artist || artistName ||  'No Artist name';
   };
 
   return (
