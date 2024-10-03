@@ -55,6 +55,21 @@ const SongDetails = () => {
   return (
     <div className="flex flex-col">
       <DetailsHeader artistId={artistId} songData={songData} />
+      <div className="flex items-center mb-10">
+        <PlayPause
+          isPlaying={isPlaying}
+          activeSong={activeSong}
+          song={songData}
+          handlePause={handlePauseClick}
+          handlePlay={handlePlayClick}
+          audioUrl={audioUrl}
+          coverArt={coverArt}
+          artistName={artistName}
+          songName={songName} 
+
+        />
+        <h2 className="text-white text-3xl font-bold ml-4">Play Song</h2>
+      </div>
 
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Lyrics:</h2>
@@ -73,21 +88,7 @@ const SongDetails = () => {
         </div>
       </div>
 
-      <div className="flex items-center mb-10">
-        <PlayPause
-          isPlaying={isPlaying}
-          activeSong={activeSong}
-          song={songData}
-          handlePause={handlePauseClick}
-          handlePlay={handlePlayClick}
-          audioUrl={audioUrl}
-          coverArt={coverArt}
-          artistName={artistName}
-          songName={songName} 
-
-        />
-        <h2 className="text-white text-3xl font-bold ml-4">Play Song</h2>
-      </div>
+    
 
       <RelatedSongsManual
         data={relatedSongs}
