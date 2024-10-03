@@ -1,13 +1,18 @@
 import React from "react";
 import { FaPauseCircle, FaPlayCircle } from "react-icons/fa";
 
+
 const PlayPause = ({
   isPlaying,
   activeSong,
   song,
   handlePause,
   handlePlay,
-  songId
+  songId,
+  size = 35, // Default size
+  color = "text-gray-300", // Default color
+  playIcon = FaPlayCircle, // Default play icon
+  pauseIcon = FaPauseCircle, // Default pause icon
 }) => {
 
 let activeSongId=   activeSong?.resources?.songs && Object.keys(activeSong.resources.songs)[0];
@@ -30,10 +35,13 @@ let activeSongId=   activeSong?.resources?.songs && Object.keys(activeSong.resou
 
   }
 
+  const PlayIconComponent = playIcon;
+  const PauseIconComponent = pauseIcon;
+
   return isPlaying && isActive ? (
-    <FaPauseCircle size={35} className="text-gray-300 z-50" onClick={handlePause} />
+    <PauseIconComponent size={size} className={`${color} z-50`} onClick={handlePause} />
   ) : (
-    <FaPlayCircle size={35} className="text-gray-300 z-50" onClick={handlePlay} />
+    <PlayIconComponent size={size} className={`${color} z-50`} onClick={handlePlay} />
   );
 };
 

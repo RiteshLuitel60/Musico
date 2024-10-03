@@ -6,6 +6,11 @@ import { setActiveSong, playPause } from '../redux/features/playerSlice';
 import { useGetSongDetailsQuery, useGetSongRelatedQuery } from '../redux/services/shazamCore';
 import RelatedSongsManual from '../components/RelatedSongManual';
 import PlayPause from '../components/PlayPause';
+import { MdPlayCircleFilled } from "react-icons/md";
+import { MdPauseCircleOutline } from "react-icons/md";
+
+
+
 
 const SongDetails = () => {
   const dispatch = useDispatch();
@@ -56,9 +61,9 @@ const SongDetails = () => {
     : songData?.resources?.lyrics?.[Object.keys(songData.resources.lyrics)[0]]?.attributes?.text;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <DetailsHeader artistId={artistId} songData={songData} />
-      <div className="flex items-center mb-10">
+      <div className="flex items-center mb-10 ">
         <PlayPause
           isPlaying={isPlaying}
           activeSong={activeSong}
@@ -68,10 +73,13 @@ const SongDetails = () => {
           audioUrl={audioUrl}
           coverArt={coverArt}
           artistName={artistName}
-          songId={songInfo} 
-
+          songId={songInfo}
+          size={75}
+          color="text-black"
+          playIcon={MdPlayCircleFilled}
+          pauseIcon={MdPauseCircleOutline}
+                  
         />
-        <h2 className="text-white text-3xl font-bold ml-4">Play Song</h2>
       </div>
 
       <div className="mb-10">
