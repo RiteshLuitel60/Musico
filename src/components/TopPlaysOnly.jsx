@@ -18,7 +18,7 @@ const shuffleArray = (array) => {
 
 const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handlePlayClick }) => (
   <div className={`w-full flex flex-row items-center hover:bg-green-400 ${activeSong?.attributes?.name === song?.attributes?.name ? 'bg-[#26242c]' : 'bg-transparent'} py-1 p-0.7 rounded-lg cursor-pointer mb-0.5`}> 
-    <h3 className="font-extrabold text-sm text-white mr-3">☐</h3> {/* Numbering of top chart songs */}
+    <h3 className="font-extrabold text-sm text-white mr-3">{i + 1}.</h3> {/* Numbering of top chart songs */}
     <div className="flex-1 flex flex-row justify-between items-center">
       <img className="w10 h-10 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> {/* Image of top chart songs */}
       <div className="flex-1 flex flex-col justify-center mx-3"> 

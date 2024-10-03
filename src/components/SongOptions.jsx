@@ -54,11 +54,13 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     setIsOpen(false);
   };
 
+
+
   return (
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)} 
-        className="p-2 rounded-full bg-black/30 hover:text-white/80 transition-all duration-200 ease-in-out"
+        className="p-2 rounded-full hover:text-white/80 transition-all duration-200 ease-in-out"
       >
         <MoreHorizontal size={16} color="#FFFFFF" />
       </button>

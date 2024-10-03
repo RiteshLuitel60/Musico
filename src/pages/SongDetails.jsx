@@ -8,9 +8,8 @@ import RelatedSongsManual from '../components/RelatedSongManual';
 import PlayPause from '../components/PlayPause';
 import { MdPlayCircleFilled } from "react-icons/md";
 import { MdPauseCircleOutline } from "react-icons/md";
-
-
-
+import LikeButton from '../components/LikeButton'; // Ensure the correct path
+import SongOptions from '../components/SongOptions';
 
 const SongDetails = () => {
   const dispatch = useDispatch();
@@ -32,7 +31,7 @@ const SongDetails = () => {
     const songName = songInfo?.title;
 
   
-
+console.log(songData)
 
 
 
@@ -61,25 +60,37 @@ const SongDetails = () => {
     : songData?.resources?.lyrics?.[Object.keys(songData.resources.lyrics)[0]]?.attributes?.text;
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col  ">
       <DetailsHeader artistId={artistId} songData={songData} />
-      <div className="flex items-center mb-10 ">
-        <PlayPause
-          isPlaying={isPlaying}
-          activeSong={activeSong}
-          song={songData}
-          handlePause={handlePauseClick}
-          handlePlay={handlePlayClick}
-          audioUrl={audioUrl}
-          coverArt={coverArt}
-          artistName={artistName}
-          songId={songInfo}
-          size={75}
-          color="text-black"
-          playIcon={MdPlayCircleFilled}
-          pauseIcon={MdPauseCircleOutline}
-                  
-        />
+      <div className="flex items-center mb-10  ">
+        <div>
+          <PlayPause
+            isPlaying={isPlaying}
+            activeSong={activeSong}
+            song={songData}
+            handlePause={handlePauseClick}
+            handlePlay={handlePlayClick}
+            audioUrl={audioUrl}
+            coverArt={coverArt}
+            artistName={artistName}
+            songId={songInfo}
+            size={75}
+            color="text-black"
+            playIcon={MdPlayCircleFilled}
+            pauseIcon={MdPauseCircleOutline}
+          />
+        </div>
+
+
+        {/* <div className='ml-10'>
+
+          <LikeButton song={songData} /> Pass the song data to LikeButton
+        </div> */}
+
+        {/* <div className='ml-5'>
+          <SongOptions song={songData} />
+        </div> */}
+        
       </div>
 
       <div className="mb-10">
