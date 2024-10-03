@@ -28,6 +28,7 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   const [previousVolume, setPreviousVolume] = useState(volume);
 
    const getAudioUrl = async (song) => {
+    const audioUrl = song?.resources?.['shazam-songs'] && Object.values(song.resources['shazam-songs'])[0]?.attributes?.streaming?.preview;
     if (!song) {
       return '';
     }
@@ -41,6 +42,8 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
       return song.url;
     } else if (song?.audio_url) {
       return song.audio_url;
+    } else if (audioUrl) {
+      return audioUrl;
     }
 
     try {

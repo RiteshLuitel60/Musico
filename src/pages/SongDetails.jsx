@@ -16,7 +16,18 @@ const SongDetails = () => {
   const { data: songData, isFetching: isFetchingSongDetails, error } = useGetSongDetailsQuery(finalSongId);
   const { data: relatedSongs, isFetching: isFetchingRelatedSongs } = useGetSongRelatedQuery(finalSongId);
 
-  console.log(songData);
+    const audioUrl = songData?.resources?.['shazam-songs'] && Object.values(songData.resources['shazam-songs'])[0]?.attributes?.streaming?.preview;
+
+    const songInfo = songData?.resources?.['shazam-songs'] && Object.values(songData.resources['shazam-songs'])[0]?.attributes;
+    const coverArt = songInfo?.artwork?.url;
+    const artistName = songInfo?.primaryArtist;
+    const songName = songInfo?.title;
+
+  
+
+
+
+
 
   useEffect(() => {
     if (relatedSongs && !relatedSongs.some(song => song?.id || song?.key ||song?.hub?.actions[0]?.id === songid)) {
@@ -31,6 +42,7 @@ const SongDetails = () => {
   const handlePlayClick = () => {
     dispatch(setActiveSong({ song: songData, data: [songData], i: 0 }));
     dispatch(playPause(true));
+    console.log(songName + "played");
   };
 
   if (isFetchingSongDetails && isFetchingRelatedSongs) return <Loader title="Searching song details" />;
@@ -68,6 +80,11 @@ const SongDetails = () => {
           song={songData}
           handlePause={handlePauseClick}
           handlePlay={handlePlayClick}
+          audioUrl={audioUrl}
+          coverArt={coverArt}
+          artistName={artistName}
+          songName={songName} 
+
         />
         <h2 className="text-white text-3xl font-bold ml-4">Play Song</h2>
       </div>
