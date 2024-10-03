@@ -19,6 +19,9 @@ const SongDetails = () => {
     const audioUrl = songData?.resources?.['shazam-songs'] && Object.values(songData.resources['shazam-songs'])[0]?.attributes?.streaming?.preview;
 
     const songInfo = songData?.resources?.['shazam-songs'] && Object.values(songData.resources['shazam-songs'])[0]?.attributes;
+
+
+
     const coverArt = songInfo?.artwork?.url;
     const artistName = songInfo?.primaryArtist;
     const songName = songInfo?.title;
@@ -65,7 +68,7 @@ const SongDetails = () => {
           audioUrl={audioUrl}
           coverArt={coverArt}
           artistName={artistName}
-          songName={songName} 
+          songId={songInfo} 
 
         />
         <h2 className="text-white text-3xl font-bold ml-4">Play Song</h2>

@@ -7,15 +7,27 @@ const PlayPause = ({
   song,
   handlePause,
   handlePlay,
+  songId
 }) => {
+
+let activeSongId=   activeSong?.resources?.songs && Object.keys(activeSong.resources.songs)[0];
+
+
+
+
+  
   let isActive = false;
 
   if (activeSong?.id && song?.id) {
     isActive = activeSong.id === song.id;
   } else if (activeSong?.key && song?.key) {
     isActive = activeSong.key === song.key;
-  } else if (activeSong?.title === song?.title) {
-    isActive = true;
+  } else if (activeSong?.title) {
+    activeSong?.title === song?.title
+  }
+  else if (activeSongId) {
+    isActive = activeSongId === song?.id || songId;
+
   }
 
   return isPlaying && isActive ? (
