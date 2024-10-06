@@ -42,8 +42,7 @@ const FloatingAudioButton = () => {
       setNoSongFound(true); // Show no song found message
       setShowModal(true);
     }
-    console.log("Data:", data);
-    console.log("Error:", error);
+  
   }, [data, isError, error]);
 
   const handleAudioData = async (audioBlob) => {

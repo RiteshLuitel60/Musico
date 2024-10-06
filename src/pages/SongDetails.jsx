@@ -31,7 +31,6 @@ const SongDetails = () => {
     const songName = songInfo?.title;
 
   
-console.log(songData)
 
 
 

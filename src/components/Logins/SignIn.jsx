@@ -61,6 +61,7 @@ const SignIn = () => {
       setEmail(''); // Clear email field
       setPassword(''); // Clear password field
     } catch (error) {
+      console.error("Sign-in error:", error); // Log the error for more details
       setErrorMessage(error.message);
     }
   }, [email, password, supabase.auth]);
