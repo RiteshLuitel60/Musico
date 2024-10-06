@@ -76,7 +76,8 @@ export const shazamCoreApi = createApi({
       query: (artistId) => `/v2/artists/details?artist_id=${artistId}`,
     }),
     getSongsByCountry: builder.query({
-      query: (countryCode) => `/v1/charts/country?country_code=${countryCode}`,
+      query: (countryCode) =>
+        `/v1/charts/country?country_code=${countryCode || "DZ"}`,
       transformResponse: (response) => response.slice(0, 50),
     }),
     getSongsBySearch: builder.query({

@@ -250,34 +250,34 @@ const Library = () => {
                 {library.name}
               </span>
               {library.name !== 'Liked Songs' && (
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleMenu(library.id);
-                  }}
-                  className="p-1 rounded hover:bg-gray-700"
-                >
-                  <MoreVertical size={16} color="white" />
-                </button>
+                <div onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMenu(library.id);
+                }}>
+                  <button
+                    className="p-1 rounded hover:bg-gray-700"
+                  >
+                    <MoreVertical size={16} color="white" />
+                  </button>
+                  {openMenuId === library.id && (
+                    <div className="absolute right-0 mt-1 w-32 bg-gray-800 rounded shadow-lg z-50">
+                      <button
+                        onClick={() => handleRenameLibrary(library.id)}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                      >
+                        Rename
+                      </button>
+                      <button
+                        onClick={() => handleDeleteLibrary(library.id)}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
             </button>
-            {/* Library options menu */}
-            {openMenuId === library.id && (
-              <div className="absolute right-0 mt-1 w-32 bg-gray-800 rounded shadow-lg z-50">
-                <button
-                  onClick={() => handleRenameLibrary(library.id)}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
-                >
-                  Rename
-                </button>
-                <button
-                  onClick={() => handleDeleteLibrary(library.id)}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
-                >
-                  Delete
-                </button>
-              </div>
-            )}
           </div>
         ))}
       </div>
