@@ -60,11 +60,11 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
 
   const checkIfLiked = async (playlistId) => {
     const { data, error } = await supabase
-      .from("library_songs")
-      .select("*")
-      .eq("library_id", playlistId)
-      .or(`song_key.eq.${song.key},title.eq.${song.title}`);
-
+      .from('library_songs')
+      .select('*')
+      .eq('library_id', playlistId)
+      .or(`song_key.eq.${song.key || song.id},title.eq.${encodeURIComponent(song.title || song.name)}`);
+    
     if (error) {
       console.error("Error checking if song is liked:", error);
     } else {
