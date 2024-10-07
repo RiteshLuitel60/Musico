@@ -84,12 +84,12 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
           .from("library_songs")
           .delete()
           .eq("library_id", likedSongsPlaylistId)
-          .eq("song_key", song.key);
+          .eq("song_key", song.key || song.id);
       } else {
         const songDetails = {
-          song_key: song.key,
-          title: song.title,
-          artist: song.subtitle,
+          song_key: song.key || song.id,
+          title: song.title || song.name ,
+          artist: song.subtitle || song?.attributes?.artistName ,
           cover_art: song.images?.coverart,
           audio_url: song.hub?.actions?.find((action) => action.type === "uri")?.uri ||
                      song.attributes?.previews?.[0]?.url ||
