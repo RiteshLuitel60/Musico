@@ -54,25 +54,23 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     setIsOpen(false);
   };
 
-
-
   return (
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)} 
-        className="p-2 rounded-full hover:text-white/80 transition-all duration-200 ease-in-out"
+        className="p-2 rounded-full hover:text-white/80 transition-all duration-200 ease-in-out "
       >
         <MoreHorizontal size={16} color="#FFFFFF" />
       </button>
       {isOpen && (
-        <div className="absolute bottom-full right-0 mb-2 w-48 bg-black/90 backdrop-blur-md rounded-md shadow-lg z-20">
+        <div className="absolute bottom-full right-[-15px] mb-2 w-48 bg-black/90 backdrop-blur-md rounded-md shadow-lg z-50">
           {currentLibraryId && (
             <button 
               onClick={handleRemoveFromLibrary} 
               className="w-full text-left px-4 py-2 flex items-center text-gray-400 font-bold hover:text-red-400 transition-colors duration-200"
             >
               <Trash2 size={12} className="mr-1" color="#FFFFFF" />
-              <span className="text-xs">Remove From Playlist</span>
+              <span className="text-xs ">Remove From Playlist</span>
             </button>
           )}
           <button onClick={handleCreateLibraryClick} className="w-full text-left px-4 py-2 flex items-center transition-colors duration-200">

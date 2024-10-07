@@ -235,7 +235,7 @@ const Library = () => {
       <div className="flex mb-4 flex-wrap">
         {libraries.map((library) => (
           <div key={library.id} className="mr-2 mb-2 relative">
-            <button
+            <div
               onClick={() => handleSelectLibrary(library)}
               className={`w-48 h-12 px-4 py-1 rounded flex items-center justify-between ${
                 selectedLibrary?.id === library.id
@@ -243,7 +243,7 @@ const Library = () => {
                   : library.name === 'Liked Songs'
                   ? 'bg-gray-900 text-white'
                   : 'bg-gray-900 text-white'
-              } hover:bg-gray-800 transition-colors duration-200`}
+              } hover:bg-gray-800 transition-colors duration-200 cursor-pointer`}
             >
               <span className="font-semibold text-sm truncate mr-2 ">
                 {library.name === 'Liked Songs' && <Heart size={16} fill="white" strokeWidth={0} className="inline mr-2" />}
@@ -254,30 +254,30 @@ const Library = () => {
                   e.stopPropagation();
                   toggleMenu(library.id);
                 }}>
-                  <button
-                    className="p-1 rounded hover:bg-gray-700"
+                  <div
+                    className="p-1 rounded hover:bg-gray-700 cursor-pointer"
                   >
                     <MoreVertical size={16} color="white" />
-                  </button>
+                  </div>
                   {openMenuId === library.id && (
                     <div className="absolute right-0 mt-1 w-32 bg-gray-800 rounded shadow-lg z-50">
-                      <button
+                      <div
                         onClick={() => handleRenameLibrary(library.id)}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 cursor-pointer"
                       >
                         Rename
-                      </button>
-                      <button
+                      </div>
+                      <div
                         onClick={() => handleDeleteLibrary(library.id)}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 cursor-pointer"
                       >
                         Delete
-                      </button>
+                      </div>
                     </div>
                   )}
                 </div>
               )}
-            </button>
+            </div>
           </div>
         ))}
       </div>
