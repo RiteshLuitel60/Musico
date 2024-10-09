@@ -1,7 +1,6 @@
-// Import necessary dependencies and components
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { Searchbar, Sidebar, MusicPlayer, TopPlay } from "./components";
 import {
   ArtistDetails,
@@ -33,6 +32,12 @@ const App = () => {
   const [showTopPlay, setShowTopPlay] = useState(false);
   // State to track user's login status
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Move useLocation hook here, at the top level of the component
+  const location = useLocation();
+
+  // Use useMemo to create a memoized key for Routes
+  const routesKey = useMemo(() => location.pathname, [location]);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -93,7 +98,7 @@ const App = () => {
 
             <div className="px-6 h-[calc(100vh-72px)] overflow-y-scroll hide-scrollbar flex xl:flex-row flex-col-reverse">
               <div className="flex-1 h-fit pb-40">
-                <Routes>
+                <Routes key={routesKey}>
                   <Route path="/" element={<Discover />} />
                   <Route path="/top-artists" element={<TopArtists />} />
                   <Route path="/top-charts" element={<TopCharts />} />
