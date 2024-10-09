@@ -11,15 +11,17 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
   const [lyricsOn, setLyricsOn] = useState(false);
   const [size, setSize] = useState({ width: 320, height: 400 });
   const cardRef = useRef(null);
+  const nodeRef = useRef(null);
 
   const {
     title,
     subtitle,
     images,
-    key,
     artists,
     hub,
   } = song || {};
+
+  let key = song?.hub?.actions[0]?.id
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,14 +40,16 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  
 
   const handlePauseClick = () => {
-    dispatch(playPause(false));
+    dispatch(playPause(false) );
   };
 
   const handlePlayClick = () => {
     dispatch(setActiveSong({ song, data, i }));
-    dispatch(playPause(true));
+    dispatch(playPause(true))
+    console.log(song);
   };
 
   const handleCloseClick = () => {
@@ -56,20 +60,14 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
     setLyricsOn(!lyricsOn);
   };
 
-  const handleResize = (e, direction, ref, delta) => {
-    const { width, height } = ref.style;
-    setSize({
-      width: parseInt(width, 10),
-      height: parseInt(height, 10),
-    });
-  };
+
 
   if (!isVisible) return null;
 
   return (
-    <Draggable handle=".handle">
+    <Draggable nodeRef={nodeRef}>
       <div
-        ref={cardRef}
+        ref={nodeRef}
         className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-black text-white rounded-lg overflow-hidden shadow-lg cursor-move"
         style={{ width: `${size.width}px`, height: `${size.height}px`, maxWidth: '90vw', maxHeight: '90vh' }}
       >
@@ -98,16 +96,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
             </div>
           </div>
           
-          <div className="mt-4">
-            <a
-              href={hub?.actions?.find(action => action.type === "applemusicplay")?.uri || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full bg-white text-black text-center py-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
-            >
-              Listen on Apple Music
-            </a>
-          </div>
+        
 
           <button 
             onClick={handleLyricsToggle}
