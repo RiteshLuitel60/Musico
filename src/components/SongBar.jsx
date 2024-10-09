@@ -8,6 +8,7 @@ const SongBar = ({ song, i, artistId, isPlaying, activeSong, handlePauseClick, h
   // Helper functions to safely access properties
   const getSongName = () => song?.attributes?.name || song?.title || 'Unknown Song';
   const getArtistName = () => song?.attributes?.artistName || song?.subtitle || 'Unknown Artist';
+  const getSongTitle = () => song?.title || song?.attributes?.name || 'Unknown Title';
   const getArtworkUrl = () => {
     if (song?.attributes?.artwork?.url) {
       return song.attributes.artwork.url.replace('{w}', '125').replace('{h}', '125');
@@ -30,17 +31,11 @@ const SongBar = ({ song, i, artistId, isPlaying, activeSong, handlePauseClick, h
           alt={getSongName()}
         />
         <div className="flex-1 flex flex-col justify-center mx-3">
-          {!artistId ? (
-            <Link to={`/songs/${getSongId()}`}>
-              <p className="text-xl font-bold text-white">
-                {getSongName()}
-              </p>
-            </Link>
-          ) : (
-            <p className="text-xl font-bold text-white">
-              {getSongName()}
-            </p>
-          )}
+        <p className="font-semibold text-lg text-white truncate">
+          <Link to={`/songs/${getSongId()}`}>
+            {getSongTitle()}
+          </Link>
+        </p>
           <p className="text-base text-gray-300 mt-1">
             {getArtistName()}
           </p>
