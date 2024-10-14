@@ -10,6 +10,7 @@ import {
   Search,
   SongDetails,
   TopCharts,
+  RecognizedSongsHistory,
 } from "./pages";
 import FloatingAudioButton from "./components/FloatingAudioButton";
 import GoToTop from "./components/GoToTop";
@@ -107,6 +108,7 @@ const App = () => {
                   <Route path="/songs/:songid" element={<SongDetails />} />
                   <Route path="/search/:searchTerm" element={<Search />} />
                   <Route path="/library" element={<Library />} />
+                  <Route path="/recognized-songs-history" element={<RecognizedSongsHistory />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </div>

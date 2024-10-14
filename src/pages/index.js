@@ -6,7 +6,7 @@ import Search from "./Search";
 import TopCharts from "./TopCharts";
 import AroundYou from "./AroundYou";
 import LoginPage from "./LoginPage";
-
+import RecognizedSongsHistory from "./RecognizedSongsHistory";
 export {
   Discover,
   Search,
@@ -16,4 +16,5 @@ export {
   TopCharts,
   AroundYou,
   LoginPage,
+  RecognizedSongsHistory,
 };

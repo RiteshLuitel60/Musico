@@ -10,44 +10,33 @@ const FloatingAudioButton = () => {
   const [isActive, setIsActive] = useState(false);
   const [songInfo, setSongInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [noSongFound, setNoSongFound] = useState(false); // State to handle no song found message
+  const [noSongFound, setNoSongFound] = useState(false);
   const [recognizeSong, { isLoading, isError, data, error }] =
     useRecognizeSongMutation();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
 
   useEffect(() => {
-    let timer;
-    if (isActive) {
-      timer = setTimeout(() => {
-        setIsActive(false);
-        if (!data || (data.track === null && data.matches.length === 0)) {
-          setNoSongFound(true); // Show no song found dialog if no valid data
-        }
-      }, 15000); // 15 seconds
-    }
-    return () => clearTimeout(timer);
-  }, [isActive, data]);
-
-  useEffect(() => {
     if (data) {
       if (data.track) {
-        setSongInfo(data.track); // Set song info if track data is available
-        setNoSongFound(false); // Reset no song found message
-        setShowModal(false); // Hide modal if data is successfully received
+        setSongInfo(data.track);
+        setNoSongFound(false);
+        setShowModal(false);
+        console.log("Song recognized:", data.track.title);
       } else if (data.track === null && (!data.matches || data.matches.length === 0)) {
-        setNoSongFound(true); // Show no song found dialog if track is null and no matches
+        setNoSongFound(true);
+        console.log("No matching song found in API response");
       }
     }
     if (isError) {
-      setNoSongFound(true); // Show no song found message
+      setNoSongFound(true);
       setShowModal(true);
+      console.error("Error in song recognition:", error);
     }
-  
   }, [data, isError, error]);
 
   const handleAudioData = async (audioBlob) => {
     try {
-      console.log("Audio Blob:", audioBlob);
+      console.log("Starting song recognition process");
       const formData = new FormData();
       formData.append("file", audioBlob, "audio.wav");
       await recognizeSong(formData).unwrap();
@@ -55,22 +44,18 @@ const FloatingAudioButton = () => {
       console.error("Error recognizing song:", error);
     }
   };
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setNoSongFound(false); // Reset no song found message when modal is closed
-  };
 
   const handleClick = async () => {
     if (!isActive) {
       setIsActive(true);
-      setSongInfo(null); // Reset song info when starting new recognition
-      setShowModal(false); // Ensure modal is hidden
-      setNoSongFound(false); // Reset no song found message
+      setSongInfo(null);
+      setShowModal(false);
+      setNoSongFound(false);
+      console.log("Initiating song recognition");
 
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-        });
+        console.log("Requesting microphone access");
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         const mediaRecorder = new MediaRecorder(stream);
         const audioChunks = [];
 
@@ -79,16 +64,21 @@ const FloatingAudioButton = () => {
         };
 
         mediaRecorder.onstop = async () => {
+          console.log("Audio recording stopped, processing data");
           const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
           handleAudioData(audioBlob);
         };
 
+        console.log("Starting audio recording");
         mediaRecorder.start();
         setTimeout(() => {
+          console.log("Stopping audio recording after 10 seconds");
           mediaRecorder.stop();
-        }, 10000); // Listen for 10 seconds
+          setIsActive(false);
+        }, 10000);
       } catch (error) {
         console.error("Error accessing microphone:", error);
+        setIsActive(false);
       }
     }
   };
@@ -136,7 +126,6 @@ const FloatingAudioButton = () => {
           </div>
         )}
 
-        {/* No Song Found Dialog */}
         {noSongFound && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="h-28 w-80 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-700 p-6 rounded-md shadow-2xl relative backdrop-blur-md border border-purple-800/50 flex items-center justify-center">
