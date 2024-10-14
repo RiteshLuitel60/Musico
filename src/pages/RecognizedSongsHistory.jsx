@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { supabase } from '../utils/supabaseClient';
-import { Error, Loader, SongBar } from '../components';
+import { Error } from '../components';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
 import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 import { History } from 'lucide-react';
-//976613650  test song key for atlantis
+import SongCard from '../components/SongCard';
 
 const RecognizedSongItem = ({ song, index, isPlaying, activeSong, handlePauseClick, handlePlayClick }) => {
   const { data: songDetails, isFetching, error } = useGetSongDetailsQuery(song.song_key);
 
-  if (isFetching) return <Loader />;
   if (error) return <Error />;
 
-  const detailedSong = { ...song, details: songDetails };
+  const detailedSong = { ...song, ...songDetails };
 
   return (
-    <SongBar
-      song={detailedSong.details || detailedSong}
-      i={index}
+    <SongCard
+      artist_id={song.artist_id}
+      key={song.id}
+      song={detailedSong}
       isPlaying={isPlaying}
       activeSong={activeSong}
-      handlePauseClick={handlePauseClick}
-      handlePlayClick={() => handlePlayClick(detailedSong.details || detailedSong, index)}
+      data={[detailedSong]}
+      i={index}
     />
   );
 };
@@ -31,7 +31,6 @@ const RecognizedSongsHistory = () => {
   const dispatch = useDispatch();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
   const [recognizedSongs, setRecognizedSongs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -55,8 +54,6 @@ const RecognizedSongsHistory = () => {
     } catch (error) {
       console.error('Error fetching recognized songs:', error);
       setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -71,7 +68,6 @@ const RecognizedSongsHistory = () => {
 
   const handleClearHistory = async () => {
     try {
-      setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { error } = await supabase
@@ -85,12 +81,10 @@ const RecognizedSongsHistory = () => {
     } catch (error) {
       console.error('Error clearing recognized songs history:', error);
       setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  if (isLoading) return <Loader title="Loading recognized songs..." />;
+  
   if (error) return <Error />;
 
   return (
@@ -108,7 +102,7 @@ const RecognizedSongsHistory = () => {
       {recognizedSongs.length === 0 ? (
         <p className="text-white text-center text-lg">No recognized songs in history.</p>
       ) : (
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-wrap sm:justify-start justify-center gap-8">
           {recognizedSongs.map((song, i) => (
             <RecognizedSongItem
               key={song.id}

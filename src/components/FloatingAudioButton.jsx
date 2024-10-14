@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { shazamCoreApi } from "../redux/services/shazamCore"; // Ensure this path is correct
 import SongCardForIdentify from "./SongCardForIdentify";
 import { Music3 } from "lucide-react";
+import { supabase } from '../utils/supabaseClient';
 
 const { useRecognizeSongMutation } = shazamCoreApi;
 
@@ -18,10 +19,11 @@ const FloatingAudioButton = () => {
   useEffect(() => {
     if (data) {
       if (data.track) {
+        console.log("Song recognized:", data.track);
         setSongInfo(data.track);
         setNoSongFound(false);
         setShowModal(false);
-        console.log("Song recognized:", data.track.title);
+        saveSongToHistory(data.track);
       } else if (data.track === null && (!data.matches || data.matches.length === 0)) {
         setNoSongFound(true);
         console.log("No matching song found in API response");
@@ -80,6 +82,30 @@ const FloatingAudioButton = () => {
         console.error("Error accessing microphone:", error);
         setIsActive(false);
       }
+    }
+  };
+
+  const saveSongToHistory = async (song) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const songData = {
+          user_id: user.id,
+          song_key: song.hub?.actions[0]?.id || song.key || song.id,
+          title: song.title,
+          artist: song.subtitle,
+          artist_id: song.artists?.[0]?.adamid,
+          recognized_at: new Date().toISOString(),
+          cover_art: song.images?.coverart || song.share?.image,
+          // Add the audio_url field
+          audio_url: song.hub?.actions?.find(action => action.type === "uri")?.uri || null
+        };
+        const { error } = await supabase.from('recognized_songs').insert(songData);
+        if (error) throw error;
+        console.log("Song saved to history:", songData);
+      }
+    } catch (error) {
+      console.error("Error saving song to history:", error);
     }
   };
 
