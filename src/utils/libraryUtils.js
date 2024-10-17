@@ -1,6 +1,13 @@
 import { supabase } from "./supabaseClient";
 
 export const handleAddToLibrary = async (libraryId, song) => {
+  const getArtistId = () =>
+    song?.artist_id ||
+    song?.artists?.[0]?.adamid ||
+    song?.relationships?.artists?.data[0]?.id ||
+    artist_id ||
+    "";
+
   try {
     if (!song) throw new Error("Song data is undefined");
 
@@ -36,6 +43,7 @@ export const handleAddToLibrary = async (libraryId, song) => {
           song.attributes.previews[0]?.url) ||
         "/path/to/default-audio.mp3",
       user_id: user.id,
+      artist_id: getArtistId(),
     };
 
     const { data, error } = await supabase

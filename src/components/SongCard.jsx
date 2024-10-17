@@ -38,8 +38,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, artist_id, libraries =
 
   // Function to get the cover art URL
   const getCoverArt = () => song?.cover_art || song?.images?.coverart || song?.attributes?.artwork?.url || 'default-image-url';
-  // Function to get a comparator for the active song
-  const getActiveSongComparator = () => song?.attributes?.name || song?.key || 'default-comparator';
+
   // Function to get the artist name
   const getArtistName = () => song?.artist || song?.subtitle || song?.attributes?.artistName || 'Unknown Artist';
 
