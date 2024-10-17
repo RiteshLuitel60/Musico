@@ -37,7 +37,6 @@ let activeSongId=   activeSong?.resources?.songs && Object.keys(activeSong.resou
     isActive = activeSongId === song?.id || songId;
 
   } 
-  console.log("isActive " , activeSong?.song_key);
 
   const PlayIconComponent = playIcon;
   const PauseIconComponent = pauseIcon;
