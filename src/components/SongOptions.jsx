@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Plus, FolderPlus, MoreHorizontal } from 'lucide-react';
 import { fetchUserLibraries, handleAddToLibrary, handleCreateLibrary } from '../utils/libraryUtils';
 import { Trash2 } from 'lucide-react';
@@ -13,8 +13,21 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
 
+  const menuRef = useRef(null);
+
   useEffect(() => {
     loadLibraries();
+
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const loadLibraries = async () => {
@@ -63,7 +76,7 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)} 
         className="p-2 rounded-full hover:text-white/80 transition-all duration-200 ease-in-out "
