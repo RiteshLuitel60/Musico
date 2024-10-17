@@ -7,17 +7,20 @@ import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 import { History } from 'lucide-react';
 import SongCard from '../components/SongCard';
 
-const RecognizedSongItem = ({ song, index, isPlaying, activeSong, handlePauseClick, handlePlayClick }) => {
+const RecognizedSongItem = ({ song, index, isPlaying, activeSong, }) => {
   const { data: songDetails, isFetching, error } = useGetSongDetailsQuery(song.song_key);
 
   if (error) return <Error />;
 
+  console.log("song " , isPlaying);
+  console.log("activeSong " , index);
+
   const detailedSong = { ...song, ...songDetails };
+  
+  console.log("a " ,detailedSong);
 
   return (
     <SongCard
-      artist_id={song.artist_id}
-      key={song.id}
       song={detailedSong}
       isPlaying={isPlaying}
       activeSong={activeSong}

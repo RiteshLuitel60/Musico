@@ -23,7 +23,10 @@ let activeSongId=   activeSong?.resources?.songs && Object.keys(activeSong.resou
   
   let isActive = false;
 
-  if (activeSong?.id && song?.id) {
+  if (activeSong?.song_key) {
+    isActive = activeSong?.song_key === song?.song_key;
+  }
+  else if (activeSong?.id && song?.id) {
     isActive = activeSong.id === song.id;
   } else if (activeSong?.key && song?.key) {
     isActive = activeSong.key === song.key;
@@ -33,7 +36,8 @@ let activeSongId=   activeSong?.resources?.songs && Object.keys(activeSong.resou
   else if (activeSongId) {
     isActive = activeSongId === song?.id || songId;
 
-  }
+  } 
+  console.log("isActive " , activeSong?.song_key);
 
   const PlayIconComponent = playIcon;
   const PauseIconComponent = pauseIcon;

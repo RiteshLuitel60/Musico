@@ -9,7 +9,7 @@ import { handleAddToLibrary, handleCreateLibrary, fetchUserLibraries } from '../
 
 
 // SongCard component definition
-const SongCard = ({ song, isPlaying, activeSong, data, i, artist_id, libraries = [], setLibraries, currentLibraryId, onRemoveFromLibrary }) => {
+const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLibraries, currentLibraryId, onRemoveFromLibrary }) => {
   const dispatch = useDispatch(); // Hook to dispatch actions
   const [isVisible, setIsVisible] = useState(true); // State to manage visibility
 
@@ -23,6 +23,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, artist_id, libraries =
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
     console.log(song); // Log the current song
+    
 
   };
 
