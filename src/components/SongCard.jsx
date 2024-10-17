@@ -73,21 +73,24 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[160px] p-4 bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out hover:bg-white/5">
-      <div className="relative w-full h-28 group ">
-        <div className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${activeSong?.title === song.title ? 'flex bg-black bg-opacity-70' : 'hidden'}`}>
-          <PlayPause
-            isPlaying={isPlaying}
-            activeSong={activeSong}
-            song={song}
-            handlePause={handlePauseClick}
-            handlePlay={handlePlayClick}
-          />
+    <div className="flex flex-col w-[160px] p-4 bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group">
+      <div className="relative w-full h-28">
+        <div className="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-90 transition-all duration-300 ease-in-out"></div>
+        <div className={`absolute inset-0 justify-center items-center hidden group-hover:flex`}>
+          <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center z-10">
+            <PlayPause
+              isPlaying={isPlaying}
+              activeSong={activeSong}
+              song={song}
+              handlePause={handlePauseClick}
+              handlePlay={handlePlayClick}
+            />
+          </div>
         </div>
         <img 
           alt="song_img" 
           src={getCoverArt()} 
-          className="w-full h-full object-cover brightness-110 hover:brightness-100 transition-all duration-300"
+          className="w-full h-full object-cover brightness-110 group-hover:brightness-50 transition-all duration-300"
         />
       </div>
 
