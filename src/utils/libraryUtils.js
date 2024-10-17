@@ -8,6 +8,9 @@ export const handleAddToLibrary = async (libraryId, song) => {
     artist_id ||
     "";
 
+  const getSongId = () =>
+    song?.song_key || song?.hub?.actions[0]?.id || song?.key || song?.id || "";
+
   try {
     if (!song) throw new Error("Song data is undefined");
 
@@ -18,7 +21,7 @@ export const handleAddToLibrary = async (libraryId, song) => {
 
     const songData = {
       library_id: libraryId,
-      song_key: song.key || song.id || `song-${Date.now()}`,
+      song_key: getSongId(),
       title:
         song.title || (song.attributes && song.attributes.name) || "Untitled",
       artist:

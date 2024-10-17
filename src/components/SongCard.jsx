@@ -33,7 +33,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, artist_id, libraries =
 
 
   // Function to get the artist ID
-  const getArtistId = () => song?.artist_id || song?.artists?.[0]?.adamid || song?.relationships?.artists?.data[0]?.id || artist_id || '';
+  const getArtistId = () => song?.artist_id || song?.artists?.[0]?.adamid || song?.relationships?.artists?.data[0]?.id ||  '';
 
 
   // Function to get the cover art URL
