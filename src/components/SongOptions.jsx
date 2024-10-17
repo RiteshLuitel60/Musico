@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, FolderPlus, MoreHorizontal } from 'lucide-react';
 import { fetchUserLibraries, handleAddToLibrary, handleCreateLibrary } from '../utils/libraryUtils';
 import { Trash2 } from 'lucide-react';
+import Notification from './Notification';
 
 const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +10,8 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
   const [libraries, setLibraries] = useState([]);
   const [addedToLibraries, setAddedToLibraries] = useState({});
   const [isLoadingLibraries, setIsLoadingLibraries] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   useEffect(() => {
     loadLibraries();
@@ -28,7 +31,12 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     const result = await handleAddToLibrary(libraryId, song);
     if (!result.success) {
       setAddedToLibraries(prev => ({ ...prev, [libraryId]: false }));
-      alert(result.error.message || 'Failed to add song to library.');
+      if (result.error.code === '23505') {
+        setNotificationMessage('Song already exists in the library');
+      } else {
+        setNotificationMessage(result.error.message || 'Failed to add song to library.');
+      }
+      setShowNotification(true);
     }
   };
 
@@ -101,6 +109,11 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
           )}
         </div>
       )}
+      <Notification
+        message={notificationMessage}
+        isVisible={showNotification}
+        onClose={() => setShowNotification(false)}
+      />
     </div>
   );
 };

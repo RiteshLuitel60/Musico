@@ -15,6 +15,9 @@ module.exports = {
         wave: "wave 1.2s linear infinite",
         slowfade: "slowfade 2.2s ease-in-out",
         like: "likeAnimation 0.3s ease-in-out",
+        fadeInDown: "fadeInDown 0.3s ease-out",
+        fadeOutUp: "fadeOutUp 0.3s ease-out",
+        fadeIn: "fadeIn 0.2s ease-out",
       },
       keyframes: {
         slowfade: {
@@ -48,6 +51,18 @@ module.exports = {
           "50%": { transform: "scale(0.95)" },
           "100%": { transform: "scale(1)" },
         },
+        fadeInDown: {
+          "0%": { opacity: "0", transform: "translateY(-10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeOutUp: {
+          "0%": { opacity: "1", transform: "translateY(0)" },
+          "100%": { opacity: "0", transform: "translateY(-10px)" },
+        },
+        fadeIn: {
+          from: { opacity: 0, transform: "translateY(-10px)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
       },
       transitionProperty: {
         colors: "background-color, color",
@@ -62,3 +77,20 @@ module.exports = {
   },
   plugins: [],
 };
+
+const styles = `
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+`;
