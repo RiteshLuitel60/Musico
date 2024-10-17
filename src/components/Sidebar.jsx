@@ -58,7 +58,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900">
+      <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-slate-800">
         <img src={logo} alt="logo" className="w-full h-24 object-cover" />
         <NavLinks />
       </div>

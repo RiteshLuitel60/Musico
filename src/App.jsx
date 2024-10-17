@@ -84,7 +84,7 @@ const App = () => {
         <div className="relative flex h-screen overflow-hidden">
           <GoToTop />
           <Sidebar />
-          <div className="flex-1 flex flex-col bg-gradient-to-br from-slate-400 via-slate-600 to-slate-800 backdrop-blur-lg">
+          <div className="flex-1 flex flex-col bg-gradient-to-b from-slate-500 via-slate-800 to-slate-900 backdrop-blur-lg">
             <div className="flex items-center space-x-1 px-4">
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center">
@@ -120,7 +120,7 @@ const App = () => {
             </div>
           </div>
           {isSongActive(activeSong) && (
-            <div className="fixed h-24 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-tl from-slate-700 via-slate-800 to-slate-900 backdrop-blur-lg z-50 shadow-lg">
+            <div className="fixed h-24 bottom-0 left-0 right-0 flex animate-slideup bg-slate-900 backdrop-blur-lg z-50 shadow-lg">
               <MusicPlayer />
             </div>
           )}
