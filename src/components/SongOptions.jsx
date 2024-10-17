@@ -71,7 +71,7 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
         <MoreHorizontal size={16} color="#FFFFFF" />
       </button>
       {isOpen && (
-        <div className="absolute bottom-full right-[-15px] mb-2 w-48 bg-black/90 backdrop-blur-md rounded-md shadow-lg z-50">
+        <div className="absolute bottom-full right-[-20px] mb-2 w-48 bg-black/90 backdrop-blur-md rounded-md shadow-lg z-50">
           {currentLibraryId && (
             <button 
               onClick={handleRemoveFromLibrary} 
