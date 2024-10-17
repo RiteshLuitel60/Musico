@@ -10,7 +10,7 @@ const PlayPause = ({
   handlePlay,
   songId,
   size = 35, // Default size
-  color = "text-gray-300", // Default color
+  color = "text-white", // Default color
   playIcon = FaPlayCircle, // Default play icon
   pauseIcon = FaPauseCircle, // Default pause icon
 }) => {
