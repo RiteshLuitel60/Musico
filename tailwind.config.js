@@ -18,6 +18,7 @@ module.exports = {
         fadeInDown: "fadeInDown 0.3s ease-out",
         fadeOutUp: "fadeOutUp 0.3s ease-out",
         fadeIn: "fadeIn 0.2s ease-out",
+        fadeUp: "fade-up 0.2s ease-out",
       },
       keyframes: {
         slowfade: {
@@ -62,6 +63,16 @@ module.exports = {
         fadeIn: {
           from: { opacity: 0, transform: "translateY(-10px)" },
           to: { opacity: 1, transform: "translateY(0)" },
+        },
+        "fade-up": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(10px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
         },
       },
       transitionProperty: {

@@ -77,7 +77,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
       <div className="relative w-full h-28">
         <div className="absolute inset-0  group-hover:bg-black/70 transition-all duration-300 ease-in-out"></div>
         <div className={`absolute inset-0 justify-center items-center hidden group-hover:flex`}>
-          <div className="absolute inset-0 flex items-center justify-between p-1 z-10">
+          <div className="absolute inset-0 flex items-center justify-between animate-fadeUp p-1 z-10">
             <LikeButton song={{
               artist_id: getArtistId(),
               key: getSongId(),
