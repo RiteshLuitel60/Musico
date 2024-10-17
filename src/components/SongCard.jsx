@@ -73,11 +73,19 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[160px] p-4 bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group">
+    <div className="flex flex-col w-[160px] p-4 hover:bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group hover:bg-opacity-70">
       <div className="relative w-full h-28">
-        <div className="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-90 transition-all duration-300 ease-in-out"></div>
+        <div className="absolute inset-0  group-hover:bg-black/70 transition-all duration-300 ease-in-out"></div>
         <div className={`absolute inset-0 justify-center items-center hidden group-hover:flex`}>
-          <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center z-10">
+          <div className="absolute inset-0 flex items-center justify-between px-4 z-10">
+            <LikeButton song={{
+              artist_id: getArtistId(),
+              key: getSongId(),
+              title: getSongTitle(),
+              subtitle: getArtistName(),
+              images: { coverart: getCoverArt() },
+              audio_url: song.audio_url || song.hub?.actions?.find(action => action.type === "uri")?.uri || song.attributes?.previews?.[0]?.url,
+            }} isLikedSongs={song.isLikedSongs} />
             <PlayPause
               isPlaying={isPlaying}
               activeSong={activeSong}
@@ -85,48 +93,33 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
               handlePause={handlePauseClick}
               handlePlay={handlePlayClick}
             />
+            <SongOptions
+              song={song}
+              libraries={libraries}
+              onAddToLibrary={onAddToLibrary}
+              onCreateLibrary={onCreateLibrary}
+              currentLibraryId={currentLibraryId}
+              onRemoveFromLibrary={onRemoveFromLibrary}
+            />
           </div>
         </div>
         <img 
           alt="song_img" 
           src={getCoverArt()} 
-          className="w-full h-full object-cover brightness-110 group-hover:brightness-50 transition-all duration-300"
+          className="w-full h-full object-cover rounded-lg"
         />
       </div>
 
       <div className="mt-4 flex flex-col">
         <p className="font-semibold text-lg text-white truncate">
-          <Link to={`/songs/${getSongId()}`}>
-            {getSongTitle()}
-          </Link>
+          {getSongTitle()}
         </p>
         <p className="text-sm truncate text-gray-300 mt-1">
-          <Link to={getArtistId() ? `/artists/${getArtistId()}` : '/top-artists'}>
-            {getArtistName()}
-          </Link>
+          {getArtistName()}
         </p>
       </div>
       
-      <div className="mt-4 flex justify-between items-center">
-
-        <LikeButton song={{
-          artist_id: getArtistId(),
-          key: getSongId(),
-          title: getSongTitle(),
-          subtitle: getArtistName(),
-          images: { coverart: getCoverArt() },
-          audio_url: song.audio_url || song.hub?.actions?.find(action => action.type === "uri")?.uri || song.attributes?.previews?.[0]?.url,
-        }} isLikedSongs={song.isLikedSongs} />
-
-        <SongOptions
-          song={song}
-          libraries={libraries}
-          onAddToLibrary={onAddToLibrary}
-          onCreateLibrary={onCreateLibrary}
-          currentLibraryId={currentLibraryId}
-          onRemoveFromLibrary={onRemoveFromLibrary}
-        />
-      </div>
+  
     </div>
   );
 };
