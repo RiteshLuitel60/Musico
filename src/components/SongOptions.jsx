@@ -79,9 +79,9 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     <div className="relative" ref={menuRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)} 
-        className="p-2 rounded-full hover:text-white/80 transition-all duration-200 ease-in-out "
+        className="p-1 rounded-full hover:text-white/80 transition-all duration-200 ease-in-out "
       >
-        <MoreHorizontal size={16} color="#FFFFFF" />
+        <MoreHorizontal size={20} color="#FFFFFF" />
       </button>
       {isOpen && (
         <div className="absolute bottom-full right-[-20px] mb-2 w-48 bg-black/90 backdrop-blur-md rounded-md shadow-lg z-50">
