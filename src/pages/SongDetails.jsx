@@ -13,7 +13,7 @@ import SongOptions from '../components/SongOptions';
 
 const SongDetails = () => {
   const dispatch = useDispatch();
-  const { songid, id: artistId } = useParams();
+  const { songid } = useParams();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
 
   const [finalSongId, setFinalSongId] = useState(songid);
@@ -60,7 +60,7 @@ const SongDetails = () => {
 
   return (
     <div className="flex flex-col  ">
-      <DetailsHeader artistId={artistId} songData={songData} />
+      <DetailsHeader songData={songData} />
       <div className="flex items-center mb-10  ">
         <div>
           <PlayPause
@@ -113,7 +113,6 @@ const SongDetails = () => {
 
       <RelatedSongsManual
         data={relatedSongs}
-        artistId={artistId}
         isPlaying={isPlaying}
         activeSong={activeSong}
         handlePauseClick={handlePauseClick}
