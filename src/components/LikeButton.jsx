@@ -118,7 +118,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
       <Heart
         size={20}
         fill={isLiked ? "lime" : "none"}
-        stroke={isLiked ? "lime" : "currentColor"}
+        stroke={isLiked ? "lime" : "white"}
         className={isLiked ? "animate-like" : ""}
       />
     </button>
