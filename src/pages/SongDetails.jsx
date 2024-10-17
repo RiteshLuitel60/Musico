@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { DetailsHeader, Error, Loader } from '../components';
 import { setActiveSong, playPause } from '../redux/features/playerSlice';
-import { useGetSongDetailsQuery, useGetSongRelatedQuery } from '../redux/services/shazamCore';
+import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 import RelatedSongsManual from '../components/RelatedSongManual';
 import PlayPause from '../components/PlayPause';
 import { MdPlayCircleFilled } from "react-icons/md";
@@ -18,7 +18,7 @@ const SongDetails = () => {
 
   const [finalSongId, setFinalSongId] = useState(songid);
   const { data: songData, isFetching: isFetchingSongDetails, error } = useGetSongDetailsQuery(finalSongId);
-  const { data: relatedSongs, isFetching: isFetchingRelatedSongs } = useGetSongRelatedQuery(finalSongId);
+
 
     const audioUrl = songData?.resources?.['shazam-songs'] && Object.values(songData.resources['shazam-songs'])[0]?.attributes?.streaming?.preview;
 
@@ -35,11 +35,6 @@ const SongDetails = () => {
 
 
 
-  useEffect(() => {
-    if (relatedSongs && !relatedSongs.some(song => song?.id || song?.key ||song?.hub?.actions[0]?.id === songid)) {
-      setFinalSongId(498502624); // Fallback to default trackId if no match is found
-    }
-  }, [relatedSongs, songid]);
 
   const handlePauseClick = () => {
     dispatch(playPause(false));
@@ -51,7 +46,7 @@ const SongDetails = () => {
     console.log(songName + "played");
   };
 
-  if (isFetchingSongDetails && isFetchingRelatedSongs) return <Loader title="Searching song details" />;
+  if (isFetchingSongDetails) return <Loader title="Searching song details" />;
   if (error) return <Error />;
 
   const lyrics = songData?.sections?.find((section) => section.type === 'LYRICS')?.text
@@ -112,11 +107,6 @@ const SongDetails = () => {
     
 
       <RelatedSongsManual
-        data={relatedSongs}
-        isPlaying={isPlaying}
-        activeSong={activeSong}
-        handlePauseClick={handlePauseClick}
-        handlePlayClick={handlePlayClick}
       />
     </div>
   );
