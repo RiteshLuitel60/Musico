@@ -23,14 +23,19 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, artist_id, libraries =
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
     console.log(song); // Log the current song
+
   };
 
   // Function to get the song title
   const getSongTitle = () => song?.title || song?.attributes?.name || 'Unknown Title';
   // Function to get the song ID
-  const getSongId = () => song?.song_key||song?.hub?.actions[0]?.id || song?.key || song?.id || "" ;
+  const getSongId = () => song?.song_key||song?.hub?.actions[0]?.id || song?.key || song?.id ||  '';
+
+
   // Function to get the artist ID
-  const getArtistId = () => song?.artists?.[0]?.adamid || song?.relationships?.artists?.data[0]?.id || artist_id || '';
+  const getArtistId = () => song?.artist_id || song?.artists?.[0]?.adamid || song?.relationships?.artists?.data[0]?.id || artist_id || '';
+
+
   // Function to get the cover art URL
   const getCoverArt = () => song?.cover_art || song?.images?.coverart || song?.attributes?.artwork?.url || 'default-image-url';
   // Function to get a comparator for the active song
@@ -102,13 +107,11 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, artist_id, libraries =
       <div className="mt-4 flex justify-between items-center">
 
         <LikeButton song={{
+          artist_id: getArtistId(),
           key: getSongId(),
           title: getSongTitle(),
           subtitle: getArtistName(),
           images: { coverart: getCoverArt() },
-          hub: song.hub,
-          sections: song.sections,
-          attributes: song.attributes,
           audio_url: song.audio_url || song.hub?.actions?.find(action => action.type === "uri")?.uri || song.attributes?.previews?.[0]?.url,
         }} isLikedSongs={song.isLikedSongs} />
 

@@ -78,6 +78,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
     setIsLoading(true);
     setIsLiked((prev) => !prev);
 
+
     try {
       if (isLiked) {
         await supabase
@@ -91,11 +92,13 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
           title: song.title || song.name ,
           artist: song.subtitle || song?.attributes?.artistName ,
           cover_art: song.images?.coverart,
+          artist_id: song.artist_id || "",
           audio_url: song.hub?.actions?.find((action) => action.type === "uri")?.uri ||
                      song.attributes?.previews?.[0]?.url ||
                      song.audio_url ||
                      "",
         };
+
 
         await supabase.from("library_songs").insert({
           library_id: likedSongsPlaylistId,
