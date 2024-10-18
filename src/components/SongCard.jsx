@@ -111,13 +111,17 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
           className="w-full h-full object-cover rounded-lg"
         />
       </div>
-
+      
       <div className="mt-4 flex flex-col">
         <p className="font-semibold text-lg text-white truncate">
-          {getSongTitle()}
+          <Link to={`/songs/${getSongId()}`}>
+            {getSongTitle()}
+          </Link>
         </p>
         <p className="text-sm truncate text-gray-300 mt-1">
-          {getArtistName()}
+          <Link to={getArtistId() ? `/artists/${getArtistId()}` : '/top-artists'}>
+            {getArtistName()}
+          </Link>
         </p>
       </div>
       
