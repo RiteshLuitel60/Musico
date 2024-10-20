@@ -48,7 +48,7 @@ const CountryTracks = () => {
     }
   };
 
-  if (isFetching && loading) return <Loader title="Loading Songs around you..." />;
+  if (isFetching || loading) return <Loader title="Loading Songs around you..." />;
 
   if (error && country !== '') return <Error />;
 
