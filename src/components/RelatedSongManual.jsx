@@ -7,7 +7,7 @@ const RelatedSongsManual = ({ //used for manually getting random songs coz api i
   return (
     <div className="flex flex-col">
       <h1 className="font-bold text-3xl text-white">
-        More Related Songs
+        You Might Also Like
       </h1>
 
       <div className="mt-6 w-full flex flex-col">
