@@ -73,7 +73,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[160px] p-4 hover:bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group hover:bg-opacity-70">
+    <div className="flex flex-col w-[160px] p-4 hover:bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group hover:bg-opacity-70 hover:scale-105">
       <div className="relative w-full h-28">
         <div className="absolute inset-0  group-hover:bg-black/70 transition-all duration-300 ease-in-out"></div>
         <div className={`absolute inset-0 justify-center items-center hidden group-hover:flex`}>

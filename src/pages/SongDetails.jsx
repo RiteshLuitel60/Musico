@@ -69,7 +69,7 @@ const SongDetails = () => {
             artistName={artistName}
             songId={songInfo}
             size={75}
-            color="text-black"
+            color="text-green-400"
             playIcon={MdPlayCircleFilled}
             pauseIcon={MdPauseCircleOutline}
           />
