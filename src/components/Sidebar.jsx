@@ -58,23 +58,28 @@ const Sidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-slate-800">
+      <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-slate-800 z-20">
         <img src={logo} alt="logo" className="w-full h-24 object-cover" />
         <NavLinks />
       </div>
 
-      <div className="absolute md:hidden block top-6 right-3">
+      {/* Mobile menu button */}
+      <div className="absolute md:hidden block top-6 right-3 z-30">
         {!mobileMenuOpen ? (
-          <HiOutlineMenu className="w-6 h-6 mr-2 text-white" onClick={() => setMobileMenuOpen(true)} />
+          <HiOutlineMenu className="w-6 h-6 text-white" onClick={() => setMobileMenuOpen(true)} />
         ) : (
-          <RiCloseLine className="w-6 h-6 mr-2 text-white" onClick={() => setMobileMenuOpen(false)} />
+          <RiCloseLine className="w-6 h-6 text-white" onClick={() => setMobileMenuOpen(false)} />
         )}
       </div>
 
-      <div className={`absolute top-0 h-screen w-2/3 bg-gradient-to-tl from-white/10 to-[#483D8B] backdrop-blur-lg z-10 p-6 md:hidden smooth-transition ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
+      {/* Mobile Sidebar */}
+      <div className={`absolute top-0 h-screen w-2/3 bg-gradient-to-tl from-white/10 to-slate-800 backdrop-blur-lg z-20 p-6 md:hidden smooth-transition ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
         <img src={logo} alt="logo" className="w-full h-14 object-contain" />
+        <div>
+
         <UserNameDisplay className="mt-4 mb-6 text-white" />
         <NavLinks handleClick={() => setMobileMenuOpen(false)} />
+        </div>
       </div>
     </>
   );
