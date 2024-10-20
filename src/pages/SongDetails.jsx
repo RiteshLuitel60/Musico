@@ -18,7 +18,7 @@ const SongDetails = () => {
 
   const [finalSongId, setFinalSongId] = useState(songid);
   const { data: songData, isFetching: isFetchingSongDetails, error } = useGetSongDetailsQuery(finalSongId);
-
+  
 
     const audioUrl = songData?.resources?.['shazam-songs'] && Object.values(songData.resources['shazam-songs'])[0]?.attributes?.streaming?.preview;
 
@@ -107,7 +107,7 @@ const SongDetails = () => {
     
 
       <RelatedSongsManual
-      />
+      songData={songData}/>
     </div>
   );
 };

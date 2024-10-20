@@ -2,6 +2,7 @@ import React from 'react';
 import TopPlayM from './TopPlaysOnly';
 
 const RelatedSongsManual = ({ //used for manually getting random songs coz api is not working as intended 
+  songData
 }) => {
   return (
     <div className="flex flex-col">
@@ -10,7 +11,7 @@ const RelatedSongsManual = ({ //used for manually getting random songs coz api i
       </h1>
 
       <div className="mt-6 w-full flex flex-col">
-        <TopPlayM />
+        <TopPlayM songData={songData} />
       </div>
 
       <div className="mt-8">

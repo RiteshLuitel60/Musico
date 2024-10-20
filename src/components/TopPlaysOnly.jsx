@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import PlayPause from './PlayPause';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
-import { useGetTopChartsQuery } from '../redux/services/shazamCore';
+import { useGetTopChartsQuery, useGetSongsByGenreQuery } from '../redux/services/shazamCore';
 
 // Function to shuffle an array
 const shuffleArray = (array) => {
@@ -44,21 +44,21 @@ const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handle
   </div>
 );
 
-const TopPlayM = () => {
+const TopPlayM = ({ songData }) => {
   const dispatch = useDispatch();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
-  const { data } = useGetTopChartsQuery();
   const divRef = useRef(null);
 
   const [topPlays, setTopPlays] = useState([]);
 
+  const genre = (songData?.resources?.['shazam-songs']?.[songData?.data?.[0]?.id]?.attributes?.genres?.primary).toUpperCase();
+
+  const { data, isFetching, error } = useGetSongsByGenreQuery(genre, { skip: !genre });
+
   useEffect(() => {
     if (data) {
-      // Shuffle the data and pick 10 songs from the middle
       const shuffledData = shuffleArray(data);
-      const start = Math.floor(shuffledData.length / 2) - 5; // Middle of the array
-      const end = start + 10;
-      setTopPlays(shuffledData.slice(start, end));
+      setTopPlays(shuffledData.slice(0, 10));
     }
   }, [data]);
 
@@ -67,15 +67,17 @@ const TopPlayM = () => {
   };
 
   const handlePlayClick = (song, i) => {
-    dispatch(setActiveSong({ song, data, i }));
+    dispatch(setActiveSong({ song, data: topPlays, i }));
     dispatch(playPause(true));
   };
+
+  if (isFetching) return <div className='text-white'>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div ref={divRef} className="xl:ml-8 ml-0 xl:mb-0 mb-3 flex-1 xl:max-w-[390px] max-w-full flex flex-col">
       <div className="w-full flex flex-col">
         <div className="flex flex-row justify-between items-center">
-          <h2 className="text-white font-bold text-2xl"></h2>
           <Link to="/top-charts">
             <p className="text-gray-300 text-sm cursor-pointer">See more</p> 
           </Link>
@@ -84,7 +86,7 @@ const TopPlayM = () => {
         <div className="mt-4 flex flex-col gap-1">
           {topPlays.map((song, i) => (
             <TopChartCard
-              key={song.id}
+              key={song.key || song.id}
               song={song}
               i={i}
               isPlaying={isPlaying}
