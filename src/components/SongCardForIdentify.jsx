@@ -1,3 +1,4 @@
+// Import necessary dependencies and components
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -5,6 +6,7 @@ import Draggable from 'react-draggable';
 import PlayPause from './PlayPause';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
 
+// SongCardForIdentify component
 const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(true);
@@ -13,6 +15,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
   const cardRef = useRef(null);
   const nodeRef = useRef(null);
 
+  // Destructure song properties
   const {
     title,
     subtitle,
@@ -23,6 +26,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
 
   let key = song?.hub?.actions[0]?.id
 
+  // Effect to handle resizing
   useEffect(() => {
     const handleResize = () => {
       if (cardRef.current) {
@@ -42,20 +46,24 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
   }, []);
   
 
+  // Handle pause click
   const handlePauseClick = () => {
     dispatch(playPause(false) );
   };
 
+  // Handle play click
   const handlePlayClick = () => {
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true))
     console.log(song);
   };
 
+  // Handle close click
   const handleCloseClick = () => {
     setIsVisible(false);
   };
 
+  // Toggle lyrics visibility
   const handleLyricsToggle = () => {
     setLyricsOn(!lyricsOn);
   };
@@ -71,7 +79,9 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
         className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-black text-white rounded-lg overflow-hidden shadow-lg cursor-move"
         style={{ width: `${size.width}px`, height: `${size.height}px`, maxWidth: '90vw', maxHeight: '90vh' }}
       >
+        {/* Draggable handle */}
         <div className="handle absolute top-0 left-0 right-0 h-8 bg-gray-800 cursor-move"></div>
+        {/* Close button */}
         <div className="absolute top-2 right-2 z-10">
           <button
             onClick={handleCloseClick}
@@ -83,6 +93,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
           </button>
         </div>
         
+        {/* Song information */}
         <div className="p-4 mt-8 overflow-y-auto" style={{ height: 'calc(100% - 32px)' }}>
           <div className="flex items-center">
             <img src={images?.coverart} alt={title} className="w-16 h-16 object-cover rounded-lg mr-4" />
@@ -98,6 +109,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
           
         
 
+          {/* Lyrics toggle button */}
           <button 
             onClick={handleLyricsToggle}
             className="mt-4 w-full border border-white text-white py-2 rounded-full hover:bg-white hover:text-black transition-colors duration-200"
@@ -105,6 +117,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
             {lyricsOn ? 'TURN LYRICS OFF' : 'TURN LYRICS ON'}
           </button>
 
+          {/* Lyrics display */}
           {lyricsOn && (
             <div className="mt-4 max-h-40 overflow-y-auto">
               <p className="text-sm text-gray-300">
@@ -114,6 +127,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
           )}
         </div>
 
+        {/* Play/Pause controls */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gray-900">
           <PlayPause
             isPlaying={isPlaying}

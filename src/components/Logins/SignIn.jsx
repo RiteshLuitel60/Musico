@@ -1,9 +1,12 @@
+// Import necessary dependencies
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 
+// Define the SignIn component
 const SignIn = () => {
+  // State variables for form inputs and user status
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
@@ -12,17 +15,22 @@ const SignIn = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Hook for navigation
   const navigate = useNavigate();
+  // Refs for auth listener and sign-in animation
   const authListenerRef = useRef(null);
   const signInRef = useRef(null);
 
+  // Effect to handle authentication state changes
   useEffect(() => {
+    // Function to get the current session
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
     };
     getSession();
 
+    // Subscribe to auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setUser(session?.user ?? null);
@@ -31,6 +39,7 @@ const SignIn = () => {
 
     authListenerRef.current = subscription;
 
+    // Cleanup function to unsubscribe
     return () => {
       if (authListenerRef.current) {
         authListenerRef.current.unsubscribe();
@@ -38,9 +47,11 @@ const SignIn = () => {
     };
   }, [supabase.auth]);
 
+  // Effect to handle successful sign-in
   useEffect(() => {
     if (user) {
       setIsSignedIn(true);
+      // Animate sign-in and navigate to home page
       setTimeout(() => {
         if (signInRef.current) {
           signInRef.current.style.transition = 'transform 0.5s ease-out';
@@ -53,6 +64,7 @@ const SignIn = () => {
     }
   }, [user, navigate]);
 
+  // Function to handle sign-in
   const handleSignIn = useCallback(async (e) => {
     e.preventDefault();
     try {
@@ -66,6 +78,7 @@ const SignIn = () => {
     }
   }, [email, password, supabase.auth]);
 
+  // Function to handle sign-up
   const handleSignUp = useCallback(async (e) => {
     e.preventDefault();
     try {
@@ -78,6 +91,7 @@ const SignIn = () => {
       });
       if (error) throw error;
 
+      // Create a 'Liked Songs' library for new users
       if (user) {
         const { error: libraryError } = await supabase
           .from('libraries')
@@ -96,6 +110,7 @@ const SignIn = () => {
     }
   }, [email, password, displayName, supabase.auth]);
 
+  // Function to handle Google sign-in
   const handleGoogleSignIn = useCallback(async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -107,32 +122,41 @@ const SignIn = () => {
     }
   }, [supabase.auth]);
 
+  // Function to toggle between sign-in and sign-up forms
   const toggleSignUp = () => {
     setIsSignUp(!isSignUp);
     setEmail('');
     setPassword('');
   };
 
+  // Render the component
   return (
     <div ref={signInRef} className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
+      {/* App title */}
       <div className="absolute top-4 left-4">
         <h1 className="text-4xl font-playfair font-bold text-white italic tracking-wide shadow-lg">Musico</h1>
       </div>
+      {/* Main container */}
       <div className="max-w-md w-full space-y-8 bg-black bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-xl p-8 shadow-2xl border border-blue-200 border-opacity-20">
+        {/* Title */}
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             {isSignedIn ? 'Signing you in...' : isSignUp ? 'Sign up for an account' : 'Sign in to your account'}
           </h2>
         </div>
+        {/* Error message display */}
         {errorMessage && (
           <div className="text-red-400 text-center">
             {errorMessage}
           </div>
         )}
+        {/* Sign-in and Sign-up forms */}
         {!isSignedIn && (
           <>
             {!isSignUp ? (
+              // Sign-in form
               <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
+                {/* Form inputs */}
                 <input type="hidden" name="remember" value="true" />
                 <div className="rounded-md shadow-sm -space-y-px">
                   <div>
@@ -165,6 +189,7 @@ const SignIn = () => {
                   </div>
                 </div>
 
+                {/* Sign-in button */}
                 <div>
                   <button
                     type="submit"
@@ -175,7 +200,9 @@ const SignIn = () => {
                 </div>
               </form>
             ) : (
+              // Sign-up form
               <form className="mt-8 space-y-6" onSubmit={handleSignUp}>
+                {/* Form inputs */}
                 <input type="hidden" name="remember" value="true" />
                 <div className="rounded-md shadow-sm -space-y-px">
                   <div>
@@ -221,6 +248,7 @@ const SignIn = () => {
                   </div>
                 </div>
                 
+                {/* Sign-up button */}
                 <div>
                   <button
                     type="submit"
@@ -232,6 +260,7 @@ const SignIn = () => {
               </form>
             )}
             
+            {/* Toggle between sign-in and sign-up */}
             <div>
               <button
                 onClick={toggleSignUp}
@@ -241,6 +270,7 @@ const SignIn = () => {
               </button>
             </div>
             
+            {/* Google sign-in button */}
             <div>
               <button
                 onClick={handleGoogleSignIn}

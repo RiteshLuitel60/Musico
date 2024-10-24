@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import { LogOutIcon } from 'lucide-react';
 
+// Component for rendering a logout button
 const LogoutButton = ({ className }) => {
   const navigate = useNavigate();
 
+  // Function to handle the logout process
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -16,6 +18,7 @@ const LogoutButton = ({ className }) => {
     }
   };
 
+  // Render the logout button
   return (
     <button 
       onClick={handleLogout}

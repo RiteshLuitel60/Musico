@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowUp } from "lucide-react";
 
+// Component for a "Go to Top" button that appears when scrolling down
 const GoToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
   const scrollContainerRef = useRef(null);
 
   useEffect(() => {
-    // Find the scrollable container
+    // Find the scrollable container and add scroll event listener
     const scrollContainer = document.querySelector('.hide-scrollbar');
     if (scrollContainer) {
       scrollContainerRef.current = scrollContainer;
       scrollContainer.addEventListener("scroll", toggleVisibility);
     }
 
+    // Clean up event listener on component unmount
     return () => {
       if (scrollContainerRef.current) {
         scrollContainerRef.current.removeEventListener("scroll", toggleVisibility);
@@ -20,6 +22,7 @@ const GoToTop = () => {
     };
   }, []);
 
+  // Show/hide button based on scroll position
   const toggleVisibility = () => {
     if (scrollContainerRef.current) {
       if (scrollContainerRef.current.scrollTop > 300) {
@@ -30,6 +33,7 @@ const GoToTop = () => {
     }
   };
 
+  // Scroll to top of the container
   const scrollToTop = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({

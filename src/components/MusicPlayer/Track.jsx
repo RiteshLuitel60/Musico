@@ -3,11 +3,12 @@ import React from 'react';
 
 // Track component definition
 const Track = ({ isPlaying, isActive, activeSong }) => {
-  // Function to get artwork URL
+  // Get song info from Shazam data
   const songInfo = activeSong?.resources?.['shazam-songs'] && Object.values(activeSong.resources['shazam-songs'])[0]?.attributes;
   
+  // Function to get artwork URL
   const getArtwork = () => {
-    // Get song info from Shazam data
+  
     const coverArt = songInfo?.artwork?.url;
 
     // Check different sources for artwork

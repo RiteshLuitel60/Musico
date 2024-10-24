@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+// Component for displaying details header for artists or songs
 const DetailsHeader = ({ artistId, artistData, songData }) => {
-  // Safely access older songData resources and attributes
+  // Extract artist ID from song data
   const artistIdDynamic = songData?.resources?.['shazam-songs']?.[songData?.data?.[0]?.id]?.relationships?.artists?.data?.[0]?.id;
 
-  // Helper function to get song details (older structure)
+  // Helper function to get song details from older data structure
   const getSongDetails = (key) =>
     songData?.resources?.['shazam-songs']?.[songData?.data?.[0]?.id]?.attributes?.[key];
 
@@ -63,8 +64,10 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
 
   return (
     <div className="relative w-full flex flex-col">
+      {/* Gradient background */}
       <div className="w-full bg-gradient-to-l from-transparent to-black sm:h-48 h-28" />
 
+      {/* Profile image and details */}
       <div className="absolute inset-0 flex items-center">
         <img
           alt="profile"
@@ -84,6 +87,7 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
         </div>
       </div>
 
+      {/* Spacer */}
       <div className="w-full sm:h-44 h-24" />
     </div>
   );

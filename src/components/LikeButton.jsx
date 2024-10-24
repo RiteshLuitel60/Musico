@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Heart } from "lucide-react";
 
+// Component for a like button that interacts with a Supabase backend
 const LikeButton = ({ song, isLikedSongs = false }) => {
   const [isLiked, setIsLiked] = useState(isLikedSongs);
   const [userId, setUserId] = useState(null);
@@ -10,6 +11,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
   const supabase = useSupabaseClient();
   const isInitialized = useRef(false);
 
+  // Initialize the button state on component mount
   useEffect(() => {
     const initializeButton = async () => {
       if (isInitialized.current) return;
@@ -38,11 +40,13 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
     initializeButton();
   }, [song]); // Add song as a dependency
 
+  // Fetch the current user's ID
   const fetchUserId = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     return user ? user.id : null;
   };
 
+  // Fetch the ID of the user's "Liked Songs" playlist
   const fetchLikedSongsPlaylistId = async (userId) => {
     const { data, error } = await supabase
       .from("libraries")
@@ -58,6 +62,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
     return data ? data.id : null;
   };
 
+  // Check if the current song is liked by the user
   const checkIfLiked = async (playlistId) => {
     const { data, error } = await supabase
       .from('library_songs')
@@ -72,6 +77,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
     }
   };
 
+  // Handle the like/unlike action
   const handleLike = async () => {
     if (isLoading) return;
 
@@ -81,12 +87,14 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
 
     try {
       if (isLiked) {
+        // Remove the song from liked songs
         await supabase
           .from("library_songs")
           .delete()
           .eq("library_id", likedSongsPlaylistId)
           .eq("song_key", song.key || song.id);
       } else {
+        // Add the song to liked songs
         const songDetails = {
           song_key: song.key || song.id,
           title: song.title || song.name ,
@@ -113,6 +121,7 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
     }
   };
 
+  // Render the like button
   return (
     <button onClick={handleLike} className="focus:outline-none" disabled={isLoading}>
       <Heart

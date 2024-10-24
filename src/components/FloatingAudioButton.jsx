@@ -8,6 +8,7 @@ import { supabase } from '../utils/supabaseClient';
 const { useRecognizeSongMutation } = shazamCoreApi;
 
 const FloatingAudioButton = () => {
+  // State variables for managing button and song recognition
   const [isActive, setIsActive] = useState(false);
   const [songInfo, setSongInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +17,7 @@ const FloatingAudioButton = () => {
     useRecognizeSongMutation();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
 
+  // Effect to handle song recognition results
   useEffect(() => {
     if (data) {
       if (data.track) {
@@ -36,6 +38,7 @@ const FloatingAudioButton = () => {
     }
   }, [data, isError, error]);
 
+  // Function to handle audio data and initiate song recognition
   const handleAudioData = async (audioBlob) => {
     try {
       console.log("Starting song recognition process");
@@ -47,6 +50,7 @@ const FloatingAudioButton = () => {
     }
   };
 
+  // Function to handle button click and start audio recording
   const handleClick = async () => {
     if (!isActive) {
       setIsActive(true);
@@ -85,6 +89,7 @@ const FloatingAudioButton = () => {
     }
   };
 
+  // Function to save recognized song to user's history
   const saveSongToHistory = async (song) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -112,6 +117,7 @@ const FloatingAudioButton = () => {
   return (
     <>
       <div className="relative">
+        {/* Floating audio button */}
         <button
           className={`ml-4 mr-2  bg-slate-900 rounded-full w-7 h-7 flex items-center justify-center text-white text-lg sm:w-10 sm:h-10 sm:text-xl md:w-12 md:h-12 md:text-2xl shadow-lg focus:outline-none transition-all duration-300 ease-in-out z-50 transform hover:shadow-xl hover:scale-125 animate-pulse border border-white hover:bg-slate-800 ${isActive ? "shadow-2xl" : ""}`}
           onClick={handleClick}
@@ -125,6 +131,7 @@ const FloatingAudioButton = () => {
           </span>
         </button>
 
+        {/* Error modal */}
         {showModal && isError && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg relative">
@@ -152,6 +159,7 @@ const FloatingAudioButton = () => {
           </div>
         )}
 
+        {/* No song found modal */}
         {noSongFound && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="h-28 w-80 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-700 p-6 rounded-md shadow-2xl relative backdrop-blur-md border border-purple-800/50 flex items-center justify-center">
@@ -181,6 +189,7 @@ const FloatingAudioButton = () => {
           </div>
         )}
       </div>
+      {/* Recognized song card */}
       {songInfo && (
         <div className="fixed bottom-11 left-1/2 transform -translate-x-1/2 z-50">
           <div className="p-4 rounded-lg bg-mint-green">

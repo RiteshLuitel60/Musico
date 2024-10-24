@@ -6,7 +6,7 @@ import PlayPause from './PlayPause';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
 import { useGetTopChartsQuery, useGetSongsByGenreQuery } from '../redux/services/shazamCore';
 
-// Function to shuffle an array
+// Function to shuffle an array randomly
 const shuffleArray = (array) => {
   let shuffledArray = array.slice(); // Create a copy of the array
   for (let i = shuffledArray.length - 1; i > 0; i--) {
@@ -16,21 +16,22 @@ const shuffleArray = (array) => {
   return shuffledArray;
 };
 
+// Component for rendering individual top chart cards
 const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handlePlayClick }) => (
   <div className={`w-full flex flex-row items-center hover:bg-green-400 ${activeSong?.attributes?.name === song?.attributes?.name ? 'bg-[#26242c]' : 'bg-transparent'} py-1 p-0.7 rounded-lg cursor-pointer mb-0.5`}> 
-    <h3 className="font-extrabold text-sm text-white mr-3">{i + 1}.</h3> {/* Numbering of top chart songs */}
+    <h3 className="font-extrabold text-sm text-white mr-3">{i + 1}.</h3> 
     <div className="flex-1 flex flex-row justify-between items-center">
-      <img className="w10 h-10 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> {/* Image of top chart songs */}
+      <img className="w10 h-10 rounded-lg" src={song?.attributes?.artwork.url} alt={song?.attributes?.name} /> 
       <div className="flex-1 flex flex-col justify-center mx-3"> 
         <Link to={`/songs/${song.id}`}>
           <p className="text-base font-bold text-white">
             {song?.attributes?.name}
-          </p> {/* Song name text in top chart cards */}
+          </p> 
         </Link>
         <Link to={`/artists/${song?.relationships.artists.data[0].id}`}>
           <p className="text-sm text-gray-300 mt-1">
             {song?.attributes?.artistName} 
-          </p> {/* Artist name in top chart card */}
+          </p> 
         </Link>
       </div>
     </div>
@@ -44,6 +45,7 @@ const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handle
   </div>
 );
 
+// Main component for displaying top plays
 const TopPlayM = ({ songData }) => {
   const dispatch = useDispatch();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
@@ -51,10 +53,13 @@ const TopPlayM = ({ songData }) => {
 
   const [topPlays, setTopPlays] = useState([]);
 
+  // Extract genre from song data
   const genre = (songData?.resources?.['shazam-songs']?.[songData?.data?.[0]?.id]?.attributes?.genres?.primary).toUpperCase();
 
+  // Fetch songs by genre
   const { data, isFetching, error } = useGetSongsByGenreQuery(genre, { skip: !genre });
 
+  // Shuffle and set top plays when data is available
   useEffect(() => {
     if (data) {
       const shuffledData = shuffleArray(data);
@@ -62,15 +67,18 @@ const TopPlayM = ({ songData }) => {
     }
   }, [data]);
 
+  // Handle pause click
   const handlePauseClick = () => {
     dispatch(playPause(false));
   };
 
+  // Handle play click
   const handlePlayClick = (song, i) => {
     dispatch(setActiveSong({ song, data: topPlays, i }));
     dispatch(playPause(true));
   };
 
+  // Loading and error states
   if (isFetching) return <div className='text-white'>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 

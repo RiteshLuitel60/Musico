@@ -1,3 +1,4 @@
+// Importing icons from react-icons library
 import {
   HiOutlineHashtag,
   HiOutlineHome,
@@ -5,6 +6,7 @@ import {
   HiOutlineUserGroup,
 } from "react-icons/hi";
 
+// List of music genres
 export const genres = [
   { title: "Pop", value: "POP" },
   { title: "Hip-Hop", value: "HIP_HOP_RAP" },
@@ -22,6 +24,7 @@ export const genres = [
   { title: "K-Pop", value: "K_POP" },
 ];
 
+// Navigation links with their names, routes, and icons
 export const links = [
   { name: "Discover", to: "/", icon: HiOutlineHome },
   { name: "Around You", to: "/around-you", icon: HiOutlinePhotograph },

@@ -1,3 +1,4 @@
+// Import all components
 import Sidebar from "./Sidebar";
 import Searchbar from "./Searchbar";
 import SongCard from "./SongCard";
@@ -15,6 +16,7 @@ import UserNameDisplay from "./UserNameDisplay";
 import SignIn from "./Logins/SignIn";
 import PrivateRoute from "./PrivateRoute";
 
+// Export all components for use in other parts of the application
 export {
   TopPlay,
   Sidebar,

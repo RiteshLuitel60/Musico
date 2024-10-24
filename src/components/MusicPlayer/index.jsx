@@ -1,39 +1,52 @@
+// Import necessary libraries and components
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+// Import actions from Redux slice
 import {
   nextSong,
   prevSong,
   playPause,
 } from "../../redux/features/playerSlice";
+
+// Import child components
 import Controls from "./Controls";
 import Player from "./Player";
 import Seekbar from "./Seekbar";
 import Track from "./Track";
 import VolumeBar from "./VolumeBar";
+
+// Import utility function
 import { getAudioUrl } from "../../utils/audioUtils";
 
 const MusicPlayer = () => {
+  // Get state from Redux store
   const { activeSong, currentSongs, currentIndex, isActive, isPlaying } =
     useSelector((state) => state.player);
+
+  // Set up local state
   const [duration, setDuration] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [appTime, setAppTime] = useState(0);
   const [volume, setVolume] = useState(0.3);
   const [repeat, setRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
+
+  // Initialize dispatch
   const dispatch = useDispatch();
 
+  // Effect to play song when currentIndex changes
   useEffect(() => {
     if (currentSongs.length) dispatch(playPause(true));
   }, [currentIndex]);
 
+  // Function to handle play/pause
   const handlePlayPause = () => {
     if (!isActive) return;
-
     dispatch(playPause(!isPlaying));
   };
 
+  // Function to handle next song
   const handleNextSong = () => {
     dispatch(playPause(false));
 
@@ -44,6 +57,7 @@ const MusicPlayer = () => {
     }
   };
 
+  // Function to handle previous song
   const handlePrevSong = () => {
     if (currentIndex === 0) {
       dispatch(prevSong(currentSongs.length - 1));
@@ -54,6 +68,7 @@ const MusicPlayer = () => {
     }
   };
 
+  // Effect to preload playlist
   useEffect(() => {
     const preloadPlaylist = async () => {
       if (currentSongs.length > 0) {
@@ -64,8 +79,10 @@ const MusicPlayer = () => {
     preloadPlaylist();
   }, [currentSongs]);
 
+  // Render the music player
   return (
     <div className="relative sm:px-12 px-8 w-full flex items-center justify-between flex-wrap">
+      {/* Display current track info */}
       <Track
         isPlaying={isPlaying}
         isActive={isActive}
@@ -73,6 +90,7 @@ const MusicPlayer = () => {
       />
 
       <div className="flex-1 flex flex-col items-center justify-center sm:justify-between">
+        {/* Render player controls */}
         <Controls
           isPlaying={isPlaying}
           isActive={isActive}
@@ -85,6 +103,7 @@ const MusicPlayer = () => {
           handlePrevSong={handlePrevSong}
           handleNextSong={handleNextSong}
         />
+        {/* Render seekbar */}
         <Seekbar
           value={appTime}
           min="0"
@@ -93,6 +112,7 @@ const MusicPlayer = () => {
           setSeekTime={setSeekTime}
           appTime={appTime}
         />
+        {/* Render audio player if there's an active song */}
         {activeSong && Object.keys(activeSong).length > 0 && (
           <Player
             activeSong={activeSong}
@@ -108,6 +128,7 @@ const MusicPlayer = () => {
         )}
       </div>
 
+      {/* Render volume control */}
       <VolumeBar
         value={volume}
         min="0"

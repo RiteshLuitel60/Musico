@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { CheckCircle, AlertCircle, Info } from 'lucide-react';
 
+// Notification component for displaying messages with different types
 const Notification = ({ 
   message, 
   isVisible,  
@@ -9,27 +10,27 @@ const Notification = ({
 }) => {
   useEffect(() => {
     if (isVisible) {
-      // Set a timer to close the notification after 3 seconds
+      // Auto-close the notification after 3 seconds
       const timer = setTimeout(() => {
         onClose();
       }, 3000);
       
-      // Clear the timer if the component unmounts or isVisible changes
+      // Cleanup function to clear the timer
       return () => clearTimeout(timer);
     }
   }, [isVisible, onClose]);
 
-  // If the notification is not visible, don't render anything
+  // Don't render anything if the notification is not visible
   if (!isVisible) return null;
 
-  // Icons for different types of notifications
+  // Icons for different notification types
   const icons = {
     success: <CheckCircle className="w-5 h-5 text-green-400" />,
     error: <AlertCircle className="w-5 h-5 text-red-400" />,
     info: <Info className="w-5 h-5 text-blue-400" />
   };
 
-  // Colors for different types of notifications
+  // Background and border colors for different notification types
   const colors = {
     success: 'border-green-500/20 bg-green-500/10',
     error: 'border-red-500/20 bg-red-500/10',

@@ -1,3 +1,4 @@
+// Import necessary dependencies and components
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, HiOutlineUserGroup } from 'react-icons/hi';
@@ -9,6 +10,7 @@ import LogoutButton from './LogoutButton';
 import UserNameDisplay from './UserNameDisplay';
 import { History } from 'lucide-react';
 
+// Define navigation links
 const links = [
   { name: 'Discover', to: '/', icon: HiOutlineHome },
   { name: 'Around You', to: '/around-you', icon: HiOutlinePhotograph },
@@ -18,6 +20,7 @@ const links = [
   { name: 'Recognized Songs', to: '/recognized-songs-history', icon: History },
 ];
 
+// NavLinks component to render navigation links
 const NavLinks = ({ handleClick }) => (
   <div className="mt-10">
     {links.map((item) => (
@@ -35,10 +38,12 @@ const NavLinks = ({ handleClick }) => (
   </div>
 );
 
+// Main Sidebar component
 const Sidebar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Effect to check and update login status
   useEffect(() => {
     const checkLoginStatus = async () => {
       const { data: { session } } = await supabase.auth.getSession();

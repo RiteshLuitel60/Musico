@@ -4,16 +4,16 @@ import { useNavigate } from 'react-router-dom';
 const ArtistCard = ({ track }) => {
   const navigate = useNavigate();
 
-  // Extract the artist ID from the relationships
+  // Get artist ID
   const artistId = track?.relationships?.artists?.data[0]?.id;
 
-  // Extract the cover art URL
+  // Get cover art URL
   const coverArt = track?.attributes?.artwork?.url;
 
-  // Replace width and height in the URL with desired dimensions
+  // Format cover art URL with specific dimensions
   const formattedCoverArt = coverArt?.replace('{w}', '200').replace('{h}', '200');
 
-  // Get the first word of the artist name
+  // Get artist name
   const artistName = track?.attributes?.artistName?.split(' ')[0] || '';
 
   return (

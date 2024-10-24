@@ -1,3 +1,4 @@
+// Import necessary dependencies and components
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -27,23 +28,14 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
 
   };
 
-  // Function to get the song title
+  // Helper functions to get song details
   const getSongTitle = () => song?.title || song?.attributes?.name || 'Unknown Title';
-  // Function to get the song ID
   const getSongId = () => song?.song_key||song?.hub?.actions[0]?.id || song?.key || song?.id ||  '';
-
-
-  // Function to get the artist ID
   const getArtistId = () => song?.artist_id || song?.artists?.[0]?.adamid || song?.relationships?.artists?.data[0]?.id ||  '';
-
-
-  // Function to get the cover art URL
   const getCoverArt = () => song?.cover_art || song?.images?.coverart || song?.attributes?.artwork?.url || 'default-image-url';
-
-  // Function to get the artist name
   const getArtistName = () => song?.artist || song?.subtitle || song?.attributes?.artistName || 'Unknown Artist';
 
-  // Async function to add a song to a library
+  // Function to add a song to a library
   const onAddToLibrary = async (libraryId, song) => {
     const result = await handleAddToLibrary(libraryId, song);
     if (result.success) {
@@ -55,7 +47,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
     return result;
   };
 
-  // Async function to create a library
+  // Function to create a new library
   const onCreateLibrary = async () => {
     const result = await handleCreateLibrary(song);
     if (result.success) {

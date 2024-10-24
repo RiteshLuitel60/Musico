@@ -1,11 +1,13 @@
+// Import necessary stuff
 import React, { useRef, useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 
 
-// Add this function after the imports and before the Player component
+// Function to get audio URL from Supabase
 const fetchAudioUrlFromSupabase = async (songKey) => {
   console.log('Fetching audio URL from Supabase for song key:', songKey);
   try {
+    // Query Supabase for the audio URL
     const { data, error } = await supabase
       .from('library_songs')
       .select('audio_url')
@@ -20,20 +22,23 @@ const fetchAudioUrlFromSupabase = async (songKey) => {
   }
 };
 
+// Main Player component
 const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate, onLoadedData, repeat }) => {
 
+  // Set up refs and state
   const ref = useRef(null);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [previousVolume, setPreviousVolume] = useState(volume);
 
+   // Function to get the audio URL
    const getAudioUrl = async (song) => {
     const audioUrl = song?.resources?.['shazam-songs'] && Object.values(song.resources['shazam-songs'])[0]?.attributes?.streaming?.preview;
     if (!song) {
       return '';
     }
 
-
+    // Check different places for the audio URL
     if (song?.attributes?.previews?.[0]?.url) {
       return song.attributes.previews[0].url;
     } else if (song?.hub?.actions?.[1]?.uri) {
@@ -46,6 +51,7 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
       return audioUrl;
     }
 
+    // If not found, try Supabase
     try {
       const supabaseUrl = await fetchAudioUrlFromSupabase(song?.key || song?.id);
       if (supabaseUrl) {
@@ -59,7 +65,7 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
     return '';
   };
 
-  // Handle play/pause logic
+  // Play or pause the song
   if (ref.current) {
     if (isPlaying) {
       ref.current.play();
@@ -68,33 +74,33 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
     }
   }
 
-  // Update volume
+  // Change the volume
   useEffect(() => {
     if (ref.current) {
       ref.current.volume = isMuted ? 0 : volume;
     }
   }, [volume, isMuted]);
 
-  // Update seek time
+  // Change the current time of the song
   useEffect(() => {
     if (ref.current) {
       ref.current.currentTime = seekTime;
     }
   }, [seekTime]);
 
-  // Update playback rate
+  // Change the playback speed
   useEffect(() => {
     if (ref.current) {
       ref.current.playbackRate = playbackRate;
     }
   }, [playbackRate]);
 
-  // New function to handle playback rate change
+  // Function to change playback speed
   const handlePlaybackRateChange = (newRate) => {
     setPlaybackRate(newRate);
   };
 
-  // New function to handle mute/unmute
+  // Function to mute/unmute
   const handleMuteToggle = () => {
     if (isMuted) {
       setIsMuted(false);
@@ -110,13 +116,14 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
     }
   };
 
-  // New function to handle seeking
+  // Function to change current time of song
   const handleSeek = (time) => {
     if (ref.current) {
       ref.current.currentTime = time;
     }
   };
 
+  // Set the audio source when the active song changes
   useEffect(() => {
     const setAudioSrc = async () => {
       if (activeSong && Object.keys(activeSong).length > 0) {
@@ -138,6 +145,7 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
 
   return (
     <>
+      {/* Audio element */}
       <audio
         ref={ref}
         loop={repeat}
@@ -145,7 +153,7 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
         onTimeUpdate={onTimeUpdate}
         onLoadedData={onLoadedData}
       />
-      {/* New UI elements for additional features */}
+      {/* Controls for playback speed, mute, and seeking */}
       <div className="player-controls" style={{ display: 'none' }}>
         <button onClick={() => handlePlaybackRateChange(0.5)}>0.5x</button>
         <button onClick={() => handlePlaybackRateChange(1)}>1x</button>

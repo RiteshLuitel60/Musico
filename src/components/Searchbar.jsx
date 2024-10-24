@@ -2,16 +2,19 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
 
+// Searchbar component for handling search functionality
 const Searchbar = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const inputRef = useRef(null);
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate(`/search/${searchTerm}`);
   };
 
+  // Handle search icon click
   const handleIconClick = () => {
     inputRef.current.focus();
     handleSubmit({ preventDefault: () => {} });

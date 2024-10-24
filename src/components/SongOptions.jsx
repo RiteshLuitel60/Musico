@@ -4,7 +4,9 @@ import { fetchUserLibraries, handleAddToLibrary, handleCreateLibrary } from '../
 import { Trash2 } from 'lucide-react';
 import Notification from './Notification';
 
+// Component for song options menu
 const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
+  // State variables
   const [isOpen, setIsOpen] = useState(false);
   const [showLibraries, setShowLibraries] = useState(false);
   const [libraries, setLibraries] = useState([]);
@@ -15,6 +17,7 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
 
   const menuRef = useRef(null);
 
+  // Effect to load libraries and handle outside clicks
   useEffect(() => {
     loadLibraries();
 
@@ -30,6 +33,7 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     };
   }, []);
 
+  // Function to load user libraries
   const loadLibraries = async () => {
     setIsLoadingLibraries(true);
     const result = await fetchUserLibraries();
@@ -39,6 +43,7 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     setIsLoadingLibraries(false);
   };
 
+  // Function to handle adding a song to a library
   const handleAddToLibraryClick = async (libraryId) => {
     setAddedToLibraries(prev => ({ ...prev, [libraryId]: true }));
     const result = await handleAddToLibrary(libraryId, song);
@@ -53,6 +58,7 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     }
   };
 
+  // Function to handle creating a new library
   const handleCreateLibraryClick = async () => {
     const result = await handleCreateLibrary(song);
     if (result.success) {
@@ -63,6 +69,7 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     }
   };
 
+  // Function to toggle showing libraries
   const handleShowLibraries = async () => {
     setShowLibraries(!showLibraries);
     if (!showLibraries) {
@@ -70,6 +77,7 @@ const SongOptions = ({ song, currentLibraryId, onRemoveFromLibrary }) => {
     }
   };
 
+  // Function to remove a song from the current library
   const handleRemoveFromLibrary = () => {
     onRemoveFromLibrary(song.id);
     setIsOpen(false);
