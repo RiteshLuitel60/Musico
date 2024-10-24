@@ -1,12 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  // Specify which files Tailwind should scan for class names
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      // Custom color definitions
       colors: {
         black: "#191624",
         "green-500": "#4caf50",
       },
+      // Custom animation definitions
       animation: {
         slideup: "slideup 1s ease-in-out",
         slidedown: "slidedown 1s ease-in-out",
@@ -20,6 +23,7 @@ module.exports = {
         fadeIn: "fadeIn 0.2s ease-out",
         fadeUp: "fade-up 0.2s ease-out",
       },
+      // Custom keyframe definitions for animations
       keyframes: {
         slowfade: {
           from: { opacity: 0 },
@@ -75,20 +79,24 @@ module.exports = {
           },
         },
       },
+      // Custom transition property definitions
       transitionProperty: {
         colors: "background-color, color",
       },
     },
   },
+  // Extend variants for specific utilities
   variants: {
     extend: {
       backgroundColor: ["active"],
       textColor: ["active"],
     },
   },
+  // Add any Tailwind plugins here
   plugins: [],
 };
 
+// Additional CSS styles for fade-in animation
 const styles = `
   @keyframes fade-in {
     from {

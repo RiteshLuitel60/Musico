@@ -1,6 +1,6 @@
 import { supabase } from "./supabaseClient";
 
-// Function to handle user logout
+// Logs out the user
 export const logout = async () => {
   try {
     const { error } = await supabase.auth.signOut();
@@ -11,7 +11,7 @@ export const logout = async () => {
   }
 };
 
-// Function to check if a user is currently logged in
+// Checks if a user is logged in
 export const isLoggedIn = async () => {
   try {
     const {
@@ -26,7 +26,7 @@ export const isLoggedIn = async () => {
   }
 };
 
-// Function to get the current user's data
+// Retrieves the current user's data
 export const getCurrentUser = async () => {
   try {
     const {
@@ -41,7 +41,7 @@ export const getCurrentUser = async () => {
   }
 };
 
-// Function to handle user login
+// Logs in a user with email and password
 export const login = async (email, password) => {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -56,7 +56,7 @@ export const login = async (email, password) => {
   }
 };
 
-// Function to handle user sign up
+// Signs up a new user with email and password
 export const signUp = async (email, password) => {
   try {
     const { data, error } = await supabase.auth.signUp({

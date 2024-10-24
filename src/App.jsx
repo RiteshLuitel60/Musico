@@ -34,27 +34,30 @@ const App = () => {
   // State to track user's login status
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Move useLocation hook here, at the top level of the component
+  // Get current location
   const location = useLocation();
 
-  // Use useMemo to create a memoized key for Routes
+  // Create a memoized key for Routes based on current path
   const routesKey = useMemo(() => location.pathname, [location]);
 
   useEffect(() => {
+    // Check user session and set login status
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsLoggedIn(!!session);
     };
     checkSession();
 
+    // Subscribe to auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsLoggedIn(!!session);
     });
 
+    // Cleanup subscription on component unmount
     return () => subscription.unsubscribe();
   }, []);
 
-  // Show TopPlay component after 2 seconds
+  // Show TopPlay component after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTopPlay(true);

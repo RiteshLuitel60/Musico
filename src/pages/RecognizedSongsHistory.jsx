@@ -7,6 +7,7 @@ import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
 import { History } from 'lucide-react';
 import SongCard from '../components/SongCard';
 
+// Component to render a single recognized song item
 const RecognizedSongItem = ({ song, index, isPlaying, activeSong, }) => {
   const { data: songDetails, isFetching, error } = useGetSongDetailsQuery(song.song_key);
 
@@ -30,16 +31,19 @@ const RecognizedSongItem = ({ song, index, isPlaying, activeSong, }) => {
   );
 };
 
+// Main component for displaying recognized songs history
 const RecognizedSongsHistory = () => {
   const dispatch = useDispatch();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
   const [recognizedSongs, setRecognizedSongs] = useState([]);
   const [error, setError] = useState(null);
 
+  // Fetch recognized songs on component mount
   useEffect(() => {
     fetchRecognizedSongs();
   }, []);
 
+  // Function to fetch recognized songs from the database
   const fetchRecognizedSongs = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -60,15 +64,18 @@ const RecognizedSongsHistory = () => {
     }
   };
 
+  // Function to handle pausing the currently playing song
   const handlePauseClick = () => {
     dispatch(playPause(false));
   };
 
+  // Function to handle playing a song
   const handlePlayClick = (song, i) => {
     dispatch(setActiveSong({ song, data: recognizedSongs, i }));
     dispatch(playPause(true));
   };
 
+  // Function to clear the recognized songs history
   const handleClearHistory = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();

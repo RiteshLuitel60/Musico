@@ -1,6 +1,8 @@
 import { supabase } from "./supabaseClient";
 
+// Add a song to a specific library
 export const handleAddToLibrary = async (libraryId, song) => {
+  // Helper function to get artist ID from various song object structures
   const getArtistId = () =>
     song?.artist_id ||
     song?.artists?.[0]?.adamid ||
@@ -8,6 +10,7 @@ export const handleAddToLibrary = async (libraryId, song) => {
     artist_id ||
     "";
 
+  // Helper function to get song ID from various song object structures
   const getSongId = () =>
     song?.song_key || song?.hub?.actions[0]?.id || song?.key || song?.id || "";
 
@@ -19,6 +22,7 @@ export const handleAddToLibrary = async (libraryId, song) => {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("User not authenticated");
 
+    // Prepare song data for insertion
     const songData = {
       library_id: libraryId,
       song_key: getSongId(),
@@ -49,6 +53,7 @@ export const handleAddToLibrary = async (libraryId, song) => {
       artist_id: getArtistId(),
     };
 
+    // Insert song data into the library_songs table
     const { data, error } = await supabase
       .from("library_songs")
       .insert(songData)
@@ -62,6 +67,7 @@ export const handleAddToLibrary = async (libraryId, song) => {
   }
 };
 
+// Create a new library and add a song to it
 export const handleCreateLibrary = async (song) => {
   try {
     if (!song) throw new Error("Song data is undefined");
@@ -71,9 +77,11 @@ export const handleCreateLibrary = async (song) => {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("User not authenticated");
 
+    // Prompt user for library name
     const name = prompt("Enter a name for the new library:");
     if (!name) return { success: false, error: "Library name is required" };
 
+    // Create new library
     const { data, error } = await supabase
       .from("libraries")
       .insert({ name, user_id: user.id })
@@ -93,6 +101,7 @@ export const handleCreateLibrary = async (song) => {
   }
 };
 
+// Fetch all libraries for the current user
 export const fetchUserLibraries = async () => {
   try {
     const {
@@ -102,6 +111,7 @@ export const fetchUserLibraries = async () => {
     if (authError) throw authError;
     if (!user) throw new Error("User not authenticated");
 
+    // Fetch libraries for the current user
     const { data, error } = await supabase
       .from("libraries")
       .select("*")
@@ -116,8 +126,10 @@ export const fetchUserLibraries = async () => {
   }
 };
 
+// Fetch all songs in a specific library
 export const fetchLibrarySongs = async (libraryId) => {
   try {
+    // Fetch songs for the specified library
     const { data, error } = await supabase
       .from("library_songs")
       .select("*")
@@ -125,6 +137,7 @@ export const fetchLibrarySongs = async (libraryId) => {
 
     if (error) throw error;
 
+    // Transform the fetched data
     return {
       success: true,
       songs: data.map((song) => ({

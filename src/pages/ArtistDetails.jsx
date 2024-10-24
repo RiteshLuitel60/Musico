@@ -5,7 +5,7 @@ import { DetailsHeader, Error, Loader, RelatedSongs } from '../components';
 
 import { useGetArtistDetailsQuery } from '../redux/services/shazamCore';
 
-// Helper function to get artist data
+// Extract artist data from API response
 const getArtistData = (data) => {
   if (data?.data && Array.isArray(data.data)) {
     return data.data[0];
@@ -13,7 +13,7 @@ const getArtistData = (data) => {
   return data;
 };
 
-// Helper function to get top songs
+// Get top songs from artist data
 const getTopSongs = (artistData) => {
   if (artistData?.views?.['top-songs']?.data) {
     return artistData.views['top-songs'].data;
@@ -29,8 +29,10 @@ const ArtistDetails = () => {
   const { activeSong, isPlaying } = useSelector((state) => state.player);
   const { data: rawArtistData, isFetching: isFetchingArtistDetails, error } = useGetArtistDetailsQuery(artistId);
 
+  // Show loading state
   if (isFetchingArtistDetails) return <Loader title="Loading artist details..." />;
 
+  // Show error state
   if (error) return <Error />;
 
   const artistData = getArtistData(rawArtistData);

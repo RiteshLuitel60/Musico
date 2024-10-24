@@ -6,15 +6,20 @@ import { Error, Loader, SongCard } from '../components';
 import { useGetSongsBySearchQuery } from '../redux/services/shazamCore';
 
 const Search = () => {
+  // Get the search term from URL parameters
   const { searchTerm } = useParams();
+  // Get the current playing state from Redux store
   const { activeSong, isPlaying } = useSelector((state) => state.player);
+  // Fetch search results using the custom hook
   const { data, isFetching, error } = useGetSongsBySearchQuery(searchTerm);
 
-  // Correctly map the songs from the API response
+  // Extract songs from the API response
   const songs = data?.tracks?.hits?.map((hit) => hit.track) || []; 
 
+  // Show loading state while fetching data
   if (isFetching) return <Loader title={`Searching ${searchTerm}...`} />;
 
+  // Show error state if there's an error
   if (error) return <Error />;
 
   return (
@@ -26,11 +31,11 @@ const Search = () => {
       <div className="flex flex-wrap sm:justify-start justify-center gap-8">
         {songs.map((song, i) => (
           <SongCard
-            key={song?.key || i}  // Ensure key is unique
+            key={song?.key || i}  
             song={song}
             isPlaying={isPlaying}
             activeSong={activeSong}
-            data={songs}  // Pass the entire array if needed
+            data={songs}  
             i={i}
           />
         ))}
@@ -40,4 +45,3 @@ const Search = () => {
 };
 
 export default Search;
-

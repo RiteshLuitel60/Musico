@@ -1,3 +1,4 @@
+// Define JSON type
 export type Json =
   | string
   | number
@@ -6,9 +7,11 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+// Define Database structure
 export type Database = {
   public: {
     Tables: {
+      // Customer table
       customers: {
         Row: {
           id: string
@@ -32,6 +35,7 @@ export type Database = {
           },
         ]
       }
+      // Liked songs table
       liked_songs: {
         Row: {
           album_name: string | null
@@ -103,6 +107,7 @@ export type Database = {
           },
         ]
       }
+      // Prices table
       prices: {
         Row: {
           active: boolean | null
@@ -153,6 +158,7 @@ export type Database = {
           },
         ]
       }
+      // Products table
       products: {
         Row: {
           active: boolean | null
@@ -180,6 +186,7 @@ export type Database = {
         }
         Relationships: []
       }
+      // Songs table
       songs: {
         Row: {
           album_name: string | null
@@ -273,6 +280,7 @@ export type Database = {
         }
         Relationships: []
       }
+      // Subscriptions table
       subscriptions: {
         Row: {
           cancel_at: string | null
@@ -342,6 +350,7 @@ export type Database = {
           },
         ]
       }
+      // Users table
       users: {
         Row: {
           avatar_url: string | null
@@ -399,8 +408,10 @@ export type Database = {
   }
 }
 
+// Define PublicSchema type
 type PublicSchema = Database[Extract<keyof Database, "public">]
 
+// Define Tables type
 export type Tables<
   PublicTableNameOrOptions extends
     | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
@@ -426,6 +437,7 @@ export type Tables<
       : never
     : never
 
+// Define TablesInsert type
 export type TablesInsert<
   PublicTableNameOrOptions extends
     | keyof PublicSchema["Tables"]
@@ -447,6 +459,7 @@ export type TablesInsert<
       : never
     : never
 
+// Define TablesUpdate type
 export type TablesUpdate<
   PublicTableNameOrOptions extends
     | keyof PublicSchema["Tables"]
@@ -468,6 +481,7 @@ export type TablesUpdate<
       : never
     : never
 
+// Define Enums type
 export type Enums<
   PublicEnumNameOrOptions extends
     | keyof PublicSchema["Enums"]

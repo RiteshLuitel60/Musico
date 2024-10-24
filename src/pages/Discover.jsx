@@ -13,16 +13,19 @@ const Discover = () => {
   const dispatch = useDispatch();
   const { genreListId } = useSelector((state) => state.player);
   const { activeSong, isPlaying } = useSelector((state) => state.player);
+  // Fetch songs by genre
   const { data, isFetching, error } = useGetSongsByGenreQuery(
     genreListId || "POP",
   );
 
   const [libraries, setLibraries] = useState([]);
 
+  // Fetch libraries on component mount
   useEffect(() => {
     fetchLibraries();
   }, []);
 
+  // Function to fetch user's libraries
   const fetchLibraries = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
@@ -39,9 +42,12 @@ const Discover = () => {
     }
   };
 
+  // Show loading state
   if (isFetching) return <Loader title="Loading Songs...." />;
+  // Show error state
   if (error) return <Error />;
 
+  // Get the title of the selected genre
   const genreTitle =
     genres.find(({ value }) => value === genreListId)?.title || "Pop";
 
@@ -52,6 +58,7 @@ const Discover = () => {
           <h2 className="font-bold text-3xl text-white text-left">
             Discover {genreTitle}
           </h2>
+          {/* Genre selection dropdown */}
           <select
             onChange={(e) => dispatch(selectGenreListId(e.target.value))}
             value={genreListId || "pop"}
@@ -65,6 +72,7 @@ const Discover = () => {
           </select>
         </div>
 
+        {/* Display song cards */}
         <div className="flex flex-wrap justify-start gap-8 w-full">
           {data?.map((song, i) => (
             <SongCard

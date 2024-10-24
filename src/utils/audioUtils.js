@@ -1,5 +1,6 @@
 import { supabase } from "./supabaseClient";
 
+// Function to fetch audio URL from Supabase database
 const fetchAudioUrlFromSupabase = async (songKey) => {
   console.log("Fetching audio URL from Supabase for song key:", songKey);
   try {
@@ -18,6 +19,7 @@ const fetchAudioUrlFromSupabase = async (songKey) => {
   }
 };
 
+// Main function to get audio URL from various sources
 export const getAudioUrl = async (song) => {
   const audioUrl =
     song?.resources?.["shazam-songs"] &&
@@ -28,6 +30,7 @@ export const getAudioUrl = async (song) => {
     return "";
   }
 
+  // Check different properties of the song object for audio URL
   if (song?.attributes?.previews?.[0]?.url) {
     return song.attributes.previews[0].url;
   } else if (song?.hub?.actions?.[1]?.uri) {
@@ -40,6 +43,7 @@ export const getAudioUrl = async (song) => {
     return audioUrl;
   }
 
+  // If no URL found, try fetching from Supabase
   try {
     const songKey = song?.key || song?.id;
     if (songKey) {
@@ -52,6 +56,7 @@ export const getAudioUrl = async (song) => {
     console.error("Error fetching from Supabase:", error);
   }
 
+  // If no audio URL found, log a warning and return empty string
   console.warn("No audio URL found for song:", song);
   return "";
 };

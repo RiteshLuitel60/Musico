@@ -8,7 +8,7 @@ import { Plus, Edit2, Trash2, MoreVertical, Heart, Pen } from 'lucide-react';
 import { supabase } from '../utils/supabaseClient';
 
 const Library = () => {
-  // Set up Redux dispatch and state management
+  // Set up state variables and Redux hooks
   const dispatch = useDispatch();
   const [libraries, setLibraries] = useState([]);
   const [selectedLibrary, setSelectedLibrary] = useState(null);
