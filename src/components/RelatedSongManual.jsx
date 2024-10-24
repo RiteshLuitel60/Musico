@@ -1,5 +1,5 @@
 import React from 'react';
-import TopPlayM from './TopPlaysM';
+import TopPlayM from './TopPlayM';
 import { Link } from 'react-router-dom';
 
 // Component for displaying related songs manually (show songs related ot same genre )
