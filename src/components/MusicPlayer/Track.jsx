@@ -1,11 +1,16 @@
+// Import React library
 import React from 'react';
 
+// Track component definition
 const Track = ({ isPlaying, isActive, activeSong }) => {
+  // Function to get artwork URL
+  const songInfo = activeSong?.resources?.['shazam-songs'] && Object.values(activeSong.resources['shazam-songs'])[0]?.attributes;
+  
   const getArtwork = () => {
-    const songInfo = activeSong?.resources?.['shazam-songs'] && Object.values(activeSong.resources['shazam-songs'])[0]?.attributes;
+    // Get song info from Shazam data
     const coverArt = songInfo?.artwork?.url;
 
-
+    // Check different sources for artwork
     if (activeSong?.attributes?.artwork?.url) {
       return activeSong.attributes.artwork.url;
     } else if (activeSong?.images?.coverart) {
@@ -17,28 +22,31 @@ const Track = ({ isPlaying, isActive, activeSong }) => {
     } else {
       return coverArt;
     }
-
   };
 
+  // Function to get song title
   const getTitle = () => {
-
-    const songInfo = activeSong?.resources?.['shazam-songs'] && Object.values(activeSong.resources['shazam-songs'])[0]?.attributes;
+    // Get song info from Shazam data
     const songName = songInfo?.title;
     return activeSong?.attributes?.name || activeSong?.title || songName || 'No active Song';
   };
 
+  // Function to get artist name
   const getArtist = () => {
-    const songInfo = activeSong?.resources?.['shazam-songs'] && Object.values(activeSong.resources['shazam-songs'])[0]?.attributes;
+    // Get song info from Shazam data
     const artistName = songInfo?.primaryArtist;
 
     return activeSong?.attributes?.artistName || activeSong?.subtitle ||activeSong?.artist || artistName ||  'No Artist name';
   };
 
+  // Render the Track component
   return (
     <div className="flex-1 flex items-center justify-start">
+      {/* Album artwork */}
       <div className={`${isPlaying && isActive ? 'animate-[spin_3s_linear_infinite]' : ''} hidden sm:block h-16 w-16 mr-4`}>
         <img src={getArtwork()} alt="cover art" className="rounded-full" />
       </div>
+      {/* Song and artist info */}
       <div className="w-[50%]">
         <p className="truncate text-white font-bold text-lg">
           {getTitle()}
@@ -51,4 +59,5 @@ const Track = ({ isPlaying, isActive, activeSong }) => {
   );
 };
 
+// Export the Track component
 export default Track;
