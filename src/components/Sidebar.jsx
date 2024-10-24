@@ -9,7 +9,7 @@ import { logo } from '../assets';
 import LogoutButton from './LogoutButton';
 import UserNameDisplay from './UserNameDisplay';
 import { History } from 'lucide-react';
-
+import Logo from './Logo';
 // Define navigation links
 const links = [
   { name: 'Discover', to: '/', icon: HiOutlineHome },
@@ -64,7 +64,9 @@ const Sidebar = () => {
     <>
       {/* Desktop Sidebar */}
       <div className="md:flex hidden flex-col w-[200px] py-10 px-4 bg-slate-800 z-20">
-        <img src={logo} alt="logo" className="w-full h-24 object-cover" />
+        <div className="w-3/4 mt-[-62px]">
+          <Logo />
+        </div>
         <NavLinks />
       </div>
 

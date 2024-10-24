@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
+import Logo from '../Logo';
 
 // Define the SignIn component
 const SignIn = () => {
@@ -131,17 +132,17 @@ const SignIn = () => {
 
   // Render the component
   return (
-    <div ref={signInRef} className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
-      {/* App title */}
-      <div className="absolute top-4 left-4">
-        <h1 className="text-4xl font-playfair font-bold text-white italic tracking-wide shadow-lg">Musico</h1>
+    <div ref={signInRef} className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-black to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
+      {/* Logo */}
+      <div className="mb-[-15px] w-48">
+        <Logo />
       </div>
       {/* Main container */}
       <div className="max-w-md w-full space-y-8 bg-black bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-xl p-8 shadow-2xl border border-blue-200 border-opacity-20">
         {/* Title */}
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            {isSignedIn ? 'Signing you in...' : isSignUp ? 'Sign up for an account' : 'Sign in to your account'}
+            {isSignedIn ? 'Signing you in...' : isSignUp ? 'Sign up ' : 'Sign in'}
           </h2>
         </div>
         {/* Error message display */}
