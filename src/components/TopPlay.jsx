@@ -97,7 +97,7 @@ const TopPlay = () => {
         </div>
 
         <div className="mt-4 flex flex-col gap-1">
-          {topPlays.slice(0,5)?.map((song, i) => (
+          {topPlays?.slice(0,5)?.map((song, i) => (
             <TopChartCard
               key={song.id}
               song={song}
