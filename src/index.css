@@ -3,6 +3,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global styles for responsiveness */
+html {
+  font-size: 16px; /* Base font size */
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 14px; /* Smaller font size for mobile */
+  }
+}
+
 /* Active Navigation Link */
 .active {
   @apply text-white;

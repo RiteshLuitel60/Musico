@@ -8,7 +8,6 @@ import PlayPause from "./PlayPause";
 import SongOptions from "./SongOptions";
 import { handleAddToLibrary, handleCreateLibrary, fetchUserLibraries } from '../utils/libraryUtils';
 
-
 // SongCard component definition
 const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLibraries, currentLibraryId, onRemoveFromLibrary }) => {
   const dispatch = useDispatch(); // Hook to dispatch actions
@@ -24,8 +23,6 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
     dispatch(setActiveSong({ song, data, i }));
     dispatch(playPause(true));
     console.log(song); // Log the current song
-    
-
   };
 
   // Helper functions to get song details
@@ -65,11 +62,11 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[160px] p-4 hover:bg-white/10 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group hover:bg-opacity-70 hover:scale-105">
-      <div className="relative w-full h-28">
-        <div className="absolute inset-0  group-hover:bg-black/70 transition-all duration-300 ease-in-out"></div>
-        <div className={`absolute inset-0 justify-center items-center hidden group-hover:flex`}>
-          <div className="absolute inset-0 flex items-center justify-between animate-fadeUp p-1 z-10">
+    <div className="flex flex-col w-[110px] md:w-[160px] p-2  bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group md:hover:bg-opacity-70 md:hover:bg-white/10 md:hover:scale-105">
+      <div className="relative w-full h-24 sm:h-32">
+        <div className="absolute inset-0 hover:bg-black/70 transition-all duration-300 ease-in-out"></div>
+        <div className="absolute inset-0 flex justify-center items-center">
+          <div className="absolute inset-0 md:hover:bg-black/70 flex items-center justify-between animate-fadeUp p-1 z-10">
             <LikeButton song={{
               artist_id: getArtistId(),
               key: getSongId(),
@@ -105,19 +102,17 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
       </div>
       
       <div className="mt-4 flex flex-col">
-        <p className="font-semibold text-lg text-white truncate">
+        <p className="font-semibold text-base sm:text-lg text-white truncate">
           <Link to={`/songs/${getSongId()}`}>
             {getSongTitle()}
           </Link>
         </p>
-        <p className="text-sm truncate text-gray-300 mt-1">
+        <p className="text-xs sm:text-sm truncate text-gray-300 mt-1">
           <Link to={getArtistId() ? `/artists/${getArtistId()}` : '/top-artists'}>
             {getArtistName()}
           </Link>
         </p>
       </div>
-      
-  
     </div>
   );
 };
