@@ -132,156 +132,143 @@ const SignIn = () => {
 
   // Render the component
   return (
-    <div ref={signInRef} className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-black to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
-      {/* Logo */}
-      <div className="mb-[-15px] w-48">
+    <div ref={signInRef} className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl -top-48 -left-48 animate-pulse"></div>
+        <div className="absolute w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl -bottom-48 -right-48 animate-pulse delay-700"></div>
+      </div>
+
+      {/* Logo with enhanced styling */}
+      <div className="mb-4 w-48 transform hover:scale-105 transition-transform duration-300">
         <Logo />
       </div>
-      {/* Main container */}
-      <div className="max-w-md w-full space-y-8 bg-black bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-xl p-8 shadow-2xl border border-blue-200 border-opacity-20">
-        {/* Title */}
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            {isSignedIn ? 'Signing you in...' : isSignUp ? 'Sign up ' : 'Sign in'}
-          </h2>
-        </div>
-        {/* Error message display */}
+
+      {/* Main container with glass morphism effect */}
+      <div className="max-w-md w-full space-y-6 p-8 bg-white/5 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] border border-white/10">
+        {/* Title with modern typography */}
+        <h2 className="text-center text-3xl font-bold bg-gradient-to-r from-blue-200 to-indigo-200 bg-clip-text text-transparent">
+          {isSignedIn ? 'Signing you in...' : isSignUp ? 'Create Account' : 'Welcome Back'}
+        </h2>
+
+        {/* Error message with improved styling */}
         {errorMessage && (
-          <div className="text-red-400 text-center">
+          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-center text-sm">
             {errorMessage}
           </div>
         )}
-        {/* Sign-in and Sign-up forms */}
+
         {!isSignedIn && (
-          <>
+          <div className="space-y-4">
             {!isSignUp ? (
               // Sign-in form
-              <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
-                {/* Form inputs */}
-                <input type="hidden" name="remember" value="true" />
-                <div className="rounded-md shadow-sm -space-y-px">
-                  <div>
-                    <label htmlFor="email-address" className="sr-only">Email address</label>
-                    <input
-                      id="email-address"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-blue-300 placeholder-blue-200 text-white rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-black bg-opacity-50"
-                      placeholder="Email address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="password" className="sr-only">Password</label>
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-blue-300 placeholder-blue-200 text-white rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-black bg-opacity-50"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
+              <form className="space-y-4" onSubmit={handleSignIn}>
+                <div className="space-y-2">
+                  <input
+                    id="email-address"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
 
-                {/* Sign-in button */}
-                <div>
-                  <button
-                    type="submit"
-                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-                  >
-                    Sign in
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  Sign in
+                </button>
               </form>
             ) : (
-              // Sign-up form
-              <form className="mt-8 space-y-6" onSubmit={handleSignUp}>
-                {/* Form inputs */}
-                <input type="hidden" name="remember" value="true" />
-                <div className="rounded-md shadow-sm -space-y-px">
-                  <div>
-                    <label htmlFor="email-address" className="sr-only">Email address</label>
-                    <input
-                      id="email-address"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-blue-300 placeholder-blue-200 text-white rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-black bg-opacity-50"
-                      placeholder="Email address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="password" className="sr-only">Password</label>
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-blue-300 placeholder-blue-200 text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-black bg-opacity-50"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="displayName" className="sr-only">Full Name</label>
-                    <input
-                      id="displayName"
-                      name="displayName"
-                      type="text"
-                      required
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-blue-300 placeholder-blue-200 text-white rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm bg-black bg-opacity-50"
-                      placeholder="Full Name"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                    />
-                  </div>
+              // Sign-up form with similar styling
+              <form className="space-y-4" onSubmit={handleSignUp}>
+                <div className="space-y-2">
+                  <input
+                    id="email-address"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <input
+                    id="displayName"
+                    name="displayName"
+                    type="text"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-transparent transition-all duration-200"
+                    placeholder="Full Name"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                  />
                 </div>
-                
-                {/* Sign-up button */}
-                <div>
-                  <button
-                    type="submit"
-                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-                  >
-                    Sign up
-                  </button>
-                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  Sign up
+                </button>
               </form>
             )}
-            
-            {/* Toggle between sign-in and sign-up */}
-            <div>
+
+            {/* Toggle and Google sign-in buttons */}
+            <div className="space-y-3 pt-2">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/10"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-transparent text-slate-400">Or continue with</span>
+                </div>
+              </div>
+
               <button
                 onClick={toggleSignUp}
-                className="group relative w-full flex justify-center py-2 px-4 border border-blue-300 text-sm font-medium rounded-md text-blue-300 bg-transparent hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+                className="w-full py-3 px-4 bg-transparent border border-white/10 text-slate-300 rounded-lg font-medium hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
               >
                 {isSignUp ? 'Back to Sign in' : 'Sign up with Email'}
               </button>
-            </div>
-            
-            {/* Google sign-in button */}
-            <div>
+
               <button
                 onClick={handleGoogleSignIn}
-                className="group relative w-full flex justify-center py-2 px-4 border border-blue-300 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+                className="w-full py-3 px-4 bg-white/5 border border-white/10 text-white rounded-lg font-medium hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center"
               >
                 <FcGoogle className="mr-2 h-5 w-5" />
                 Sign in with Google
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
