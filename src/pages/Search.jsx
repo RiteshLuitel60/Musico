@@ -29,7 +29,7 @@ const Search = () => {
       </h2>
 
       <div className="flex flex-wrap justify-center gap-2 md:gap-3 w-full max-w-[95%] md:max-w-[90%]">
-        {songs.map((song, i) => (
+        {songs.slice(0,36).map((song, i) => (
           <SongCard
             key={song?.key || i}  
             song={song}
