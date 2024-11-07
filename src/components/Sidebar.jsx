@@ -5,11 +5,11 @@ import { HiOutlineHashtag, HiOutlineHome, HiOutlineMenu, HiOutlinePhotograph, Hi
 import { MdLibraryMusic } from "react-icons/md";
 import { RiCloseLine } from 'react-icons/ri';
 import { supabase } from '../utils/supabaseClient';
-import { logo } from '../assets';
 import LogoutButton from './LogoutButton';
 import UserNameDisplay from './UserNameDisplay';
 import { History } from 'lucide-react';
 import Logo from './Logo';
+
 // Define navigation links
 const links = [
   { name: 'Discover', to: '/', icon: HiOutlineHome },
@@ -78,14 +78,16 @@ const Sidebar = () => {
           <RiCloseLine className="w-6 h-6 text-white" onClick={() => setMobileMenuOpen(false)} />
         )}
       </div>
+        
 
       {/* Mobile Sidebar */}
       <div className={`absolute top-0 h-screen w-2/3 bg-gradient-to-tl from-white/10 to-slate-800 backdrop-blur-lg z-20 p-6 md:hidden smooth-transition ${mobileMenuOpen ? 'left-0' : '-left-full'}`}>
-        <img src={logo} alt="logo" className="w-full h-14 object-contain" />
+        <div className="w-3/4">
+          <Logo  />
+        </div>
         <div>
-
-        <UserNameDisplay className="mt-4 mb-6 text-white" />
-        <NavLinks handleClick={() => setMobileMenuOpen(false)} />
+          <UserNameDisplay className="mt-4 mb-6 text-white" />
+          <NavLinks handleClick={() => setMobileMenuOpen(false)} />
         </div>
       </div>
     </>
