@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Heart } from "lucide-react";
+import { createLikedSongsLibrary } from '../utils/libraryUtils';
 
 // Component for a like button that interacts with a Supabase backend
 const LikeButton = ({ song, isLikedSongs = false }) => {
@@ -56,6 +57,13 @@ const LikeButton = ({ song, isLikedSongs = false }) => {
       .single();
 
     if (error) {
+      if (error.code === 'PGRST116') { // No rows returned
+        // Create Liked Songs library if it doesn't exist
+        const result = await createLikedSongsLibrary();
+        if (result.success) {
+          return result.library.id;
+        }
+      }
       console.error("Error fetching Liked Songs playlist:", error);
       return null;
     }

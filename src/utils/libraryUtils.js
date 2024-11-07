@@ -152,3 +152,24 @@ export const fetchLibrarySongs = async (libraryId) => {
     return { success: false, error };
   }
 };
+
+// Add this new function
+export const createLikedSongsLibrary = async () => {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("User not authenticated");
+
+    const { data, error } = await supabase
+      .from("libraries")
+      .insert({ name: "Liked Songs", user_id: user.id })
+      .select();
+
+    if (error) throw error;
+    return { success: true, library: data[0] };
+  } catch (error) {
+    console.error("Error creating Liked Songs library:", error);
+    return { success: false, error };
+  }
+};
