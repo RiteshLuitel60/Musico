@@ -81,7 +81,7 @@ const Discover = () => {
     <>
       <div className="flex flex-col ">
         <div className="w-full flex justify-between flex-row mt-4 mb-10">
-          <h2 className="font-bold text-3xl text-white text-left">
+          <h2 className="font-bold text-xl sm:text-2xl md:text-3xl text-white text-left">
             Discover {genreTitle}
           </h2>
           {/* Genre selection dropdown */}
