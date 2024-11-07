@@ -102,7 +102,7 @@ const Discover = () => {
         </div>
 
         {/* Display song cards */}
-        <div className="flex flex-wrap justify-center gap-9 mx-auto w-full max-w-[90%]">
+        <div className="flex flex-wrap justify-start gap-2 mx-auto w-full max-w-[90%]">
           {displayedSongs?.map((song, i) => (
             <SongCard
               key={song.key || song.id || `song-${i}`}

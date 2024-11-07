@@ -112,7 +112,7 @@ const RecognizedSongsHistory = () => {
       {recognizedSongs.length === 0 ? (
         <p className="text-white text-center text-lg">No recognized songs in history.</p>
       ) : (
-        <div className="flex flex-wrap sm:justify-start justify-center gap-8">
+        <div className="flex flex-wrap justify-start gap-2 mx-auto w-full max-w-[90%]">
           {recognizedSongs.map((song, i) => (
             <RecognizedSongItem
               key={song.id}

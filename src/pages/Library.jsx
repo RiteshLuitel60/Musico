@@ -327,7 +327,7 @@ const Library = () => {
         </div>
       )}
       {/* List of songs in the selected library */}
-      <div className="flex flex-wrap sm:justify-start justify-center gap-8">
+      <div className="flex flex-wrap justify-start gap-2 mx-auto w-full max-w-[90%]">
         {librarySongs.map((song, i) => (
           <SongCard
             key={song.id}
