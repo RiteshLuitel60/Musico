@@ -62,11 +62,11 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col w-[110px] md:w-[160px] p-2  bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group md:hover:bg-opacity-70 md:hover:bg-white/10 md:hover:scale-105">
+    <div className="flex flex-col w-[105px] md:w-[160px] p-2 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer transition-all duration-300 ease-in-out group md:hover:bg-opacity-70 md:hover:bg-white/10 md:hover:scale-105">
       <div className="relative w-full h-24 sm:h-32">
-        <div className="absolute inset-0 hover:bg-black/70 transition-all duration-300 ease-in-out"></div>
+        <div className="absolute inset-0  transition-all duration-300 ease-in-out"></div>
         <div className="absolute inset-0 flex justify-center items-center">
-          <div className="absolute inset-0 md:hover:bg-black/70  flex items-center justify-between animate-fadeUp  p-1 z-10">
+          <div className="absolute inset-0 md:opacity-0 md:group-hover:opacity-100  transition-opacity duration-300 bg-black/20 hover:bg-black/70 ease-in-out flex items-center justify-between animate-fadeUp p-1 ">
             <LikeButton song={{
               artist_id: getArtistId(),
               key: getSongId(),
@@ -97,7 +97,7 @@ const SongCard = ({ song, isPlaying, activeSong, data, i, libraries = [], setLib
         <img 
           alt="song_img" 
           src={getCoverArt()} 
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover rounded-lg "
         />
       </div>
       

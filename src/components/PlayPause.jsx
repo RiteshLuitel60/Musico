@@ -10,7 +10,7 @@ const PlayPause = ({
   handlePlay,
   songId,
   size = 35, // Default size
-  color = "text-white/80", // Default color
+  color = "text-white", // Default color
   playIcon = FaPlayCircle, // Default play icon
   pauseIcon = FaPauseCircle, // Default pause icon
 }) => {
@@ -46,9 +46,9 @@ let activeSongId=   activeSong?.resources?.songs && Object.keys(activeSong.resou
 
   // Render pause icon if playing and active, otherwise render play icon
   return isPlaying && isActive ? (
-    <PauseIconComponent size={size} className={`${color} z-50`} onClick={handlePause} />
+    <PauseIconComponent size={size} className={`${color} `} onClick={handlePause} />
   ) : (
-    <PlayIconComponent size={size} className={`${color} z-50`} onClick={handlePlay} />
+    <PlayIconComponent size={size} className={`${color} `} onClick={handlePlay} />
   );
 };
 
