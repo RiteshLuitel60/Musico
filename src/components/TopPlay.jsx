@@ -131,7 +131,7 @@ const TopPlay = () => {
             <SwiperSlide
               key={song?.id}
               style={{
-                width: "22%",
+                width: "20%",
                 height: "auto",
               }}
               className="shadow-lg rounded-full animate-slideright"
