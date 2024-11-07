@@ -28,7 +28,7 @@ const Search = () => {
         Showing results for <span className="font-black">{searchTerm}</span>
       </h2>
 
-      <div className="flex flex-wrap justify-start gap-2 mx-auto w-full max-w-[90%]">
+      <div className="flex flex-wrap justify-center gap-2 md:gap-3 w-full max-w-[95%] md:max-w-[90%]">
         {songs.map((song, i) => (
           <SongCard
             key={song?.key || i}  
