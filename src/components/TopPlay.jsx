@@ -69,7 +69,7 @@ const TopPlay = () => {
     divRef.current.scrollIntoView({ behavior: "smooth" });
   }, []); // Empty array ensures this runs only on component load
 
-  const topPlays = data?.slice(0, 5);
+  const topPlays = data?.slice(0, 10);
 
   // Handler for pausing the song
   const handlePauseClick = () => {
@@ -97,7 +97,7 @@ const TopPlay = () => {
         </div>
 
         <div className="mt-4 flex flex-col gap-1">
-          {topPlays?.map((song, i) => (
+          {topPlays.slice(0,5)?.map((song, i) => (
             <TopChartCard
               key={song.id}
               song={song}
@@ -127,11 +127,11 @@ const TopPlay = () => {
           modules={[FreeMode]}
           className="mt-6"
         >
-          {topPlays?.slice(0, 5).map((song, i) => (
+          {topPlays?.map((song, i) => (
             <SwiperSlide
               key={song?.id}
               style={{
-                width: "20%",
+                width: "17%",
                 height: "auto",
               }}
               className="shadow-lg rounded-full animate-slideright"
