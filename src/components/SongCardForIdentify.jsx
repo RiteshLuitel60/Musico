@@ -38,7 +38,11 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
   const formatTitle = (text) => {
     if (!text) return '';
     const words = text.split(' ');
-    return words.slice(0, 3).join(' ');
+    // Find index of first word containing special characters
+    const specialCharIndex = words.findIndex(word => /[^a-zA-Z\s]/.test(word));
+    // If special char found, slice up to that index, otherwise take first 3 words
+    const wordLimit = specialCharIndex !== -1 ? specialCharIndex : 3;
+    return words.slice(0, wordLimit).join(' ');
   };
 
   // Get first name of artist
@@ -46,7 +50,11 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
     if (!name) return '';
     const words = name.split(' ');
     if (words.length > 3) {
-      return( words[0] +" "+ words[1]) ;
+      // Check if second word exists and is valid
+      if (words[1] && /^[a-zA-Z]{2,}$/.test(words[1])) {
+        return words[0] + " " + words[1];
+      }
+      return words[0];
     }
     return name;
   };
@@ -123,7 +131,7 @@ const SongCardForIdentify = ({ song, isPlaying, activeSong, data, i }) => {
               <Link to={`/artists/${artists?.[0]?.adamid}`}>
                 <motion.p
                   whileHover={{ x: 5 }}
-                  className="text-xs text-white hover:text-white/90 truncate text-center"
+                  className=" font-bold text-sm text-white hover:text-white/90 truncate text-center"
                   style={{ fontSize: '120%' }}
                 >
                   {getFirstName(subtitle)}
