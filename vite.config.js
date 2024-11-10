@@ -6,4 +6,5 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   // Add plugins to the build process
   plugins: [react()],
+  base: "/Musico/",
 });
