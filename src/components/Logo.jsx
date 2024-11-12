@@ -1,4 +1,4 @@
-import musicoLogo from '../assets/musicologo.png';
+import musicoLogo from '../assets/musicoLogo.png';
 import { Link } from 'react-router-dom';
 
 const Logo = () => {
