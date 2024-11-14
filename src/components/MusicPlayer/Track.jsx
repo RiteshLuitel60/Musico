@@ -1,5 +1,6 @@
-// Import React library
+// Import React library and Link component
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // Track component definition
 const Track = ({ isPlaying, isActive, activeSong }) => {
@@ -8,7 +9,6 @@ const Track = ({ isPlaying, isActive, activeSong }) => {
   
   // Function to get artwork URL
   const getArtwork = () => {
-  
     const coverArt = songInfo?.artwork?.url;
 
     // Check different sources for artwork
@@ -27,20 +27,26 @@ const Track = ({ isPlaying, isActive, activeSong }) => {
 
   // Function to get song title
   const getTitle = () => {
-    // Get song info from Shazam data
     const songName = songInfo?.title;
     return activeSong?.attributes?.name || activeSong?.title || songName || 'No active Song';
   };
 
   // Function to get artist name
   const getArtist = () => {
-    // Get song info from Shazam data
     const artistName = songInfo?.primaryArtist;
-
-    return activeSong?.attributes?.artistName || activeSong?.subtitle ||activeSong?.artist || artistName ||  'No Artist name';
+    return activeSong?.attributes?.artistName || activeSong?.subtitle || activeSong?.artist || artistName || 'No Artist name';
   };
 
-  // Render the Track component
+  // Function to get song ID
+  const getSongId = () => {
+    return activeSong?.key || activeSong?.id || Object.keys(activeSong?.resources?.['shazam-songs'] || {})[0] || '';
+  };
+
+  // Function to get artist ID
+  const getArtistId = () => {
+    return activeSong?.relationships?.artists?.data[0]?.id || activeSong?.artists?.[0]?.adamid || '';
+  };
+
   return (
     <div className="flex-1 flex items-center justify-start">
       {/* Album artwork */}
@@ -50,15 +56,22 @@ const Track = ({ isPlaying, isActive, activeSong }) => {
       {/* Song and artist info */}
       <div className="w-[50%]">
         <p className="truncate text-white font-bold text-lg">
-          {getTitle()}
+          <Link to={`/songs/${getSongId()}`} className="hover:text-white/90">
+            {getTitle()}
+          </Link>
         </p>
         <p className="truncate text-gray-300">
-          {getArtist()}
+          {getArtistId() ? (
+            <Link to={`/artists/${getArtistId()}`} className="hover:text-white/90">
+              {getArtist()}
+            </Link>
+          ) : (
+            <span>{getArtist()}</span>
+          )}
         </p>
       </div>
     </div>
   );
 };
 
-// Export the Track component
 export default Track;
