@@ -34,7 +34,7 @@ const TopChartCard = ({
       {/* Song artwork */}
       <div className="flex-1 flex flex-col justify-center mx-3">
         <Link to={`/songs/${song.id}`}>
-          <p className="text-base font-bold text-white">
+          <p className="text-base font-bold text-white overflow-hidden">
             {song?.attributes?.name}
           </p>{" "}
           {/* Song title */}
@@ -97,7 +97,7 @@ const TopPlay = () => {
         </div>
 
         <div className="mt-4 flex flex-col gap-1">
-          {topPlays?.slice(0,5)?.map((song, i) => (
+          {topPlays?.slice(1,6)?.map((song, i) => (
             <TopChartCard
               key={song.id}
               song={song}
