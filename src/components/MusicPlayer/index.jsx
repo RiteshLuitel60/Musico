@@ -1,6 +1,7 @@
 // Import necessary libraries and components
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 // Import actions from Redux slice
 import {
@@ -79,64 +80,70 @@ const MusicPlayer = () => {
     preloadPlaylist();
   }, [currentSongs]);
 
+  const getSongId = () => {
+    return activeSong?.key || activeSong?.id || Object.keys(activeSong?.resources?.['shazam-songs'] || {})[0] || '';
+  };
+
   // Render the music player
   return (
-    <div className="relative sm:px-12 px-8 w-full flex items-center justify-between flex-wrap">
-      {/* Display current track info */}
-      <Track
-        isPlaying={isPlaying}
-        isActive={isActive}
-        activeSong={activeSong}
-      />
-
-      <div className="flex-1 flex flex-col items-center justify-center sm:justify-between">
-        {/* Render player controls */}
-        <Controls
+    <Link to={`/songs/${getSongId()}`} className="w-full">
+      <div className="relative sm:px-12 px-8 w-full flex items-center justify-between flex-wrap">
+        {/* Display current track info */}
+        <Track
           isPlaying={isPlaying}
           isActive={isActive}
-          repeat={repeat}
-          setRepeat={setRepeat}
-          shuffle={shuffle}
-          setShuffle={setShuffle}
-          currentSongs={currentSongs}
-          handlePlayPause={handlePlayPause}
-          handlePrevSong={handlePrevSong}
-          handleNextSong={handleNextSong}
+          activeSong={activeSong}
         />
-        {/* Render seekbar */}
-        <Seekbar
-          value={appTime}
-          min="0"
-          max={duration}
-          onInput={(event) => setSeekTime(event.target.value)}
-          setSeekTime={setSeekTime}
-          appTime={appTime}
-        />
-        {/* Render audio player if there's an active song */}
-        {activeSong && Object.keys(activeSong).length > 0 && (
-          <Player
-            activeSong={activeSong}
-            volume={volume}
-            isPlaying={isPlaying}
-            seekTime={seekTime}
-            repeat={repeat}
-            currentIndex={currentIndex}
-            onEnded={handleNextSong}
-            onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
-            onLoadedData={(event) => setDuration(event.target.duration)}
-          />
-        )}
-      </div>
 
-      {/* Render volume control */}
-      <VolumeBar
-        value={volume}
-        min="0"
-        max="1"
-        onChange={(event) => setVolume(event.target.value)}
-        setVolume={setVolume}
-      />
-    </div>
+        <div className="flex-1 flex flex-col items-center justify-center sm:justify-between">
+          {/* Render player controls */}
+          <Controls
+            isPlaying={isPlaying}
+            isActive={isActive}
+            repeat={repeat}
+            setRepeat={setRepeat}
+            shuffle={shuffle}
+            setShuffle={setShuffle}
+            currentSongs={currentSongs}
+            handlePlayPause={handlePlayPause}
+            handlePrevSong={handlePrevSong}
+            handleNextSong={handleNextSong}
+          />
+          {/* Render seekbar */}
+          <Seekbar
+            value={appTime}
+            min="0"
+            max={duration}
+            onInput={(event) => setSeekTime(event.target.value)}
+            setSeekTime={setSeekTime}
+            appTime={appTime}
+          />
+          {/* Render audio player if there's an active song */}
+          {activeSong && Object.keys(activeSong).length > 0 && (
+            <Player
+              activeSong={activeSong}
+              volume={volume}
+              isPlaying={isPlaying}
+              seekTime={seekTime}
+              repeat={repeat}
+              currentIndex={currentIndex}
+              onEnded={handleNextSong}
+              onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
+              onLoadedData={(event) => setDuration(event.target.duration)}
+            />
+          )}
+        </div>
+
+        {/* Render volume control */}
+        <VolumeBar
+          value={volume}
+          min="0"
+          max="1"
+          onChange={(event) => setVolume(event.target.value)}
+          setVolume={setVolume}
+        />
+      </div>
+    </Link>
   );
 };
 
