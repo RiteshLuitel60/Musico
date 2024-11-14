@@ -86,7 +86,7 @@ const MusicPlayer = () => {
 
   // Render the music player
   return (
-    <Link to={`/songs/${getSongId()}`} className="w-full">
+    
       <div className="relative sm:px-12 px-8 w-full flex items-center justify-between flex-wrap">
         {/* Display current track info */}
         <Track
@@ -143,7 +143,7 @@ const MusicPlayer = () => {
           setVolume={setVolume}
         />
       </div>
-    </Link>
+
   );
 };
 
