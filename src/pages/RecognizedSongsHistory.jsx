@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { supabase } from '../utils/supabaseClient';
-import { Error } from '../components';
-import { playPause, setActiveSong } from '../redux/features/playerSlice';
-import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
-import { History } from 'lucide-react';
-import SongCard from '../components/SongCard';
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { supabase } from "../utils/supabaseClient";
+import { Error } from "../components";
+import { playPause, setActiveSong } from "../redux/features/playerSlice";
+import { useGetSongDetailsQuery } from "../redux/services/shazamCore";
+import { History } from "lucide-react";
+import SongCard from "../components/SongCard";
 
 // Component to render a single recognized song item
-const RecognizedSongItem = ({ song, index, isPlaying, activeSong, }) => {
-  const { data: songDetails, isFetching, error } = useGetSongDetailsQuery(song.song_key);
+const RecognizedSongItem = ({ song, index, isPlaying, activeSong }) => {
+  const {
+    data: songDetails,
+    isFetching,
+    error,
+  } = useGetSongDetailsQuery(song.song_key);
 
   if (error) return <Error />;
 
-  console.log("song " , isPlaying);
-  console.log("activeSong " , index);
+  console.log("song ", isPlaying);
+  console.log("activeSong ", index);
 
   const detailedSong = { ...song, ...songDetails };
-  
-  console.log("a " ,detailedSong);
+
+  console.log("a ", detailedSong);
 
   return (
     <SongCard
@@ -46,20 +50,22 @@ const RecognizedSongsHistory = () => {
   // Function to fetch recognized songs from the database
   const fetchRecognizedSongs = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         const { data, error } = await supabase
-          .from('recognized_songs')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('recognized_at', { ascending: false });
+          .from("recognized_songs")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("recognized_at", { ascending: false });
 
         if (error) throw error;
 
         setRecognizedSongs(data);
       }
     } catch (error) {
-      console.error('Error fetching recognized songs:', error);
+      console.error("Error fetching recognized songs:", error);
       setError(error.message);
     }
   };
@@ -78,29 +84,32 @@ const RecognizedSongsHistory = () => {
   // Function to clear the recognized songs history
   const handleClearHistory = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         const { error } = await supabase
-          .from('recognized_songs')
+          .from("recognized_songs")
           .delete()
-          .eq('user_id', user.id);
+          .eq("user_id", user.id);
 
         if (error) throw error;
         setRecognizedSongs([]);
       }
     } catch (error) {
-      console.error('Error clearing recognized songs history:', error);
+      console.error("Error clearing recognized songs history:", error);
       setError(error.message);
     }
   };
 
-  
   if (error) return <Error />;
 
   return (
     <div className="flex flex-col w-full px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col sm:flex-row justify-between items-center mt-4 mb-6 sm:mb-10">
-        <h2 className="font-bold text-2xl sm:text-3xl text-white text-center sm:text-left mb-4 sm:mb-0">Recognized Songs History</h2>
+        <h2 className="font-bold text-2xl sm:text-3xl text-white text-center sm:text-left mb-4 sm:mb-0">
+          Recognized Songs History
+        </h2>
         <span
           className="flex items-center text-gray-400 hover:text-gray-300 cursor-pointer text-sm sm:text-base sm:order-2 order-1"
           onClick={handleClearHistory}
@@ -110,9 +119,11 @@ const RecognizedSongsHistory = () => {
         </span>
       </div>
       {recognizedSongs.length === 0 ? (
-        <p className="text-white text-center text-lg">No recognized songs in history.</p>
+        <p className="text-white text-center text-lg">
+          No recognized songs in history.
+        </p>
       ) : (
-        <div className="flex flex-wrap justify-center gap-2 md:gap-2 w-full max-w-[95%] md:max-w-[97%]">
+        <div className="flex flex-wrap justify-left gap-2 md:gap-2 w-full max-w-[95%] md:max-w-[97%]">
           {recognizedSongs.map((song, i) => (
             <RecognizedSongItem
               key={song.id}
