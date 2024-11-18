@@ -23,7 +23,7 @@ import UserNameDisplay from './components/UserNameDisplay'
 import { supabase } from './utils/supabaseClient';
 import ErrorBoundary from './components/ErrorBoundary'; // Import ErrorBoundary
 
-// TODO: Move these to environment variables for better security
+
 
 
 const App = () => {

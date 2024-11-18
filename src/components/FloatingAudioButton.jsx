@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { shazamCoreApi } from "../redux/services/shazamCore"; // Ensure this path is correct
+import { shazamCoreApi } from "../redux/services/shazamCore"; 
 import SongCardForIdentify from "./SongCardForIdentify";
-import { Music3 } from "lucide-react";
 import { supabase } from '../utils/supabaseClient';
 import animatedIdentifyButton from '../assets/AnimatedIdentifyButton.webm';
 
 const { useRecognizeSongMutation } = shazamCoreApi;
 
 const FloatingAudioButton = () => {
-  // State variables for managing button and song recognition
+  // State variables
   const [isActive, setIsActive] = useState(false);
   const [songInfo, setSongInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -18,18 +17,16 @@ const FloatingAudioButton = () => {
     useRecognizeSongMutation();
   const { activeSong, isPlaying } = useSelector((state) => state.player);
 
-  // Effect to handle song recognition results
+  // Handle song recognition results
   useEffect(() => {
     if (data) {
       if (data.track) {
-        console.log("Song recognized:", data.track);
         setSongInfo(data.track);
         setNoSongFound(false);
         setShowModal(false);
         saveSongToHistory(data.track);
       } else if (data.track === null && (!data.matches || data.matches.length === 0)) {
         setNoSongFound(true);
-        console.log("No matching song found in API response");
       }
     }
     if (isError) {
@@ -39,10 +36,9 @@ const FloatingAudioButton = () => {
     }
   }, [data, isError, error]);
 
-  // Function to handle audio data and initiate song recognition
+  // Process audio data for recognition
   const handleAudioData = async (audioBlob) => {
     try {
-      console.log("Starting song recognition process");
       const formData = new FormData();
       formData.append("file", audioBlob, "audio.wav");
       await recognizeSong(formData).unwrap();
@@ -51,17 +47,15 @@ const FloatingAudioButton = () => {
     }
   };
 
-  // Function to handle button click and start audio recording
+  // Start audio recording on button click
   const handleClick = async () => {
     if (!isActive) {
       setIsActive(true);
       setSongInfo(null);
       setShowModal(false);
       setNoSongFound(false);
-      console.log("Initiating song recognition");
 
       try {
-        console.log("Requesting microphone access");
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         const mediaRecorder = new MediaRecorder(stream);
         const audioChunks = [];
@@ -71,15 +65,12 @@ const FloatingAudioButton = () => {
         };
 
         mediaRecorder.onstop = async () => {
-          console.log("Audio recording stopped, processing data");
           const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
           handleAudioData(audioBlob);
         };
 
-        console.log("Starting audio recording");
         mediaRecorder.start();
         setTimeout(() => {
-          console.log("Stopping audio recording after 10 seconds");
           mediaRecorder.stop();
           setIsActive(false);
         }, 10000);
@@ -90,7 +81,7 @@ const FloatingAudioButton = () => {
     }
   };
 
-  // Function to save recognized song to user's history
+  // Save recognized song to history
   const saveSongToHistory = async (song) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -103,12 +94,10 @@ const FloatingAudioButton = () => {
           artist_id: song.artists?.[0]?.adamid,
           recognized_at: new Date().toISOString(),
           cover_art: song.images?.coverart || song.share?.image,
-          // Add the audio_url field
           audio_url: song.hub?.actions?.find(action => action.type === "uri")?.uri || null
         };
         const { error } = await supabase.from('recognized_songs').insert(songData);
         if (error) throw error;
-        console.log("Song saved to history:", songData);
       }
     } catch (error) {
       console.error("Error saving song to history:", error);
@@ -120,7 +109,7 @@ const FloatingAudioButton = () => {
       <div className="relative">
         {/* Floating audio button */}
         <button
-          className={`ml-4 mr-2   ${isActive ? "shadow-2xl" : ""}`}
+          className={`ml-4 mr-2 ${isActive ? "shadow-2xl" : ""}`}
           onClick={handleClick}
           disabled={isLoading}
         >
@@ -130,12 +119,11 @@ const FloatingAudioButton = () => {
             loop
             muted
             playsInline
-            className="w-10  h-10 object-cover hover:animate-spin animate-pulse mt-3"
+            className="w-10 h-10 object-cover hover:animate-spin animate-pulse mt-3"
           />
           {isActive && (
             <span className="absolute inset-0 rounded-full bg-slate-600 opacity-75 animate-ping"></span>
           )}
-        
         </button>
 
         {/* Error modal */}

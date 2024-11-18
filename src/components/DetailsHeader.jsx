@@ -1,60 +1,60 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Component for displaying details header for artists or songs
+// DetailsHeader component for displaying artist or song information
 const DetailsHeader = ({ artistId, artistData, songData }) => {
-  // Extract artist ID from song data
+  // Get artist ID from song data
   const artistIdDynamic = songData?.resources?.['shazam-songs']?.[songData?.data?.[0]?.id]?.relationships?.artists?.data?.[0]?.id;
 
-  // Helper function to get song details from older data structure
+  // Get song details based on key
   const getSongDetails = (key) =>
     songData?.resources?.['shazam-songs']?.[songData?.data?.[0]?.id]?.attributes?.[key];
 
-  // Helper function to get genre name
+  // Get genre name based on artist or song data
   const getGenreName = () => {
     if (artistId) {
       return artistData?.attributes?.genreNames?.[0] || 'Unknown';
     } else {
       return (
         getSongDetails('genres')?.primary ||
-        songData?.genres?.primary || // Updated structure
+        songData?.genres?.primary ||
         'Unknown'
       );
     }
   };
 
-  // Helper function to get image URL
+  // Get image URL for artist or song
   const getImageURL = () => {
     if (artistId) {
       return artistData?.attributes?.artwork?.url?.replace('{w}', '500').replace('{h}', '500');
     } else {
       return (
         getSongDetails('artwork')?.url ||
-        songData?.images?.coverart || // Updated structure
+        songData?.images?.coverart ||
         '/fallback-image.jpg'
       );
     }
   };
 
-  // Helper function to get title or artist name
+  // Get title or artist name
   const getTitleOrName = () => {
     return (
       artistId
         ? artistData?.attributes?.name
-        : getSongDetails('title') || // Older structure
-          songData?.title || // Updated structure
+        : getSongDetails('title') ||
+          songData?.title ||
           'Unknown'
     );
   };
 
-  // Helper function to get the artist link
+  // Get the artist link if artistId is not present
   const getArtistLink = () => {
     if (!artistId) {
       return (
         <Link to={`/artists/${artistIdDynamic || songData?.artists?.[0]?.adamid}`}>
           <p className="text-base text-white mt-2">
-            {getSongDetails('artist') || // Older structure
-            songData?.subtitle || 'Unknown Artist'}{/* Updated structure */}
+            {getSongDetails('artist') ||
+            songData?.subtitle || 'Unknown Artist'}
           </p>
         </Link>
       );
@@ -64,10 +64,8 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
 
   return (
     <div className="relative w-full flex flex-col">
-      {/* Gradient background */}
       <div className="w-full bg-gradient-to-l from-transparent to-black sm:h-48 h-28" />
 
-      {/* Profile image and details */}
       <div className="absolute inset-0 flex items-center">
         <img
           alt="profile"
@@ -87,7 +85,6 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
         </div>
       </div>
 
-      {/* Spacer */}
       <div className="w-full sm:h-44 h-24" />
     </div>
   );
